@@ -1,0 +1,47 @@
+[
+    {
+        "goodTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "Wait",
+            "TurnPumpOff"
+        ],
+        "badTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "Wait",
+            "Wait"
+        ]
+    },
+    {
+        "goodTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "Wait"
+        ],
+        "badTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "TurnPumpOff",
+            "TurnPumpOn",
+            "Wait",
+            "Wait"
+        ]
+    },
+    {
+        "goodTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "Wait",
+            "TurnPumpOff"
+        ],
+        "badTrace": [
+            "TurnPumpOn",
+            "Wait",
+            "Wait",
+            "TurnPumpOff",
+            "TurnPumpOn",
+            "Wait"
+        ]
+    }
+]
