@@ -29,9 +29,9 @@ After cloning the repository, use maven to build the project:
 
 #### Fortis
 
-You will also need the [FASR branch of Fortis](https://github.com/cmu-soda/fortis-core/tree/FASR). After cloning and switching to the FASR branch, make sure you can run the "Water Tank" example:
+You will also need the [FASR branch of Fortis](https://github.com/cmu-soda/fortis-core/tree/FASR). After cloning and switching to the FASR branch, make sure you can run the "Water Tank" example using the `--stpa` flag:
 
-```json
+```
 % pwd
 /Users/sprocter/git/fortis-core/examples/water_tank
 % java -jar ../../out/artifacts/fortis_core_jar/fortis-core.jar robustness --stpa --tla-sys WaterTank.tla --cfg-sys WaterTank.cfg --tla-env WaterTankEnv.tla --cfg-env WaterTankEnv.cfg | tail -2 | head -1 | jq
@@ -57,9 +57,9 @@ You will also need the [FASR branch of Fortis](https://github.com/cmu-soda/forti
 
 #### Classifying Fortis Output
 
-You can now pipe the output from Fortis (using the `--stpa` flag) to the UCA Classifier:
+You can now pipe the output from Fortis to the UCA Classifier:
 
-```json
+```
 % pwd
 % java -jar ../../out/artifacts/fortis_core_jar/fortis-core.jar robustness --stpa --tla-sys WaterTank.tla --cfg-sys WaterTank.cfg --tla-env WaterTankEnv.tla --cfg-env WaterTankEnv.cfg | java -jar ~/git/fasr/UCAClassification_EditDistance/target/FASR-0.0.1-SNAPSHOT-jar-with-dependencies.jar | jq
 
