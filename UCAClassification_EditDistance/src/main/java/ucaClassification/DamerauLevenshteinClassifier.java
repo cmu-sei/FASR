@@ -82,7 +82,7 @@ public class DamerauLevenshteinClassifier {
 		System.out.println("Usage: java -jar fortis-core.jar robustness --stpa ... | java -jar fasr-classifier.jar");
 	}
 
-	public Collection<UnsafeControlAction> classifyFortisOutput(File jsonFile) {
+	public static Collection<UnsafeControlAction> classifyFortisOutput(File jsonFile) {
 		Collection<UnsafeControlAction> ret = null;
 		Scanner s = null;
 		try {
@@ -106,7 +106,7 @@ public class DamerauLevenshteinClassifier {
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
-				ret.add(classify(safe, unsafe, "##PLACEHOLDER##"));
+				ret.add(classify(safe, unsafe, "##INVARIANT-PLACEHOLDER##"));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -201,7 +201,7 @@ public class DamerauLevenshteinClassifier {
 	private static Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
 			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName) {
 		CG[i][j] = new LinkedList<UnsafeControlAction>();
-		String source = "##PLACEHOLDER##";
+		String source = "##SOURCE-PLACEHOLDER##";
 		Guideword guideword = null;
 		String controlAction = null;
 		List<String> context = null;
@@ -241,10 +241,9 @@ public class DamerauLevenshteinClassifier {
 				String correctAction = safeActions.get(i - 1);
 				String incorrectAction = unsafeActions.get(j - 1);
 				if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
-					// Not implemented pending discussion
-					controlAction = null; // Nullity prevents the UCA object from getting instantiated
-					context = null;
-					guideword = null;
+					controlAction = incorrectAction;
+					context = unsafeActions.subList(0, i - 1);
+					guideword = Guideword.Providing;
 				} else if (incorrectAction.equals(DELAY_ACTION)) {
 					controlAction = correctAction;
 					context = unsafeActions.subList(0, i - 1);
@@ -295,7 +294,7 @@ public class DamerauLevenshteinClassifier {
 	 * @param s The second string for comparison
 	 * @return The edit distance from p to s
 	 */
-	public int unrestrictedDamerauLevenshtein(List<String> p, List<String> s) {
+	public static int unrestrictedDamerauLevenshtein(List<String> p, List<String> s) {
 		int[][] C = new int[p.size() + 1][s.size() + 1];
 
 		// This gets the alphabet of the strings: it de-duplicates them by combining

@@ -40,13 +40,11 @@ import org.junit.jupiter.api.Test;
 
 class DamerauLevenshteinTests {
 
-	private static DamerauLevenshteinClassifier classifier;
-	private static String invariantName = "##PLACEHOLDER##";
-	private static String sourceName = "##PLACEHOLDER##";
+	private static String invariantName = "##INVARIANT-PLACEHOLDER##";
+	private static String sourceName = "##SOURCE-PLACEHOLDER##";
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		classifier = new DamerauLevenshteinClassifier();
 	}
 
 	@AfterAll
@@ -76,7 +74,7 @@ class DamerauLevenshteinTests {
 	 * 
 	 * | **Edit**      | **Correct** | **Incorrect** | **Guideword(s)**         | **Control Action** |
 	 * | ------------- | ----------- | ------------- | ------------------------ | ------------------ |
-	 * | Substitution  | Any         | Any           | ???                      | ???                |
+	 * | Substitution  | Any         | Any           | Providing                | Provided Action    |
 	 * | Substitution  | Any         | Delay         | Not Providing            | Removed action     |
 	 * | Substitution  | Delay       | Any           | Providing                | Additional action  |
 	 * | Transposition | Any         | Any           | Out of Order             | Incorrect action   |
@@ -98,7 +96,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -112,7 +110,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -130,7 +128,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -144,7 +142,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -152,14 +150,19 @@ class DamerauLevenshteinTests {
 	@Nested
 	public class SubstitutionTests {
 
-//		@Test
-//		void testSubstitutionGeneric() {
-//			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
-//			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOff", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
-//			var expected = Set.of(DamerauLevenshteinClassifier.Guideword.NotProviding, DamerauLevenshteinClassifier.Guideword.Providing);
-//			var actual = classifier.classify(safe, unsafe);
-//			assertEquals(expected, actual);
-//		}
+		@Test
+		void testSubstitutionGeneric() {
+			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
+			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOff", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+					"Sys.TurnPumpOff", // Control Action
+					Arrays.asList("Init"), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			assertEquals(expected, actual);
+		}
 
 		@Test
 		void testSubstitutionNotProviding() {
@@ -173,7 +176,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -187,7 +190,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -204,7 +207,7 @@ class DamerauLevenshteinTests {
 					Collections.emptyList(), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -218,7 +221,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -232,7 +235,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = classifier.classify(safe, unsafe, invariantName);
+			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -265,7 +268,7 @@ class DamerauLevenshteinTests {
 				Arrays.asList("TurnPumpOn", "Wait", "Wait", "TurnPumpOff"), // Context
 				invariantName// Violated Constraint
 		));
-		var actual = classifier.classifyFortisOutput(new File("src/test/resources/fortis-out.json"));
+		var actual = DamerauLevenshteinClassifier.classifyFortisOutput(new File("src/test/resources/fortis-out.json"));
 		assertEquals(expected, actual);
 	}
 
@@ -275,7 +278,7 @@ class DamerauLevenshteinTests {
 		var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 		var expected = "The unsafe trace is identical to the safe trace; there is no error to classify.";
 		IllegalArgumentException actual = assertThrows(IllegalArgumentException.class,
-				() -> classifier.classify(safe, unsafe, invariantName));
+				() -> DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName));
 		assertEquals(expected, actual.getMessage());
 	}
 
@@ -284,26 +287,26 @@ class DamerauLevenshteinTests {
 		var p = "ba";
 		var s = "acb";
 		assertEquals(2,
-				classifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
 
 		p = "ab";
 		s = "ba";
 		assertEquals(1,
-				classifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
 
 		p = "ab";
 		s = "acb";
 		assertEquals(1,
-				classifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
 
 		p = "wadr";
 		s = "sword";
 		assertEquals(3,
-				classifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
 
 		p = "kitten";
 		s = "smitten";
 		assertEquals(2,
-				classifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
 	}
 }
