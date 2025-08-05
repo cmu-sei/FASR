@@ -88,14 +88,11 @@ public class TraverseModel {
 			try {
 				this.modelURI  = URI.createFileURI(path);
 				modelResource = resources.getResource(modelURI  , true);
+                EcoreUtil.resolveAll(modelResource);
 			} catch (RuntimeException e) {
-				// this only works on Keaton's machine
-				// it is only here so I don't have to retype the path
-				this.modelURI  = URI.createFileURI("/Users/kehanna/GitRepos/fasr/TestUML/Diagrams/TestCameo.uml");
-				modelResource = resources.getResource(modelURI  , true);
+                System.err.println(e.getMessage());
+                return null;
 			}
-			
-			EcoreUtil.resolveAll(modelResource);
 			org.eclipse.uml2.uml.Package umlPackage = (org.eclipse.uml2.uml.Package) EcoreUtil.getObjectByType(modelResource.getContents(),UMLPackage.Literals.PACKAGE);
 			EcoreUtil.resolveAll(umlPackage);
 			return umlPackage;
@@ -174,7 +171,7 @@ public class TraverseModel {
 		public State getFirstState(StateMachine sm) {
 			// Get all states and find which one is transitioned to from InitialState
 			for(State s : getAllStatesFromStateMachine(sm)) {
-				for(Transition t : getTransitionsToState(s, true)) {
+				for(Transition t : getTransitionsToState(s, Boolean.TRUE)) {
 					// see if the state is being transitioned to from a Pseudostate
 					if(t.getSource() instanceof Pseudostate) {
 						// see if the Pseudostate is PseudostateKind.INITIAL
