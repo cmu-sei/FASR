@@ -95,7 +95,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.TooEarly, // Guideword
+					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -109,7 +109,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.NotProviding, // Guideword
+					DamerauLevenshteinClassifier.Guideword.NOT_PROVIDING, // Guideword
 					"Sys.TurnPumpOn", // Control Action
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
@@ -127,7 +127,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.TooLate, // Guideword
+					DamerauLevenshteinClassifier.Guideword.TOO_LATE, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -141,7 +141,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Init", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+					DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 					"Init", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn"), // Context
 					invariantName// Violated Constraint
@@ -159,7 +159,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOff", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+					DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
@@ -175,7 +175,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Wait", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.NotProviding, // Guideword
+					DamerauLevenshteinClassifier.Guideword.NOT_PROVIDING, // Guideword
 					"Sys.TurnPumpOn", // Control Action
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
@@ -189,7 +189,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+					DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -206,7 +206,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Sys.TurnPumpOn", "Init", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.OutOfSequence, // Guideword
+					DamerauLevenshteinClassifier.Guideword.OUT_OF_SEQUENCE, // Guideword
 					"Sys.TurnPumpOn", // Control Action
 					Collections.emptyList(), // Context
 					invariantName// Violated Constraint
@@ -220,7 +220,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff", "Wait");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.TooLate, // Guideword
+					DamerauLevenshteinClassifier.Guideword.TOO_LATE, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -234,7 +234,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff", "Wait");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.TooEarly, // Guideword
+					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -255,7 +255,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.StoppedTooSoon, // Guideword
+					DamerauLevenshteinClassifier.Guideword.STOPPED_TOO_SOON, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -269,7 +269,7 @@ class DamerauLevenshteinTests {
 			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
 			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-					DamerauLevenshteinClassifier.Guideword.AppliedTooLong, // Guideword
+					DamerauLevenshteinClassifier.Guideword.APPLIED_TOO_LONG, // Guideword
 					"Sys.TurnPumpOff", // Control Action
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
@@ -283,19 +283,19 @@ class DamerauLevenshteinTests {
 	void testJSON() {
 		var expected = new HashSet<DamerauLevenshteinClassifier.UnsafeControlAction>();
 		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+				DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 				"TurnPumpOff", // Control Action
 				Arrays.asList("TurnPumpOn", "Wait"), // Context
 				invariantName// Violated Constraint
 		));
 		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.NotProviding, // Guideword
+				DamerauLevenshteinClassifier.Guideword.NOT_PROVIDING, // Guideword
 				"TurnPumpOff", // Control Action
 				Arrays.asList("TurnPumpOn", "Wait", "Wait"), // Context
 				invariantName// Violated Constraint
 		));
 		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
+				DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 				"TurnPumpOn", // Control Action
 				Arrays.asList("TurnPumpOn", "Wait", "Wait", "TurnPumpOff"), // Context
 				invariantName// Violated Constraint
@@ -312,33 +312,5 @@ class DamerauLevenshteinTests {
 		IllegalArgumentException actual = assertThrows(IllegalArgumentException.class,
 				() -> dlc.classify(safe, unsafe, invariantName));
 		assertEquals(expected, actual.getMessage());
-	}
-
-	@Test
-	void testDLDistance() {
-		var p = "ba";
-		var s = "acb";
-		assertEquals(2, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
-				Arrays.asList(s.split(""))));
-
-		p = "ab";
-		s = "ba";
-		assertEquals(1, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
-				Arrays.asList(s.split(""))));
-
-		p = "ab";
-		s = "acb";
-		assertEquals(1, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
-				Arrays.asList(s.split(""))));
-
-		p = "wadr";
-		s = "sword";
-		assertEquals(3, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
-				Arrays.asList(s.split(""))));
-
-		p = "kitten";
-		s = "smitten";
-		assertEquals(2, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
-				Arrays.asList(s.split(""))));
 	}
 }

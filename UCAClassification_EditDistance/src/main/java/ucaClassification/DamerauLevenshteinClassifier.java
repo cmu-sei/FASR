@@ -47,33 +47,86 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * Takes pairs of traces -- one safe, one unsafe -- and creates Unsafe Control
+ * Actions. This partially automates the third step of the System Theoretic
+ * Process Analysis (STPA).
+ * 
+ * This classification is done using a modified version of the
+ * Damerau-Levenshtein edit distance calculation -- we map those the traces to
+ * strings, and the edits to the strings to STPA Guidewords classifying the
+ * unsafe behavior.
+ * 
+ * @author Sam Procter
+ */
 public class DamerauLevenshteinClassifier {
 
+	/**
+	 * STPA Guidewords -- essentially classifications of how a control action can be
+	 * unsafe
+	 */
 	public enum Guideword {
-		NotProviding, Providing, TooEarly, TooLate, OutOfSequence, StoppedTooSoon, AppliedTooLong
+		NOT_PROVIDING, PROVIDING, TOO_EARLY, TOO_LATE, OUT_OF_SEQUENCE, STOPPED_TOO_SOON, APPLIED_TOO_LONG
 	}
 
+	/**
+	 * These five elements describe an Unsafe Control Action -- see page 37 of the
+	 * STPA Handbook
+	 */
 	public record UnsafeControlAction(String source, Guideword guideword, String controlAction, List<String> context,
 			String violatedConstraint) {
 	};
 
+	/**
+	 * Activities link two actions that start and end something. This lets us
+	 * determine if the activity is stopped too soon or done for too long, eg:
+	 * 
+	 * <ul>
+	 * <li>Activity: Stop Car
+	 * <li>Start: Apply Brakes
+	 * <li>End: Release Brakes
+	 * </ul>
+	 */
 	public record Activity(String start, String end) {
 	};
 
+	/**
+	 * Maps names to activity objects so we can identify Too Soon / Too Long unsafe
+	 * control actions.
+	 */
+	private Map<String, Activity> activities;
+
+	/**
+	 * STPA's model of time isn't really wall-clock time, but it's more than
+	 * ordering. Several guidewords (Too Early, Too Late, Stopped too Soon, Applied
+	 * too Long) have a concept of "too much" or "too little" time -- Delay Actions
+	 * signify some amount of time passing, so we can compare safe and unsafe traces
+	 * where the amount of time passing differs, and thus identify those guidewords.
+	 */
 	private static final String DELAY_ACTION = "Wait";
 
 	private static String source = "##SOURCE-PLACEHOLDER##";
 
+	/**
+	 * The Damerau-Levenshtein algorithm recognizes these four types of atomic
+	 * string edits.
+	 */
 	private enum Edit {
-		add, delete, substitute, transpose
+		ADD, DELETE, SUBSTITUTE, TRANSPOSE
 	}
 
-	private Map<String, Activity> activities;
-
+	/**
+	 * Default constructor -- no activities.
+	 */
 	public DamerauLevenshteinClassifier() {
 		this(Collections.emptyMap());
 	}
 
+	/**
+	 * Creates an instance with the supplied activity mapping
+	 * 
+	 * @param activities Activities that may be encountered in the traces
+	 */
 	public DamerauLevenshteinClassifier(Map<String, Activity> activities) {
 		this.activities = activities;
 	}
@@ -204,13 +257,13 @@ public class DamerauLevenshteinClassifier {
 				}
 				Edit edit = null;
 				if (C[i][j] == delScore) {
-					edit = Edit.delete;
+					edit = Edit.DELETE;
 				} else if (C[i][j] == addScore) {
-					edit = Edit.add;
+					edit = Edit.ADD;
 				} else if (C[i][j] == subScore) {
-					edit = Edit.substitute;
+					edit = Edit.SUBSTITUTE;
 				} else if (transScore.isPresent() && C[i][j] == transScore.get()) {
-					edit = Edit.transpose;
+					edit = Edit.TRANSPOSE;
 				}
 				Optional<UnsafeControlAction> newUCA = classifyUCA(safe, unsafe, edit, CG, i, j, d, iPrime, jPrime,
 						invariantName);
@@ -224,6 +277,18 @@ public class DamerauLevenshteinClassifier {
 		return CG[safe.size()][unsafe.size()].getFirst();
 	}
 
+	/**
+	 * Checks to see if the traces can be classified using the "Applied Too Long" or
+	 * "Stopped Too Soon" guidewords. This relies on the
+	 * {@link DamerauLevenshteinClassifier#activities} field.
+	 * 
+	 * @param safe          A safe trace of system behaviors
+	 * @param unsafe        An unsafe trace of system behaviors
+	 * @param invariantName The name of the safety property that is violated by the
+	 *                      unsafe trace but not the safe trace.
+	 * @return The UnsafeControlAction associated with these traces, or empty if
+	 *         neither "Applied Too Long" or "Stopped Too Soon" apply
+	 */
 	private Optional<UnsafeControlAction> checkTooLongOrShort(List<String> safe, List<String> unsafe,
 			String invariantName) {
 		var safeActivityDurations = getActivityDurations(safe);
@@ -242,10 +307,10 @@ public class DamerauLevenshteinClassifier {
 					prefix = safe.subList(0, diffIdx);
 				}
 				if (unsafeActivityDurations.get(activityName) < safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.StoppedTooSoon,
+					return Optional.of(new UnsafeControlAction(source, Guideword.STOPPED_TOO_SOON,
 							activities.get(activityName).end(), prefix, invariantName));
 				} else if (unsafeActivityDurations.get(activityName) > safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.AppliedTooLong,
+					return Optional.of(new UnsafeControlAction(source, Guideword.APPLIED_TOO_LONG,
 							activities.get(activityName).end(), prefix, invariantName));
 				}
 			}
@@ -253,12 +318,20 @@ public class DamerauLevenshteinClassifier {
 		return Optional.empty();
 	}
 
+	/**
+	 * This determines the "duration" (number of delay actions) of each activity in
+	 * the provided trace
+	 * 
+	 * @param actions A trace of system behavior
+	 * @return A mapping from activity name -> number of delay actions between the start and stop action of the named activity
+	 */
 	private Map<String, Integer> getActivityDurations(List<String> actions) {
 		Map<String, Integer> ret = new HashMap<>();
 		for (String activityName : activities.keySet()) {
 			Activity a = activities.get(activityName);
 			int startPos = actions.indexOf(a.start());
-			int endPos = actions.indexOf(a.end());
+			// Make sure the end comes after the start
+			int endPos = actions.subList(startPos, actions.size()).indexOf(a.end());
 			if (startPos >= 0 && endPos >= 0 && startPos < endPos) {
 				int numWaits = Collections.frequency(actions.subList(startPos, endPos), DELAY_ACTION);
 				ret.put(activityName, numWaits);
@@ -273,19 +346,19 @@ public class DamerauLevenshteinClassifier {
 		Guideword guideword = null;
 		String controlAction = null;
 		List<String> context = null;
-		if (edit == Edit.delete) {
+		if (edit == Edit.DELETE) {
 			CG[i][j].addAll(CG[i - 1][j]);
 			String deletedAction = safeActions.get(i - 1);
 			if (deletedAction.equals(DELAY_ACTION)) {
 				controlAction = unsafeActions.get(j);
 				context = unsafeActions.subList(0, i - 1);
-				guideword = Guideword.TooEarly;
+				guideword = Guideword.TOO_EARLY;
 			} else {
 				controlAction = deletedAction;
 				context = unsafeActions.subList(0, i - 1);
-				guideword = Guideword.NotProviding;
+				guideword = Guideword.NOT_PROVIDING;
 			}
-		} else if (edit == Edit.add) {
+		} else if (edit == Edit.ADD) {
 			CG[i][j].addAll(CG[i][j - 1]);
 			String addedAction = unsafeActions.get(j - 1);
 			if (addedAction.equals(DELAY_ACTION)) {
@@ -297,13 +370,13 @@ public class DamerauLevenshteinClassifier {
 					controlAction = null;
 				}
 				context = unsafeActions.subList(0, i);
-				guideword = Guideword.TooLate;
+				guideword = Guideword.TOO_LATE;
 			} else {
 				controlAction = addedAction;
 				context = unsafeActions.subList(0, i);
-				guideword = Guideword.Providing;
+				guideword = Guideword.PROVIDING;
 			}
-		} else if (edit == Edit.substitute) {
+		} else if (edit == Edit.SUBSTITUTE) {
 			CG[i][j].addAll(CG[i - 1][j - 1]);
 			if (d == 1) {
 				String correctAction = safeActions.get(i - 1);
@@ -311,33 +384,33 @@ public class DamerauLevenshteinClassifier {
 				if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
 					controlAction = incorrectAction;
 					context = unsafeActions.subList(0, i - 1);
-					guideword = Guideword.Providing;
+					guideword = Guideword.PROVIDING;
 				} else if (incorrectAction.equals(DELAY_ACTION)) {
 					controlAction = correctAction;
 					context = unsafeActions.subList(0, i - 1);
-					guideword = Guideword.NotProviding;
+					guideword = Guideword.NOT_PROVIDING;
 				} else if (correctAction.equals(DELAY_ACTION)) {
 					controlAction = incorrectAction;
 					context = unsafeActions.subList(0, i - 1);
-					guideword = Guideword.Providing;
+					guideword = Guideword.PROVIDING;
 				}
 			}
-		} else if (edit == Edit.transpose) {
+		} else if (edit == Edit.TRANSPOSE) {
 			CG[i][j].addAll(CG[iPrime - 1][jPrime - 1]);
 			String correctAction = safeActions.get(iPrime - 1);
 			String incorrectAction = unsafeActions.get(jPrime - 1);
 			if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
 				controlAction = incorrectAction;
 				context = unsafeActions.subList(0, i - 2);
-				guideword = Guideword.OutOfSequence;
+				guideword = Guideword.OUT_OF_SEQUENCE;
 			} else if (incorrectAction.equals(DELAY_ACTION)) {
 				controlAction = correctAction;
 				context = safeActions.subList(0, iPrime - 1);
-				guideword = Guideword.TooLate;
+				guideword = Guideword.TOO_LATE;
 			} else if (correctAction.equals(DELAY_ACTION)) {
 				controlAction = incorrectAction;
 				context = unsafeActions.subList(0, iPrime - 1);
-				guideword = Guideword.TooEarly;
+				guideword = Guideword.TOO_EARLY;
 			}
 		}
 		if (guideword == null || controlAction == null || context == null) {
@@ -345,71 +418,5 @@ public class DamerauLevenshteinClassifier {
 		} else {
 			return Optional.of(new UnsafeControlAction(source, guideword, controlAction, context, invariantName));
 		}
-	}
-
-	/**
-	 * Calculates the unrestricted Damerau-Levenshtein distance
-	 * 
-	 * As close as possible to a direct implementation of Algorithm 2 from page 84
-	 * of [1], except it uses lists of strings as inputs (where each string is
-	 * treated as a token) instead of raw strings (with characters as tokens).
-	 * 
-	 * [1]: Boytsov, Leonid. 2011. “Indexing Methods for Approximate Dictionary
-	 * Searching: Comparative Analysis.” ACM J. Exp. Algorithmics 16
-	 * (May):1.1:1.1-1.1:1.91. https://doi.org/10.1145/1963190.1963191.
-	 * 
-	 * @param p The first string for comparison
-	 * @param s The second string for comparison
-	 * @return The edit distance from p to s
-	 */
-	public static int unrestrictedDamerauLevenshtein(List<String> p, List<String> s) {
-		int[][] C = new int[p.size() + 1][s.size() + 1];
-
-		// This gets the alphabet of the strings: it de-duplicates them by combining
-		// them
-		// into a set, then puts them in a list since we need stable indices of elements
-		List<String> Σ = Set.copyOf(Stream.concat(p.stream(), s.stream()).toList()).stream()
-				.collect(Collectors.toList());
-
-		int[] CP = new int[Σ.size() + 1];
-
-		int iPrime, jPrime, CS;
-
-		for (int i = 0; i <= p.size(); i++) {
-			C[i][0] = i;
-		}
-
-		for (int j = 0; j <= s.size(); j++) {
-			C[0][j] = j;
-		}
-
-		for (int i = 1; i <= Σ.size(); i++) {
-			CP[i] = 0;
-		}
-
-		for (int i = 1; i <= p.size(); i++) {
-			CS = 0;
-			for (int j = 1; j <= s.size(); j++) {
-				int d;
-				if (p.get(i - 1).equals(s.get(j - 1))) {
-					d = 0;
-				} else {
-					d = 1;
-				}
-				C[i][j] = Math.min(C[i - 1][j] + 1, Math.min(C[i][j - 1] + 1, C[i - 1][j - 1] + d));
-				// CP[c] stores the largest index i' < i such that p[i'] = c.
-				// CS stores the largest index j' < j such that s[j'] = p[i]
-				iPrime = CP[Σ.indexOf(s.get(j - 1))];
-				jPrime = CS;
-				if (iPrime > 0 && jPrime > 0) {
-					C[i][j] = Math.min(C[i][j], C[iPrime - 1][jPrime - 1] + (i - iPrime) + (j - jPrime) - 1);
-				}
-				if (p.get(i - 1).equals(s.get(j - 1))) {
-					CS = j;
-				}
-			}
-			CP[Σ.indexOf(p.get(i - 1))] = i;
-		}
-		return C[p.size()][s.size()];
 	}
 }
