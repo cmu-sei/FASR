@@ -29,10 +29,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -54,20 +57,35 @@ public class DamerauLevenshteinClassifier {
 			String violatedConstraint) {
 	};
 
+	public record Activity(String start, String end) {
+	};
+
 	private static final String DELAY_ACTION = "Wait";
+
+	private static String source = "##SOURCE-PLACEHOLDER##";
 
 	private enum Edit {
 		add, delete, substitute, transpose
 	}
-	
+
+	private Map<String, Activity> activities;
+
+	public DamerauLevenshteinClassifier() {
+		this(Collections.emptyMap());
+	}
+
+	public DamerauLevenshteinClassifier(Map<String, Activity> activities) {
+		this.activities = activities;
+	}
+
 	public static void main(String[] args) {
 		BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+		DamerauLevenshteinClassifier dlc = new DamerauLevenshteinClassifier(Collections.emptyMap());
 		try {
 			String x = f.readLine();
-			while(x != null)
-			{
-				if(x.startsWith("[{\"goodTrace\":[\"")) {
-					Collection<UnsafeControlAction> classifierOutput = classifyFortisOutput(x);
+			while (x != null) {
+				if (x.startsWith("[{\"goodTrace\":[\"")) {
+					Collection<UnsafeControlAction> classifierOutput = dlc.classifyFortisOutput(x);
 					ObjectMapper mapper = new ObjectMapper();
 					System.out.print(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(classifierOutput));
 					return;
@@ -82,7 +100,7 @@ public class DamerauLevenshteinClassifier {
 		System.out.println("Usage: java -jar fortis-core.jar robustness --stpa ... | java -jar fasr-classifier.jar");
 	}
 
-	public static Collection<UnsafeControlAction> classifyFortisOutput(File jsonFile) {
+	public Collection<UnsafeControlAction> classifyFortisOutput(File jsonFile) {
 		Collection<UnsafeControlAction> ret = null;
 		Scanner s = null;
 		try {
@@ -96,13 +114,13 @@ public class DamerauLevenshteinClassifier {
 		}
 		return ret;
 	}
-	
-	public static Collection<UnsafeControlAction> classifyFortisOutput(String s) {
+
+	public Collection<UnsafeControlAction> classifyFortisOutput(String s) {
 		Collection<UnsafeControlAction> ret = new HashSet<>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			ArrayNode root = (ArrayNode) mapper.readTree(s);
-			for(JsonNode jsonPair : root) {
+			for (JsonNode jsonPair : root) {
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
@@ -115,10 +133,18 @@ public class DamerauLevenshteinClassifier {
 		return ret;
 	}
 
-	public static UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName) {
+	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName) {
 		if (safe.equals(unsafe)) {
 			throw new IllegalArgumentException(
 					"The unsafe trace is identical to the safe trace; there is no error to classify.");
+		}
+
+		// We don't use DamerauLevenshtein at all to check if the guideword "Applied Too
+		// Long" or "Stopped too Soon" applies. They're checked using a different
+		// algorithm, so we check for that / return early if possible.
+		Optional<UnsafeControlAction> tooLongOrShort = checkTooLongOrShort(safe, unsafe, invariantName);
+		if (tooLongOrShort.isPresent()) {
+			return tooLongOrShort.get();
 		}
 
 		int[][] C = new int[safe.size() + 1][unsafe.size() + 1];
@@ -127,8 +153,8 @@ public class DamerauLevenshteinClassifier {
 		Deque<UnsafeControlAction>[][] CG = new LinkedList[safe.size() + 1][unsafe.size() + 1];
 
 		// This gets the alphabet of the strings: it de-duplicates them by combining
-		// them
-		// into a set, then puts them in a list since we need stable indices of elements
+		// them into a set, then puts them in a list since we need stable indices of
+		// elements
 		List<String> Σ = Set.copyOf(Stream.concat(safe.stream(), unsafe.stream()).toList()).stream()
 				.collect(Collectors.toList());
 
@@ -198,10 +224,52 @@ public class DamerauLevenshteinClassifier {
 		return CG[safe.size()][unsafe.size()].getFirst();
 	}
 
-	private static Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
+	private Optional<UnsafeControlAction> checkTooLongOrShort(List<String> safe, List<String> unsafe,
+			String invariantName) {
+		var safeActivityDurations = getActivityDurations(safe);
+		if (!safeActivityDurations.isEmpty()) {
+			var unsafeActivityDurations = getActivityDurations(unsafe);
+			for (String activityName : safeActivityDurations.keySet()) {
+				if (!unsafeActivityDurations.containsKey(activityName)) {
+					continue;
+				}
+				List<String> prefix = Collections.emptyList();
+				if (safeActivityDurations != unsafeActivityDurations) {
+					int diffIdx = 0;
+					while (safe.get(diffIdx).equals(unsafe.get(diffIdx))) {
+						diffIdx++;
+					}
+					prefix = safe.subList(0, diffIdx);
+				}
+				if (unsafeActivityDurations.get(activityName) < safeActivityDurations.get(activityName)) {
+					return Optional.of(new UnsafeControlAction(source, Guideword.StoppedTooSoon,
+							activities.get(activityName).end(), prefix, invariantName));
+				} else if (unsafeActivityDurations.get(activityName) > safeActivityDurations.get(activityName)) {
+					return Optional.of(new UnsafeControlAction(source, Guideword.AppliedTooLong,
+							activities.get(activityName).end(), prefix, invariantName));
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	private Map<String, Integer> getActivityDurations(List<String> actions) {
+		Map<String, Integer> ret = new HashMap<>();
+		for (String activityName : activities.keySet()) {
+			Activity a = activities.get(activityName);
+			int startPos = actions.indexOf(a.start());
+			int endPos = actions.indexOf(a.end());
+			if (startPos >= 0 && endPos >= 0 && startPos < endPos) {
+				int numWaits = Collections.frequency(actions.subList(startPos, endPos), DELAY_ACTION);
+				ret.put(activityName, numWaits);
+			}
+		}
+		return ret;
+	}
+
+	private Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
 			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName) {
 		CG[i][j] = new LinkedList<UnsafeControlAction>();
-		String source = "##SOURCE-PLACEHOLDER##";
 		Guideword guideword = null;
 		String controlAction = null;
 		List<String> context = null;

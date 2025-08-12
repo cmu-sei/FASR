@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -38,10 +39,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import ucaClassification.DamerauLevenshteinClassifier.Activity;
+
 class DamerauLevenshteinTests {
 
 	private static String invariantName = "##INVARIANT-PLACEHOLDER##";
 	private static String sourceName = "##SOURCE-PLACEHOLDER##";
+	private static DamerauLevenshteinClassifier dlc = new DamerauLevenshteinClassifier();
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -96,7 +100,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -110,7 +114,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -128,7 +132,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -142,7 +146,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -160,7 +164,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -176,7 +180,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -190,7 +194,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -207,7 +211,7 @@ class DamerauLevenshteinTests {
 					Collections.emptyList(), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -221,7 +225,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 
@@ -235,20 +239,48 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName);
+			assertEquals(expected, actual);
+		}
+	}
+
+	@Nested
+	public class DurationTests {
+		private static Activity fillTank = new Activity("Sys.TurnPumpOn", "Sys.TurnPumpOff");
+		private static DamerauLevenshteinClassifier dlc = new DamerauLevenshteinClassifier(
+				Map.of("FillTank", fillTank));
+
+		@Test
+		void testStoppedTooSoon() {
+			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
+			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.StoppedTooSoon, // Guideword
+					"Sys.TurnPumpOff", // Control Action
+					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName);
+			assertEquals(expected, actual);
+		}
+
+		@Test
+		void testAppliedTooLong() {
+			var safe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Sys.TurnPumpOff");
+			var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.AppliedTooLong, // Guideword
+					"Sys.TurnPumpOff", // Control Action
+					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName);
 			assertEquals(expected, actual);
 		}
 	}
 
 	@Test
 	void testJSON() {
-//		var expected = new HashSet<DamerauLevenshteinClassifier.UnsafeControlAction>();
-//		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-//				DamerauLevenshteinClassifier.Guideword.TooEarly, // Guideword
-//				"Sys.TurnPumpOff", // Control Action
-//				Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
-//				invariantName// Violated Constraint
-//		));
 		var expected = new HashSet<DamerauLevenshteinClassifier.UnsafeControlAction>();
 		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 				DamerauLevenshteinClassifier.Guideword.Providing, // Guideword
@@ -268,7 +300,7 @@ class DamerauLevenshteinTests {
 				Arrays.asList("TurnPumpOn", "Wait", "Wait", "TurnPumpOff"), // Context
 				invariantName// Violated Constraint
 		));
-		var actual = DamerauLevenshteinClassifier.classifyFortisOutput(new File("src/test/resources/fortis-out.json"));
+		var actual = dlc.classifyFortisOutput(new File("src/test/resources/fortis-out.json"));
 		assertEquals(expected, actual);
 	}
 
@@ -278,7 +310,7 @@ class DamerauLevenshteinTests {
 		var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 		var expected = "The unsafe trace is identical to the safe trace; there is no error to classify.";
 		IllegalArgumentException actual = assertThrows(IllegalArgumentException.class,
-				() -> DamerauLevenshteinClassifier.classify(safe, unsafe, invariantName));
+				() -> dlc.classify(safe, unsafe, invariantName));
 		assertEquals(expected, actual.getMessage());
 	}
 
@@ -286,27 +318,27 @@ class DamerauLevenshteinTests {
 	void testDLDistance() {
 		var p = "ba";
 		var s = "acb";
-		assertEquals(2,
-				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+		assertEquals(2, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
+				Arrays.asList(s.split(""))));
 
 		p = "ab";
 		s = "ba";
-		assertEquals(1,
-				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+		assertEquals(1, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
+				Arrays.asList(s.split(""))));
 
 		p = "ab";
 		s = "acb";
-		assertEquals(1,
-				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+		assertEquals(1, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
+				Arrays.asList(s.split(""))));
 
 		p = "wadr";
 		s = "sword";
-		assertEquals(3,
-				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+		assertEquals(3, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
+				Arrays.asList(s.split(""))));
 
 		p = "kitten";
 		s = "smitten";
-		assertEquals(2,
-				DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")), Arrays.asList(s.split(""))));
+		assertEquals(2, DamerauLevenshteinClassifier.unrestrictedDamerauLevenshtein(Arrays.asList(p.split("")),
+				Arrays.asList(s.split(""))));
 	}
 }
