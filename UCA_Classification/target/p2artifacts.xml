@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='osgi.bundle' id='UCA_Classification' version='0.0.1.202508181357'>
+    <properties size='9'>
+      <property name='artifact.size' value='21386'/>
+      <property name='download.size' value='21386'/>
+      <property name='download.checksum.sha-512' value='8f366b6a0d2b2dbcde6c4c4eb87903374b45963844249851d7d637aa817687a65701eaa489c8d5fefda275a33fbc22b0b40b7542a7c6f06f947b488c39e698c6'/>
+      <property name='download.checksum.sha-1' value='9e6dc77373717cd9d85fc0d40b410f60e498e3f5'/>
+      <property name='download.checksum.sha-256' value='b0b895459390f92f78028e913045da28be048d9b1648a8dfd1c27e77c4266721'/>
+      <property name='maven-groupId' value='org.cmu'/>
+      <property name='maven-artifactId' value='UCA_Classification'/>
+      <property name='maven-version' value='0.0.1-SNAPSHOT'/>
+      <property name='maven-type' value='eclipse-plugin'/>
+    </properties>
+  </artifact>
+</artifacts>

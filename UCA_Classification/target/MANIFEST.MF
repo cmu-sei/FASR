@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: UCA_Classification
+Bundle-SymbolicName: UCA_Classification
+Bundle-Version: 0.0.1.202508181357
+Export-Package: ucaClassification
+Automatic-Module-Name: UCA.Classification
+Require-Bundle: org.eclipse.swt,org.eclipse.jface,com.fasterxml.jackson.
+ core.jackson-databind,com.fasterxml.jackson.core.jackson-core,com.faste
+ rxml.jackson.core.jackson-annotations,org.junit,junit-jupiter-api
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+
