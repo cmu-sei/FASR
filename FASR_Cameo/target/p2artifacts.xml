@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='osgi.bundle' id='fasr_cameo' version='0.0.1.202508181357'>
+    <properties size='9'>
+      <property name='artifact.size' value='10744'/>
+      <property name='download.size' value='10744'/>
+      <property name='download.checksum.sha-512' value='a6e5411161f726ccc81b6404da29eaba4fc69d74cb64695f6f7148feca4583ca1adc444123e845af4ca490824bb75d08ffeacb87ad56711327fd0f727a162357'/>
+      <property name='download.checksum.sha-1' value='99a05d5e16246fd6be006c3519a3adbae77d2532'/>
+      <property name='download.checksum.sha-256' value='8272897e79e84004539a9353e0c1a0fb50ea097abf1418302fdfe4fadc824bd7'/>
+      <property name='maven-groupId' value='org.cmu'/>
+      <property name='maven-artifactId' value='fasr_cameo'/>
+      <property name='maven-version' value='0.0.1-SNAPSHOT'/>
+      <property name='maven-type' value='eclipse-plugin'/>
+    </properties>
+  </artifact>
+</artifacts>

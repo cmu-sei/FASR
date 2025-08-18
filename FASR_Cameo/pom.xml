@@ -1,47 +1,64 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-    <artifactId>FASR_Cameo</artifactId>
-    <name>Connecting Cameo to FORTIS</name>
-  <version>0.0.1-SNAPSHOT</version>
-    <parent>
-        <groupId>org.cmu</groupId>
-        <artifactId>fasr-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-  <dependencies>
-  	    <dependency>
-    	<groupId>org.eclipse.emf</groupId>
-    	<artifactId>org.eclipse.emf.ecore</artifactId>
-    	<version>2.39.0</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.eclipse.emf</groupId>
-    	<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-    	<version>2.39.0</version>
-    </dependency>
-  	<!-- https://mvnrepository.com/artifact/org.eclipse.uml2/org.eclipse.uml2.uml -->
-	<dependency>
-    	<groupId>org.eclipse.uml2</groupId>
-    	<artifactId>org.eclipse.uml2.uml</artifactId>
-    	<version>3.1.0.v201006071150</version>
-	</dependency>
-  	<dependency>
-    	<groupId>org.eclipse.uml2</groupId>
-    	<artifactId>org.eclipse.uml2.uml.resources</artifactId>
-    	<version>3.1.0.v201005031530</version>
-	</dependency>
-  	<dependency>
-  		<groupId>org.cmu</groupId>
-  		<artifactId>FASR</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
-  <repositories>
-  <repository>
-    <id>eclipse</id>
-    <name>Eclipse UML2 Repository</name>
-    <url>https://download.eclipse.org/modeling/mdt/uml2/updates/releases/</url>
-  </repository>
-</repositories>
+<!-- /**
+ * FASR Source Code
+ * 
+ * Copyright 2025 Carnegie Mellon University.
+ * 
+ * NO WARRANTY. THIS CARNEGIE MELLON UNIVERSITY AND SOFTWARE ENGINEERING
+ * INSTITUTE MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. CARNEGIE MELLON 
+ * UNIVERSITY MAKES NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS
+ * TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE
+ * OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE 
+ * MATERIAL. CARNEGIE MELLON UNIVERSITY DOES NOT MAKE ANY WARRANTY OF ANY KIND
+ * WITH RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+ * 
+ * Licensed under a MIT (SEI)-style license, please see license.txt or contact
+ * permission@sei.cmu.edu for full terms.
+ * 
+ * [DISTRIBUTION STATEMENT A] This material has been approved for public 
+ * release and unlimited distribution.  Please see Copyright notice for non-US
+ * Government use and distribution.
+ * 
+ * DM25-0946
+ */-->
 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>fasr_cameo</artifactId>
+    <name>Connecting Cameo to FORTIS</name>
+    <version>0.0.1-SNAPSHOT</version>
+
+     <packaging>eclipse-plugin</packaging>
+
+   <parent>
+        <groupId>org.cmu</groupId>
+        <artifactId>fasr_parent</artifactId>
+        <version>1.0</version>
+    </parent>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.emf</groupId>-->
+<!--            <artifactId>org.eclipse.emf.ecore</artifactId>-->
+<!--            <version>2.39.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.emf</groupId>-->
+<!--            <artifactId>org.eclipse.emf.ecore.xmi</artifactId>-->
+<!--            <version>2.39.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.uml2</groupId>-->
+<!--            <artifactId>org.eclipse.uml2.uml</artifactId>-->
+<!--            <version>3.1.0.v201006071150</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.uml2</groupId>-->
+<!--            <artifactId>org.eclipse.uml2.uml.resources</artifactId>-->
+<!--            <version>3.1.0.v201005031530</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.cmu</groupId>-->
+<!--            <artifactId>FASR</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
 </project>
