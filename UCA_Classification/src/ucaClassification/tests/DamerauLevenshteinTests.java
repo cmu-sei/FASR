@@ -39,7 +39,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+<<<<<<< HEAD:UCA_Classification/src/ucaClassification/tests/DamerauLevenshteinTests.java
 import ucaClassification.DamerauLevenshteinClassifier;
+=======
+>>>>>>> db0ddff40b1aee59e84f9e5836b10e8c0113a1b7:UCAClassification_EditDistance/src/test/java/ucaClassification/DamerauLevenshteinTests.java
 import ucaClassification.DamerauLevenshteinClassifier.Activity;
 
 class DamerauLevenshteinTests {
@@ -301,7 +304,11 @@ class DamerauLevenshteinTests {
 				Arrays.asList("TurnPumpOn", "Wait", "Wait", "TurnPumpOff"), // Context
 				invariantName// Violated Constraint
 		));
+<<<<<<< HEAD:UCA_Classification/src/ucaClassification/tests/DamerauLevenshteinTests.java
 		var actual = dlc.classifyFortisOutput(new File("resources/fortis-out.json"));
+=======
+		var actual = dlc.classifyFortisOutput(new File("src/test/resources/fortis-out.json"));
+>>>>>>> db0ddff40b1aee59e84f9e5836b10e8c0113a1b7:UCAClassification_EditDistance/src/test/java/ucaClassification/DamerauLevenshteinTests.java
 		assertEquals(expected, actual);
 	}
 
@@ -314,4 +321,8 @@ class DamerauLevenshteinTests {
 				() -> dlc.classify(safe, unsafe, invariantName));
 		assertEquals(expected, actual.getMessage());
 	}
+<<<<<<< HEAD:UCA_Classification/src/ucaClassification/tests/DamerauLevenshteinTests.java
 }
+=======
+}
+>>>>>>> db0ddff40b1aee59e84f9e5836b10e8c0113a1b7:UCAClassification_EditDistance/src/test/java/ucaClassification/DamerauLevenshteinTests.java
