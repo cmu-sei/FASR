@@ -21,7 +21,7 @@
  * DM25-0946
  */
 
-package uca_classification.test;
+package uca_classification.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
