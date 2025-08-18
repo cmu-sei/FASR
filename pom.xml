@@ -87,19 +87,6 @@
                         </execution>
                     </executions>
                 </plugin>
-<!--                <plugin>-->
-<!--                    <groupId>com.ruleoftech</groupId>-->
-<!--                    <artifactId>markdown-page-generator-plugin</artifactId>-->
-<!--                    <version>2.4.2</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <phase>process-resources</phase>-->
-<!--                            <goals>-->
-<!--                                <goal>generate</goal>-->
-<!--                            </goals>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>
@@ -110,10 +97,10 @@
             <url>${eclipse.repo.url}</url>
             <layout>p2</layout>
         </repository>
-        <repository>
-        	<id>orbit-release</id>
-        <layout>p2</layout>
-        <url>https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0</url>
+            <repository>
+        	    <id>orbit-release</id>
+            <layout>p2</layout>
+            <url>https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0</url>
         </repository>
     </repositories>
 
@@ -124,7 +111,6 @@
     <modules>
         <module>fasr_cameo</module>
         <module>UCA_Classification</module>
-<!--        <module>UCAClassification_EditDistance</module>-->
     </modules>
 
 </project>
