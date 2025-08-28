@@ -96,6 +96,7 @@ public class TraverseModel {
 			}
 			Package umlPackage = (Package) EcoreUtil.getObjectByType(modelResource.getContents(),UMLPackage.Literals.PACKAGE);
 			EcoreUtil.resolveAll(umlPackage);
+			this.model = umlPackage;
 			return umlPackage;
 		}
 		
@@ -107,6 +108,9 @@ public class TraverseModel {
 		 * @return		a list of state machines
 		 */
 		public EList<BasicEList<Behavior>> getDiagrams(PackageableElement p) {
+			if(p == null) {
+				p = this.model;
+			}
 			EList<BasicEList<Behavior>> result = new BasicEList<BasicEList<Behavior>>();
 			BasicEList<Behavior> machineList = new BasicEList<Behavior>();
 			BasicEList<Behavior> environmentList = new BasicEList<Behavior>();
@@ -161,6 +165,24 @@ public class TraverseModel {
 				}
 			}
 			return result;
+		}
+		
+		public Transition getFirstTransition(StateMachine sm) {
+			for(State s : getAllStatesFromStateMachine(sm)) {
+				for(Transition t : getTransitionsToState(s, Boolean.TRUE)) {
+					// see if the state is being transitioned to from a Pseudostate
+					if(t.getSource() instanceof Pseudostate) {
+						// see if the Pseudostate is PseudostateKind.INITIAL
+						if(((Pseudostate) t.getSource()).getKind() == PseudostateKind.get("initial")){
+							return t;
+						}
+						
+						System.out.println(((Pseudostate) t.getSource()).getKind().getValue());
+					}
+				}
+			}
+			System.out.println("Initial state not found!");
+			return null;
 		}
 		
 		/*

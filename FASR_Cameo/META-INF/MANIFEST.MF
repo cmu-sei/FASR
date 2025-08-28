@@ -11,4 +11,5 @@ Require-Bundle: org.eclipse.uml2;bundle-version="5.5.3",
  org.junit,
  org.eclipse.emf.common,
  org.eclipse.core.resources;bundle-version="3.22.100",
- UCA_Classification;bundle-version="0.0.1"
+ UCA_Classification;bundle-version="0.0.1",
+ junit-jupiter-api
