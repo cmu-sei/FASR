@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:p2="http://www.eclipse.org/oomph/p2/1.0"
+    xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
+    name="FASR"
+    id="org.cmu_sei.fasr">
+
+    <setup:Description>
+        Install IDE features (EGit, m2e) and register Orbit 4.36.0,
+        clone cmu-sei/FASR (branch add-sysml-generation), then import projects.
+    </setup:Description>
+
+    <setup:SetupTask xsi:type="p2:P2Task" label="Install Git + Maven tooling">
+        <p2:repositories url="https://download.eclipse.org/releases/latest" />
+        <p2:requirements name="org.eclipse.egit.feature.group" />
+        <p2:requirements name="org.eclipse.m2e.feature.feature.group" />
+    </setup:SetupTask>
+
+    <setup:SetupTask xsi:type="p2:P2Task" label="Add Orbit 4.36.0">
+        <p2:repositories
+            url="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0" />
+
+    </setup:SetupTask>
+
+    <!-- Clone the repo and checkout the branch -->
+    <setup:SetupTask
+        xsi:type="git:CloneTask"
+        id="fasr.clone"
+        remoteURI="https://github.com/cmu-sei/FASR.git"
+        checkoutBranch="add-sysml-generation"
+        location="${workspace.location}/FASR" />
+
+    <!-- Import discovered Eclipse/Maven/Gradle projects -->
+    <setup:SetupTask xsi:type="projects:ImportProjectsTask" label="Import projects">
+        <projects:sourceLocators
+            xsi:type="projects:SourceLocator"
+            rootFolder="${workspace.location}/FASR" />
+    </setup:SetupTask>
+
+</setup:Project>
