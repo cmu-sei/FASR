@@ -4,6 +4,18 @@ This repository holds code to support the partial automation of the [System Theo
 
 ## Building
 
+### Setting Up Eclipse Workspace
+
+1. Open Eclipse Installer and install 2025-06
+2. Open your workspace
+3. Right click in the Package Explorer and select Import
+4. Select Git > Repositories from GitHub
+5. Search "cmu-sei/FASR"
+6. Right click on UCA_Classification and select Import > Install > Install Software Items from File
+7. Select browse and navigate to `SoftwareRequirements.p2f`
+8. Select all software that is not already installed
+9. Restart Eclipse
+
 ### The STPA Guideword Classifier
 
 This compares two traces through a system -- one safe and one unsafe -- and creates an unsafe control action for the unsafe trace. [Fortis](https://github.com/cmu-soda/fortis-core) can be used to generate the traces from a [TLA+](https://lamport.azurewebsites.net/tla/tla.html) or [FSP](https://www.doc.ic.ac.uk/~jnm/LTSdocumention/FSP-notation.html) model of a system and its environment.
