@@ -23,6 +23,7 @@
 
 package umlTraverse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +88,10 @@ public class TraverseModel {
 			Resource modelResource; 
 			
 			try {
-				this.modelURI  = URI.createFileURI(path);
+				// Need the absolute path in order to load stereotypes
+				File file = new File(path);
+				String absolutePath = file.getAbsolutePath();
+				this.modelURI  = URI.createFileURI(absolutePath);
 				modelResource = resources.getResource(modelURI  , true);
                 EcoreUtil.resolveAll(modelResource);
 			} catch (RuntimeException e) {
