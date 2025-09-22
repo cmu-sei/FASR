@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: fasr_cameo
+Bundle-SymbolicName: fasr_cameo
+Bundle-Version: 0.0.1.qualifier
+Automatic-Module-Name: fasr_cameo
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.eclipse.uml2;bundle-version="5.5.3",
+ org.eclipse.emf.ecore,
+ org.eclipse.uml2.uml.resources;bundle-version="5.5.0",
+ org.junit,
+ org.eclipse.emf.common,
+ org.eclipse.core.resources;bundle-version="3.22.100",
+ UCA_Classification;bundle-version="0.0.1",
+ junit-jupiter-api

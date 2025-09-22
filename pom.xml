@@ -1,0 +1,119 @@
+<!--/**
+ * FASR Source Code
+ * 
+ * Copyright 2025 Carnegie Mellon University.
+ * 
+ * NO WARRANTY. THIS CARNEGIE MELLON UNIVERSITY AND SOFTWARE ENGINEERING
+ * INSTITUTE MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. CARNEGIE MELLON 
+ * UNIVERSITY MAKES NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS
+ * TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE
+ * OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE 
+ * MATERIAL. CARNEGIE MELLON UNIVERSITY DOES NOT MAKE ANY WARRANTY OF ANY KIND
+ * WITH RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+ * 
+ * Licensed under a MIT (SEI)-style license, please see license.txt or contact
+ * permission@sei.cmu.edu for full terms.
+ * 
+ * [DISTRIBUTION STATEMENT A] This material has been approved for public 
+ * release and unlimited distribution.  Please see Copyright notice for non-US
+ * Government use and distribution.
+ * 
+ * DM25-0946
+ */-->
+
+
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.cmu</groupId>
+    <artifactId>fasr_parent</artifactId>
+    <version>1.0</version>
+    <name>FASR</name>
+
+    <properties>
+        <eclipse.version>2025-03</eclipse.version>
+        <eclipse.repo.url>https://download.eclipse.org/releases/${eclipse.version}</eclipse.repo.url>
+        <tycho.version>4.0.13</tycho.version>
+    </properties>
+
+     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>${tycho.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+<!--            Don't need this if all in one p2 repo-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.eclipse.tycho</groupId>-->
+            <!--                <artifactId>target-platform-configuration</artifactId>-->
+            <!--                <version>${tycho.version}</version>-->
+            <!--                <configuration>-->
+            <!--                    <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>-->
+            <!--                    <target>-->
+            <!--                        <artifact>-->
+            <!--                           <groupId>org.osate</groupId>-->
+<!--                            <artifactId>osate2-platform</artifactId>-->
+<!--                            <version>${osate.version}</version>-->
+<!--                        </artifact>-->
+<!--                    </target>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-maven-plugin</artifactId>
+                        <version>${tycho.version}</version>
+                        <extensions>true</extensions>
+                    </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-p2-plugin</artifactId>
+                    <version>${tycho.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-p2-metadata</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>p2-metadata</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>eclipse</id>
+            <url>${eclipse.repo.url}</url>
+            <layout>p2</layout>
+        </repository>
+            <repository>
+        	    <id>orbit-release</id>
+            <layout>p2</layout>
+            <url>https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0</url>
+        </repository>
+    </repositories>
+
+    <packaging>
+        pom
+    </packaging>
+
+    <modules>
+        <module>fasr_cameo</module>
+        <module>UCA_Classification</module>
+    </modules>
+
+</project>
+

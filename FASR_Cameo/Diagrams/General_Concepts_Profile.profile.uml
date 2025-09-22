@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:MagicDrawProfile="http://www.omg.org/spec/UML/20131001/MagicDrawProfile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/UML/20131001/MagicDrawProfile UML_Standard_Profile.MagicDraw_Profile.profile.uml#_kVOiAJJjEfCE5rwO4LW71g">
+  <uml:Profile xmi:id="_18_5_3_f720368_1537716950274_148762_15249" name="General Concepts Profile" visibility="public" URI="https://www.omg.org/spec/RAAML/20211101/GeneralConcepts" metamodelReference="_18_5_3_f720368_1537716950274_405638_15250">
+    <eAnnotations xmi:id="_kVNS_JJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <contents xmi:type="ecore:EPackage" xmi:id="_kVNS_ZJjEfCE5rwO4LW71g" name="GeneralConceptsProfile" nsURI="https://www.omg.org/spec/RAAML/20211101/GeneralConcepts" nsPrefix="GeneralConceptsProfile">
+        <eAnnotations xmi:id="_kVNS_pJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details xmi:id="_kVNS_5JjEfCE5rwO4LW71g" key="originalName" value="General Concepts Profile"/>
+        </eAnnotations>
+        <eAnnotations xmi:id="_kVNTAJJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/4.0.0/UML">
+          <references xmi:type="uml:Profile" href="Core_Profile.profile.uml#_18_5_3_f720368_1544384771830_305848_23660"/>
+        </eAnnotations>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTAZJjEfCE5rwO4LW71g" name="FailureMode" eSuperTypes="_kVNTCpJjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTApJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_8760274_1531056989309_523284_33290"/>
+          <eAnnotations xmi:id="_kVNTA5JjEfCE5rwO4LW71g" source="duplicates">
+            <eAnnotations xmi:id="_kVNTBJJjEfCE5rwO4LW71g" source="base_Class">
+              <details xmi:id="_kVNTBZJjEfCE5rwO4LW71g" key="lowerBound" value="1"/>
+            </eAnnotations>
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTBpJjEfCE5rwO4LW71g" name="base_Class" ordered="false">
+              <eAnnotations xmi:id="_kVNTB5JjEfCE5rwO4LW71g" source="redefines" references="_kVNTFpJjEfCE5rwO4LW71g _kVNTEJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTCpJjEfCE5rwO4LW71g" name="CoreProfile_Situation" eSuperTypes="_kVNTFJJjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTC5JjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details xmi:id="_kVNTDJJjEfCE5rwO4LW71g" key="originalName" value="Core Profile_Situation"/>
+            <references xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
+          </eAnnotations>
+          <eAnnotations xmi:id="_kVNTDZJjEfCE5rwO4LW71g" source="duplicates">
+            <eAnnotations xmi:id="_kVNTDpJjEfCE5rwO4LW71g" source="base_Class">
+              <details xmi:id="_kVNTD5JjEfCE5rwO4LW71g" key="lowerBound" value="1"/>
+            </eAnnotations>
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTEJJjEfCE5rwO4LW71g" name="base_Class" ordered="false">
+              <eAnnotations xmi:id="_kVNTEZJjEfCE5rwO4LW71g" source="redefines" references="_kVNTFpJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTFJJjEfCE5rwO4LW71g" name="SysML_Blocks_Block">
+          <eAnnotations xmi:id="_kVNTFZJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="uml:Stereotype" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147424179914_458922_958"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTFpJjEfCE5rwO4LW71g" name="base_Class" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kVNTGJJjEfCE5rwO4LW71g" name="isEncapsulated" ordered="false">
+            <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTGpJjEfCE5rwO4LW71g" name="Error" eSuperTypes="_kVNTCpJjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTG5JjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1537712322577_108664_12511"/>
+          <eAnnotations xmi:id="_kVNTHJJjEfCE5rwO4LW71g" source="duplicates">
+            <eAnnotations xmi:id="_kVNTHZJjEfCE5rwO4LW71g" source="base_Class">
+              <details xmi:id="_kVNTHpJjEfCE5rwO4LW71g" key="lowerBound" value="1"/>
+            </eAnnotations>
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTH5JjEfCE5rwO4LW71g" name="base_Class" ordered="false">
+              <eAnnotations xmi:id="_kVNTIJJjEfCE5rwO4LW71g" source="redefines" references="_kVNTFpJjEfCE5rwO4LW71g _kVNTEJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTI5JjEfCE5rwO4LW71g" name="FailureState">
+          <eAnnotations xmi:id="_kVNTJJJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1537715628614_358847_14429"/>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTJZJjEfCE5rwO4LW71g" name="base_State" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//State"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTJ5JjEfCE5rwO4LW71g" name="Fault" eSuperTypes="_kVNTCpJjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTKJJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1537712328118_412338_12539"/>
+          <eAnnotations xmi:id="_kVNTKZJjEfCE5rwO4LW71g" source="duplicates">
+            <eAnnotations xmi:id="_kVNTKpJjEfCE5rwO4LW71g" source="base_Class">
+              <details xmi:id="_kVNTK5JjEfCE5rwO4LW71g" key="lowerBound" value="1"/>
+            </eAnnotations>
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTLJJjEfCE5rwO4LW71g" name="base_Class" ordered="false">
+              <eAnnotations xmi:id="_kVNTLZJjEfCE5rwO4LW71g" source="redefines" references="_kVNTFpJjEfCE5rwO4LW71g _kVNTEJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTMJJjEfCE5rwO4LW71g" name="Detection" eSuperTypes="_kVNTN5JjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTMZJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_8760274_1528900624255_692200_25386"/>
+          <eAnnotations xmi:id="_kVNTMpJjEfCE5rwO4LW71g" source="duplicates">
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTM5JjEfCE5rwO4LW71g" name="base_Dependency" ordered="false" lowerBound="1">
+              <eAnnotations xmi:id="_kVNTNJJjEfCE5rwO4LW71g" source="redefines" references="_kVNTPJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTN5JjEfCE5rwO4LW71g" name="CoreProfile_ControllingMeasure" abstract="true" eSuperTypes="_kVNTQZJjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTOJJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details xmi:id="_kVNTOZJjEfCE5rwO4LW71g" key="originalName" value="Core Profile_ControllingMeasure"/>
+            <references xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1532684752407_253868_16273"/>
+          </eAnnotations>
+          <eAnnotations xmi:id="_kVNTOpJjEfCE5rwO4LW71g" source="http://www.eclipse.org/emf/2002/GenModel">
+            <details xmi:id="_kVNTO5JjEfCE5rwO4LW71g" key="documentation" value="-- supplier of the ControllingMeasure must be a Situation&#xA;Situation.allInstances().base_Class->includesAll(self.base_Dependency.supplier)"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTPJJjEfCE5rwO4LW71g" name="base_Dependency" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTPpJjEfCE5rwO4LW71g" name="affects" ordered="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTQZJjEfCE5rwO4LW71g" name="SysML_Blocks_DirectedRelationshipPropertyPath" abstract="true">
+          <eAnnotations xmi:id="_kVNTQpJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="uml:Stereotype" href="SysML.profile.uml#_17_0_5beta_17530432_1382583834110_524897_11405"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTQ5JjEfCE5rwO4LW71g" name="base_DirectedRelationship" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//DirectedRelationship"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTRZJjEfCE5rwO4LW71g" name="sourcePropertyPath" unique="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTR5JjEfCE5rwO4LW71g" name="targetPropertyPath" unique="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTSZJjEfCE5rwO4LW71g" name="sourceContext" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Classifier"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTS5JjEfCE5rwO4LW71g" name="targetContext" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Classifier"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTTZJjEfCE5rwO4LW71g" name="Recommendation" eSuperTypes="_kVNTN5JjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTTpJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1533301625610_655566_18518"/>
+          <eAnnotations xmi:id="_kVNTT5JjEfCE5rwO4LW71g" source="duplicates">
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTUJJjEfCE5rwO4LW71g" name="base_Dependency" ordered="false" lowerBound="1">
+              <eAnnotations xmi:id="_kVNTUZJjEfCE5rwO4LW71g" source="redefines" references="_kVNTPJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTVJJjEfCE5rwO4LW71g" name="Prevention" eSuperTypes="_kVNTN5JjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTVZJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_8760274_1528900605896_981716_25380"/>
+          <eAnnotations xmi:id="_kVNTVpJjEfCE5rwO4LW71g" source="duplicates">
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTV5JjEfCE5rwO4LW71g" name="base_Dependency" ordered="false" lowerBound="1">
+              <eAnnotations xmi:id="_kVNTWJJjEfCE5rwO4LW71g" source="redefines" references="_kVNTPJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTW5JjEfCE5rwO4LW71g" name="Mitigation" eSuperTypes="_kVNTN5JjEfCE5rwO4LW71g">
+          <eAnnotations xmi:id="_kVNTXJJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1524501116880_598604_17427"/>
+          <eAnnotations xmi:id="_kVNTXZJjEfCE5rwO4LW71g" source="duplicates">
+            <contents xmi:type="ecore:EReference" xmi:id="_kVNTXpJjEfCE5rwO4LW71g" name="base_Dependency" ordered="false" lowerBound="1">
+              <eAnnotations xmi:id="_kVNTX5JjEfCE5rwO4LW71g" source="redefines" references="_kVNTPJJjEfCE5rwO4LW71g"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_kVNTYpJjEfCE5rwO4LW71g" name="Undeveloped">
+          <eAnnotations xmi:id="_kVNTY5JjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_3_30b0125_1595419686929_266744_1004"/>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kVNTZJJjEfCE5rwO4LW71g" name="base_Element" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+      </contents>
+    </eAnnotations>
+    <ownedComment xmi:id="_18_5_3_f720368_1544391173579_5745_37291" annotatedElement="_18_5_3_f720368_1537716950274_148762_15249">
+      <body></body>
+    </ownedComment>
+    <packageImport xmi:id="_18_5_3_f720368_1537716950274_405638_15250">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_19_0_3_30b0125_1604650548822_896366_517">
+      <importedPackage xmi:type="uml:Profile" href="Core_Profile.profile.uml#_18_5_3_f720368_1544384771830_305848_23660"/>
+    </packageImport>
+    <packageImport xmi:id="_0primitiveTypesGeneral_Concepts_Profile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_0javaPrimitiveTypesGeneral_Concepts_Profile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_8760274_1531056989309_523284_33290" name="FailureMode" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544391237328_557413_37332" annotatedElement="_18_5_3_8760274_1531056989309_523284_33290">
+        <body>See FailureMode library class for the definition of a situation concept. The FailureMode stereotype is only needed to distinguish FailureModes from other types of situations.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_8760274_1531057016290_519789_33347">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_8760274_1531057016305_762060_33349" name="base_Class" visibility="private" association="_18_5_3_8760274_1531057016305_448828_33348">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_374102_43" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_211122_44" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+      <icon xmi:id="_2024x_30b0125_1688561624891_66078_2828" content="3c 3f 78 6d 6c 20 76 65 72 73 69 6f 6e 3d 22 31 2e 30 22 20 65 6e 63 6f 64 69 6e 67 3d 22 75 74 66 2d 38 22 3f 3e a 3c 21 2d 2d 20 47 65 6e 65 72 61 74 6f 72 3a 20 41 64 6f 62 65 20 49 6c 6c 75 73 74 72 61 74 6f 72 20 32 36 2e 30 2e 33 2c 20 53 56 47 20 45 78 70 6f 72 74 20 50 6c 75 67 2d 49 6e 20 2e 20 53 56 47 20 56 65 72 73 69 6f 6e 3a 20 36 2e 30 30 20 42 75 69 6c 64 20 30 29 20 20 2d 2d 3e a 3c 73 76 67 20 76 65 72 73 69 6f 6e 3d 22 31 2e 31 22 20 69 64 3d 22 4c 61 79 65 72 5f 31 22 20 78 6d 6c 6e 73 3d 22 68 74 74 70 3a 2f 2f 77 77 77 2e 77 33 2e 6f 72 67 2f 32 30 30 30 2f 73 76 67 22 20 78 6d 6c 6e 73 3a 78 6c 69 6e 6b 3d 22 68 74 74 70 3a 2f 2f 77 77 77 2e 77 33 2e 6f 72 67 2f 31 39 39 39 2f 78 6c 69 6e 6b 22 20 78 3d 22 30 70 78 22 20 79 3d 22 30 70 78 22 a 9 20 77 69 64 74 68 3d 22 32 34 70 78 22 20 68 65 69 67 68 74 3d 22 32 34 70 78 22 20 76 69 65 77 42 6f 78 3d 22 30 20 30 20 32 34 20 32 34 22 20 73 74 79 6c 65 3d 22 65 6e 61 62 6c 65 2d 62 61 63 6b 67 72 6f 75 6e 64 3a 6e 65 77 20 30 20 30 20 32 34 20 32 34 3b 22 20 78 6d 6c 3a 73 70 61 63 65 3d 22 70 72 65 73 65 72 76 65 22 3e a 3c 73 74 79 6c 65 20 74 79 70 65 3d 22 74 65 78 74 2f 63 73 73 22 3e a 9 2e 73 74 30 7b 66 69 6c 6c 3a 75 72 6c 28 23 53 56 47 49 44 5f 31 5f 29 3b 7d a 9 2e 73 74 31 7b 66 69 6c 6c 3a 23 46 46 46 46 46 46 3b 7d a 9 2e 73 74 32 7b 66 69 6c 6c 3a 23 39 39 39 39 39 39 3b 7d a 3c 2f 73 74 79 6c 65 3e a 3c 6c 69 6e 65 61 72 47 72 61 64 69 65 6e 74 20 69 64 3d 22 53 56 47 49 44 5f 31 5f 22 20 67 72 61 64 69 65 6e 74 55 6e 69 74 73 3d 22 75 73 65 72 53 70 61 63 65 4f 6e 55 73 65 22 20 78 31 3d 22 35 2e 37 38 37 36 34 35 38 22 20 79 31 3d 22 31 36 22 20 78 32 3d 22 32 34 22 20 79 32 3d 22 31 36 22 3e a 9 3c 73 74 6f 70 20 20 6f 66 66 73 65 74 3d 22 30 22 20 73 74 79 6c 65 3d 22 73 74 6f 70 2d 63 6f 6c 6f 72 3a 23 42 46 33 41 30 39 22 2f 3e a 9 3c 73 74 6f 70 20 20 6f 66 66 73 65 74 3d 22 31 22 20 73 74 79 6c 65 3d 22 73 74 6f 70 2d 63 6f 6c 6f 72 3a 23 42 39 33 34 30 38 22 2f 3e a 3c 2f 6c 69 6e 65 61 72 47 72 61 64 69 65 6e 74 3e a 3c 70 61 74 68 20 63 6c 61 73 73 3d 22 73 74 30 22 20 64 3d 22 4d 39 2e 33 39 31 37 30 35 35 2c 32 34 68 31 31 2e 30 30 34 32 33 35 33 63 32 2e 38 32 36 32 33 36 37 2c 30 2c 34 2e 35 34 39 32 35 39 32 2d 33 2e 31 30 38 37 35 38 39 2c 33 2e 30 35 31 33 35 37 33 2d 35 2e 35 30 35 34 30 33 35 6c 2d 35 2e 35 30 32 31 31 37 32 2d 38 2e 38 30 33 33 38 38 36 a 9 63 2d 31 2e 34 30 39 33 33 39 39 2d 32 2e 32 35 34 39 34 33 38 2d 34 2e 36 39 33 33 37 35 36 2d 32 2e 32 35 34 39 34 33 38 2d 36 2e 31 30 32 37 31 35 35 2c 30 6c 2d 35 2e 35 30 32 31 31 37 36 2c 38 2e 38 30 33 33 38 38 36 43 34 2e 38 34 32 34 34 35 34 2c 32 30 2e 38 39 31 32 34 31 31 2c 36 2e 35 36 35 34 36 37 38 2c 32 34 2c 39 2e 33 39 31 37 30 35 35 2c 32 34 7a 22 2f 3e a 3c 63 69 72 63 6c 65 20 63 6c 61 73 73 3d 22 73 74 31 22 20 63 78 3d 22 31 34 2e 38 39 33 38 32 32 37 22 20 63 79 3d 22 32 30 2e 31 37 34 31 38 34 38 22 20 72 3d 22 31 2e 30 33 39 35 30 39 39 22 2f 3e a 3c 70 61 74 68 20 63 6c 61 73 73 3d 22 73 74 31 22 20 64 3d 22 4d 31 35 2e 39 33 33 33 33 32 34 2c 31 32 2e 33 32 35 34 30 38 43 31 35 2e 38 38 35 33 38 37 34 2c 31 34 2e 37 39 30 36 36 37 35 2c 31 35 2e 34 34 32 39 33 35 2c 31 38 2c 31 34 2e 38 39 33 38 32 32 37 2c 31 38 a 9 63 2d 30 2e 35 36 36 38 36 30 32 2c 30 2d 31 2e 30 33 39 35 30 39 38 2d 33 2e 32 30 39 33 33 32 35 2d 31 2e 30 33 39 35 30 39 38 2d 35 2e 36 37 34 35 39 32 63 30 2d 30 2e 35 37 34 31 30 35 33 2c 30 2e 34 36 35 34 30 34 35 2d 31 2e 30 33 39 35 30 39 38 2c 31 2e 30 33 39 35 30 39 38 2d 31 2e 30 33 39 35 30 39 38 a 9 53 31 35 2e 39 34 34 34 39 36 32 2c 31 31 2e 37 35 31 34 31 31 34 2c 31 35 2e 39 33 33 33 33 32 34 2c 31 32 2e 33 32 35 34 30 38 7a 22 2f 3e a 3c 70 61 74 68 20 63 6c 61 73 73 3d 22 73 74 32 22 20 64 3d 22 4d 34 2e 34 33 36 36 34 35 35 2c 31 36 2e 30 39 38 35 37 31 38 6c 33 2e 35 39 38 39 33 38 2d 34 2e 30 39 30 30 32 36 39 43 36 2e 37 34 38 38 34 30 33 2c 31 31 2e 36 30 36 36 38 39 35 2c 35 2e 38 33 30 39 39 33 37 2c 31 30 2e 34 33 34 36 33 31 33 2c 35 2e 38 33 30 39 39 33 37 2c 39 a 9 63 30 2d 31 2e 37 37 34 36 35 38 32 2c 31 2e 33 39 34 33 34 38 31 2d 33 2e 32 39 35 37 37 36 34 2c 33 2e 31 36 39 30 30 36 33 2d 33 2e 32 39 35 37 37 36 34 63 31 2e 30 39 35 31 35 33 38 2c 30 2c 32 2e 30 34 32 37 32 34 36 2c 30 2e 35 33 33 32 30 33 31 2c 32 2e 36 30 39 39 32 34 33 2c 31 2e 33 35 36 38 37 32 36 a 9 63 30 2e 38 35 33 32 38 36 37 2d 30 2e 34 39 38 34 36 30 33 2c 33 2e 36 36 38 32 38 38 32 2d 31 2e 36 39 37 30 39 31 36 2c 34 2e 36 31 35 34 31 37 35 2d 32 2e 34 39 37 37 34 31 37 63 30 2e 34 33 31 38 34 36 36 2d 30 2e 33 36 35 30 35 38 34 2c 30 2e 32 35 33 35 34 2d 30 2e 37 36 30 35 35 39 31 2c 30 2d 31 2e 31 34 30 38 30 38 31 a 9 6c 2d 31 2e 33 39 34 33 34 38 31 2d 31 2e 33 39 34 34 30 39 32 63 2d 30 2e 32 35 33 35 34 2d 30 2e 32 35 33 34 37 39 2d 30 2e 37 36 30 35 35 39 31 2d 30 2e 33 38 30 32 34 39 2d 31 2e 31 34 30 38 36 39 31 2c 30 6c 2d 30 2e 38 38 37 33 32 39 31 2c 30 2e 36 33 33 38 35 30 31 a 9 63 2d 30 2e 36 33 33 37 38 39 31 2d 30 2e 33 38 30 33 31 30 31 2d 31 2e 31 34 30 38 30 38 31 2d 30 2e 36 33 33 38 35 30 31 2d 31 2e 37 37 34 35 39 37 32 2d 30 2e 37 36 30 36 32 30 31 6c 2d 30 2e 31 32 36 37 37 2d 31 2e 31 34 30 38 30 38 31 43 31 30 2e 39 30 31 34 32 38 32 2c 30 2e 33 38 30 32 34 39 2c 31 30 2e 35 32 31 31 31 38 32 2c 30 2c 31 30 2e 31 34 30 38 36 39 31 2c 30 a 9 48 38 2e 31 31 32 36 37 30 39 63 2d 30 2e 35 30 37 30 31 39 2c 30 2d 30 2e 37 36 30 35 35 39 31 2c 30 2e 33 38 30 32 34 39 2d 30 2e 38 38 37 33 32 39 31 2c 30 2e 37 36 30 35 35 39 31 6c 2d 30 2e 31 32 36 37 37 2c 31 2e 31 34 30 38 30 38 31 a 9 63 2d 30 2e 36 33 33 37 38 39 31 2c 30 2e 31 32 36 37 37 2d 31 2e 32 36 37 35 37 38 31 2c 30 2e 33 38 30 33 31 30 31 2d 31 2e 37 37 34 36 35 38 32 2c 30 2e 37 36 30 35 35 39 31 4c 34 2e 34 33 36 36 34 35 35 2c 31 2e 39 30 31 33 36 37 32 a 9 63 2d 30 2e 33 38 30 33 31 30 31 2d 30 2e 32 35 33 34 37 39 2d 30 2e 37 36 30 35 35 39 31 2d 30 2e 32 35 33 34 37 39 2d 31 2e 31 34 30 38 36 39 31 2c 30 4c 31 2e 39 30 31 34 32 38 32 2c 33 2e 34 32 32 35 34 36 34 63 2d 30 2e 32 35 33 35 34 2c 30 2e 32 35 33 34 37 39 2d 30 2e 32 35 33 35 34 2c 30 2e 37 36 30 35 35 39 31 2c 30 2c 31 2e 30 31 34 30 33 38 31 a 9 6c 30 2e 37 36 30 35 35 39 31 2c 30 2e 38 38 37 33 32 39 31 43 32 2e 32 38 31 36 37 37 32 2c 35 2e 39 35 37 37 30 32 36 2c 32 2e 30 32 38 31 39 38 32 2c 36 2e 35 39 31 35 35 32 37 2c 31 2e 39 30 31 34 32 38 32 2c 37 2e 30 39 38 35 37 31 38 6c 2d 31 2e 31 34 30 38 36 39 31 2c 30 2e 31 32 36 37 37 a 9 43 30 2e 32 35 33 35 34 2c 37 2e 33 35 32 31 31 31 38 2c 30 2c 37 2e 37 33 32 33 36 30 38 2c 30 2c 38 2e 31 31 32 36 37 30 39 76 31 2e 39 30 31 34 32 38 32 63 30 2c 30 2e 33 38 30 32 34 39 2c 30 2e 32 35 33 35 34 2c 30 2e 37 36 30 35 35 39 31 2c 30 2e 37 36 30 35 35 39 31 2c 30 2e 37 36 30 35 35 39 31 6c 31 2e 32 36 37 36 33 39 32 2c 30 2e 32 35 33 34 37 39 a 9 63 30 2e 31 32 36 37 30 39 2c 30 2e 35 30 37 30 38 30 31 2c 30 2e 33 38 30 32 34 39 2c 31 2e 30 31 34 30 39 39 31 2c 30 2e 36 33 33 37 38 39 31 2c 31 2e 35 32 31 31 31 38 32 6c 2d 30 2e 37 36 30 35 35 39 31 2c 31 2e 30 31 34 30 39 39 31 a 9 63 2d 30 2e 32 35 33 35 34 2c 30 2e 33 38 30 33 31 30 31 2d 30 2e 32 35 33 35 34 2c 30 2e 37 36 30 35 35 39 31 2c 30 2c 31 2e 31 34 30 38 36 39 31 6c 31 2e 33 39 34 33 34 38 31 2c 31 2e 33 39 34 33 34 38 31 a 9 43 33 2e 35 34 39 33 31 36 34 2c 31 36 2e 33 35 32 31 31 31 38 2c 34 2e 30 35 36 33 33 35 34 2c 31 36 2e 34 37 38 38 38 31 38 2c 34 2e 34 33 36 36 34 35 35 2c 31 36 2e 30 39 38 35 37 31 38 7a 22 2f 3e a 3c 2f 73 76 67 3e a " format="SVG" location="E:\users\mbi\CATIA_System\CyberSecurity\img\icons\Icons 05.02.2023\failure-mode.svg"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1537712338116_266657_12578" name="" visibility="public" memberEnd="_18_5_3_f720368_1537712338116_204851_12579 _18_5_3_f720368_1537712338116_604702_12580" navigableOwnedEnd="_18_5_3_f720368_1537712338116_604702_12580">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1537712338116_604702_12580" name="extension_Fault" visibility="private" type="_18_5_3_f720368_1537712328118_412338_12539" aggregation="composite" association="_18_5_3_f720368_1537712338116_266657_12578">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1537712338116_596334_12581" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511484_512167_18" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_8760274_1531057016305_448828_33348" name="" visibility="public" memberEnd="_18_5_3_8760274_1531057016305_762060_33349 _18_5_3_8760274_1531057016305_847311_33350" navigableOwnedEnd="_18_5_3_8760274_1531057016305_847311_33350">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_8760274_1531057016305_847311_33350" name="extension_FailureMode" visibility="private" type="_18_5_3_8760274_1531056989309_523284_33290" aggregation="composite" association="_18_5_3_8760274_1531057016305_448828_33348">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_8760274_1531057016305_812225_33351" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_418888_33" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1537712322577_108664_12511" name="Error" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1537713321942_565745_13300" annotatedElement="_18_5_3_f720368_1537712322577_108664_12511">
+        <body>The discrepancy between a computed, observed or measured value or condition and the true, specified or theoretically correct value or condition. [IEC 61508-4, 3.6.11].  The Error stereotype is needed to distinguish this type of situations.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1537712334251_227365_12568">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537712334261_174880_12570" name="base_Class" visibility="private" association="_18_5_3_f720368_1537712334261_484360_12569">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511484_657133_21" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511484_409719_22" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1537715722101_885614_14456" name="" visibility="public" memberEnd="_18_5_3_f720368_1537715722101_101546_14457 _18_5_3_f720368_1537715722101_498446_14458" navigableOwnedEnd="_18_5_3_f720368_1537715722101_498446_14458">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1537715722101_498446_14458" name="extension_FailureState" visibility="private" type="_18_5_3_f720368_1537715628614_358847_14429" aggregation="composite" association="_18_5_3_f720368_1537715722101_885614_14456">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1537715722101_400724_14459" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_66731_30" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1537715628614_358847_14429" name="FailureState" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544382385151_913925_20705" annotatedElement="_18_5_3_f720368_1537715628614_358847_14429">
+        <body>State, which the system or a part of the system enters after occurrence of FailureMode (failure).  The Failure state concept might be used in various formal safety and reliability analysis methods based on the state machine notation. Failure states could be tied to FailureModes via the RelevantTo dependency.</body>
+      </ownedComment>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537715722101_101546_14457" name="base_State" visibility="private" association="_18_5_3_f720368_1537715722101_885614_14456">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#State"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_311391_36" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_162326_37" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1537712328118_412338_12539" name="Fault" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1537713137288_697980_12889" annotatedElement="_18_5_3_f720368_1537712328118_412338_12539">
+        <body>Abnormal condition that may cause a reduction in, or loss of, the capability of a functional unit to perform a required function. [IEC 61508-4, 3.6.1]. Abnormal or undesired condition that can cause an element or a system to fail. [ISO 26262-1:2018, 3.54, modified].  The Fault stereotype is needed to distinguish this type of situations.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1537712338094_483168_12576">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537712338116_204851_12579" name="base_Class" visibility="private" association="_18_5_3_f720368_1537712338116_266657_12578">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_667219_24" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_263577_25" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1537712334261_484360_12569" name="" visibility="public" memberEnd="_18_5_3_f720368_1537712334261_174880_12570 _18_5_3_f720368_1537712334261_146304_12571" navigableOwnedEnd="_18_5_3_f720368_1537712334261_146304_12571">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1537712334261_146304_12571" name="extension_Error" visibility="private" type="_18_5_3_f720368_1537712322577_108664_12511" aggregation="composite" association="_18_5_3_f720368_1537712334261_484360_12569">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1537712334261_732657_12572" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_275995_40" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_8760274_1528900624255_692200_25386" name="Detection" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544382289273_428046_20192" annotatedElement="_19_0_8760274_1528900624255_692200_25386">
+        <body>A kind of ControllingMeasure taken to increase probability of detecting the situation under analysis. In hardware these measures may include built-in diagnostic tests, or physical inspection and manual tests.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1532686817850_92365_18094">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1532684752407_253868_16273"/>
+      </generalization>
+      <ownedAttribute xmi:id="_19_0_8760274_1528900837280_142467_25541" name="base_Dependency" visibility="private" association="_19_0_8760274_1528900837280_240577_25540">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_855717_34" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_746616_35" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_8760274_1528900837280_240577_25540" name="" visibility="public" memberEnd="_19_0_8760274_1528900837280_142467_25541 _19_0_8760274_1528900837280_161698_25542" navigableOwnedEnd="_19_0_8760274_1528900837280_161698_25542">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_8760274_1528900837280_161698_25542" name="extension_DetectionControl" visibility="private" type="_19_0_8760274_1528900624255_692200_25386" aggregation="composite" association="_19_0_8760274_1528900837280_240577_25540">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_8760274_1528900837281_661666_25543" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_58751_39" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1533301625610_655566_18518" name="Recommendation" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544382019677_207970_20143" annotatedElement="_18_5_3_f720368_1533301625610_655566_18518">
+        <body>Recommendation is used to connect the situation to an action item.  An action item is normally a Requirement but it can be a less &quot;strong&quot; type of advice - comment, rationale, etc.  The requirement is further managed by the requirements management system - it can have responsible persons, due date, verification properties etc.
+</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1533301791723_594670_18573">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1532684752407_253868_16273"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537728497486_67732_11745" name="base_Dependency" visibility="private" association="_18_5_3_f720368_1537728497486_467868_11744">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_900469_41" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_996057_42" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1537728497486_467868_11744" name="" visibility="public" memberEnd="_18_5_3_f720368_1537728497486_67732_11745 _18_5_3_f720368_1537728497486_689401_11746" navigableOwnedEnd="_18_5_3_f720368_1537728497486_689401_11746">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1537728497486_689401_11746" name="extension_Recommendation" visibility="private" type="_18_5_3_f720368_1533301625610_655566_18518" aggregation="composite" association="_18_5_3_f720368_1537728497486_467868_11744">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1537728497486_801539_11747" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_612455_38" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_8760274_1528900605896_981716_25380" name="Prevention" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544382042692_466836_20145" annotatedElement="_19_0_8760274_1528900605896_981716_25380">
+        <body>A kind of ControllingMeasure taken to reduce probability of occurrence of the situation under analysis.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1532686830363_174942_18099">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1532684752407_253868_16273"/>
+      </generalization>
+      <ownedAttribute xmi:id="_19_0_8760274_1528900851356_423604_25546" name="base_Dependency" visibility="private" association="_19_0_8760274_1528900851356_57648_25545">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_74871_27" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_545772_28" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_8760274_1528900851356_57648_25545" name="" visibility="public" memberEnd="_19_0_8760274_1528900851356_423604_25546 _19_0_8760274_1528900851356_1981_25547" navigableOwnedEnd="_19_0_8760274_1528900851356_1981_25547">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_8760274_1528900851356_1981_25547" name="extension_PreventionControl" visibility="private" type="_19_0_8760274_1528900605896_981716_25380" aggregation="composite" association="_19_0_8760274_1528900851356_57648_25545">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_8760274_1528900851356_649020_25548" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_156639_23" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1524501116880_598604_17427" name="Mitigation" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544382034011_416192_20144" annotatedElement="_18_5_3_f720368_1524501116880_598604_17427">
+        <body>A kind of ControllingMeasure taken to reduce severity of the situation under analysis.</body>
+      </ownedComment>
+      <generalization xmi:id="_18_5_3_f720368_1532686838877_394696_18103">
+        <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1532684752407_253868_16273"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1524501116883_814520_17430" name="base_Dependency" visibility="private" association="_18_5_3_f720368_1524501116883_526272_17429">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511485_980375_31" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_665778_32" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1524501116883_526272_17429" name="" visibility="public" memberEnd="_18_5_3_f720368_1524501116883_814520_17430 _18_5_3_f720368_1524501116884_526850_17431" navigableOwnedEnd="_18_5_3_f720368_1524501116884_526850_17431">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1524501116884_526850_17431" name="extension_Exhibits" visibility="private" type="_18_5_3_f720368_1524501116880_598604_17427" aggregation="composite" association="_18_5_3_f720368_1524501116883_526272_17429">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1524501116884_959815_17432" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_307163_29" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_3_30b0125_1595419686929_266744_1004" name="Undeveloped" visibility="public">
+      <ownedComment xmi:id="_19_0_3_30b0125_1595422670638_176248_1213" annotatedElement="_19_0_3_30b0125_1595419686929_266744_1004">
+        <body>Undeveloped stereotype is meant to identify incomplete concepts. This stereotype can be applied in combination with Goal or Strategy stereotype to express the fact that the goal or strategy is not fully developed, and therefore may lack crucial details. This stereotype can also be applied to basic event in fault trees to express the fact that it is not fully developed.</body>
+      </ownedComment>
+      <ownedAttribute xmi:id="_19_0_3_30b0125_1595419686943_310035_1006" name="base_Element" visibility="private" association="_19_0_3_30b0125_1595419686942_805123_1005">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Element"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418511484_580326_19" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511484_326230_20" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+      <icon xmi:id="_19_0_3_30b0125_1603886603736_615946_105" content="3c 3f 78 6d 6c 20 76 65 72 73 69 6f 6e 3d 22 31 2e 30 22 20 65 6e 63 6f 64 69 6e 67 3d 22 75 74 66 2d 38 22 3f 3e a 3c 21 2d 2d 20 47 65 6e 65 72 61 74 6f 72 3a 20 41 64 6f 62 65 20 49 6c 6c 75 73 74 72 61 74 6f 72 20 31 39 2e 32 2e 30 2c 20 53 56 47 20 45 78 70 6f 72 74 20 50 6c 75 67 2d 49 6e 20 2e 20 53 56 47 20 56 65 72 73 69 6f 6e 3a 20 36 2e 30 30 20 42 75 69 6c 64 20 30 29 20 20 2d 2d 3e a 3c 73 76 67 20 76 65 72 73 69 6f 6e 3d 22 31 2e 31 22 20 69 64 3d 22 4c 61 79 65 72 5f 31 22 20 78 6d 6c 6e 73 3d 22 68 74 74 70 3a 2f 2f 77 77 77 2e 77 33 2e 6f 72 67 2f 32 30 30 30 2f 73 76 67 22 20 78 6d 6c 6e 73 3a 78 6c 69 6e 6b 3d 22 68 74 74 70 3a 2f 2f 77 77 77 2e 77 33 2e 6f 72 67 2f 31 39 39 39 2f 78 6c 69 6e 6b 22 20 78 3d 22 30 70 78 22 20 79 3d 22 30 70 78 22 a 9 20 77 69 64 74 68 3d 22 39 36 70 78 22 20 68 65 69 67 68 74 3d 22 39 36 70 78 22 20 76 69 65 77 42 6f 78 3d 22 30 20 30 20 39 36 20 39 36 22 20 65 6e 61 62 6c 65 2d 62 61 63 6b 67 72 6f 75 6e 64 3d 22 6e 65 77 20 30 20 30 20 39 36 20 39 36 22 20 78 6d 6c 3a 73 70 61 63 65 3d 22 70 72 65 73 65 72 76 65 22 3e a 3c 70 6f 6c 79 67 6f 6e 20 66 69 6c 6c 3d 22 6e 6f 6e 65 22 20 73 74 72 6f 6b 65 3d 22 23 30 30 30 30 30 30 22 20 73 74 72 6f 6b 65 2d 77 69 64 74 68 3d 22 33 22 20 73 74 72 6f 6b 65 2d 6d 69 74 65 72 6c 69 6d 69 74 3d 22 31 30 22 20 70 6f 69 6e 74 73 3d 22 34 38 2c 37 34 2e 39 36 37 20 35 2c 34 38 20 34 38 2c 32 31 2e 30 33 33 20 39 31 2c 34 38 20 22 2f 3e a 3c 2f 73 76 67 3e a " format="SVG" location="C:\Users\andarm\Documents\Trainings and Consultations\2018-09-24 OMG TC Ottawa\FTA\FTA icons\undeveloped-event-node-96.svg"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_30b0125_1595419686942_805123_1005" name="" visibility="public" memberEnd="_19_0_3_30b0125_1595419686943_310035_1006 _19_0_3_30b0125_1595419686943_198370_1007" navigableOwnedEnd="_19_0_3_30b0125_1595419686943_198370_1007">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_30b0125_1595419686943_198370_1007" name="extension_" visibility="private" type="_19_0_3_30b0125_1595419686929_266744_1004" aggregation="composite" association="_19_0_3_30b0125_1595419686942_805123_1005">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_30b0125_1595419686943_681283_1008" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418511485_481025_26" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <profileApplication xmi:id="_be00301_1073394351331_445580_2profileApplicationGeneral_Concepts_Profile">
+      <eAnnotations xmi:id="_kXBQwpJjEfCE5rwO4LW71g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_kVOiAJJjEfCE5rwO4LW71g"/>
+      </eAnnotations>
+      <appliedProfile href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_be00301_1073394351331_445580_2"/>
+    </profileApplication>
+  </uml:Profile>
+  <MagicDrawProfile:auxiliaryResource xmi:id="_kXB30JJjEfCE5rwO4LW71g" base_Element="_18_5_3_f720368_1537716950274_148762_15249"/>
+</xmi:XMI>

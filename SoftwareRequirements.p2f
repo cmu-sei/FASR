@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?p2f version='1.0.0'?>
+<p2f version='1.0.0'>
+  <ius size='8'>
+    <iu id='org.eclipse.jdt.feature.group' name='Eclipse Java Development Tools' version='3.20.200.v20250528-1830'>
+      <repositories size='4'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+        <repository location='https://download.eclipse.org/eclipse/updates/4.36'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.platform.feature.group' name='Eclipse Platform' version='4.36.0.v20250528-2229'>
+      <repositories size='4'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+        <repository location='https://download.eclipse.org/eclipse/updates/4.36'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.pde.feature.group' name='Eclipse Plug-in Development Environment' version='3.16.300.v20250528-1830'>
+      <repositories size='4'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+        <repository location='https://download.eclipse.org/eclipse/updates/4.36'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.rcp.feature.group' name='Eclipse RCP' version='4.36.0.v20250528-1830'>
+      <repositories size='4'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+        <repository location='https://download.eclipse.org/eclipse/updates/4.36'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.emf.compare.uml2.feature.group' name='Model comparison (EMF Compare) - UML2 support' version='3.3.26.202505141345'>
+      <repositories size='3'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.orbit.maven.osgi.all.feature.group' name='Orbit Maven OSGi All' version='4.37.0.v20250825-1000'>
+      <repositories size='2'>
+        <repository location='https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/'/>
+        <repository location='https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/latest'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.uml2.sdk.feature.group' name='UML2 Extender SDK' version='5.5.3.v20221116-1811'>
+      <repositories size='3'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.uml2.sdk.source.feature.group' name='UML2 Extender SDK Developer Resources' version='5.5.3.v20221116-1811'>
+      <repositories size='3'>
+        <repository location='https://download.eclipse.org/releases/latest'/>
+        <repository location='https://download.eclipse.org/releases/2025-06'/>
+        <repository location='https://download.eclipse.org/releases/2025-06/202506111000'/>
+      </repositories>
+    </iu>
+  </ius>
+</p2f>
