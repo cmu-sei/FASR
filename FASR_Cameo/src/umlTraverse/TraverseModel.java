@@ -140,6 +140,17 @@ public class TraverseModel {
 			return result;
 		}
 		
+		public Package getPackageByName(String packageName) {
+			Package result = null; 
+			for(Element e : this.model.getOwnedElements()) {
+				if(e instanceof Package && ((Package)e).getName().equals(packageName)) {
+					result = (Package)e;
+					break;
+				}
+			}
+			return result;
+		}
+		
 		public EList<ActivityNode> getAllNodesFromActivity(Activity a){
 			EList<ActivityNode> result = new BasicEList<ActivityNode>();
 			
@@ -312,7 +323,7 @@ public class TraverseModel {
 			options.put(XMIResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
 			options.put(XMIResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
 			
-			URI newUri = URI.createFileURI("/Users/kehanna/GitRepos/fasr/TestUML/Diagrams/modified-model.uml");
+			URI newUri = URI.createFileURI("modified-model.uml");
 			Resource newResource = this.resources.createResource(newUri);
 			Resource modelResource = resources.getResource(modelURI  , true);
 			newResource.getContents().add(modelResource.getContents().get(0)); // add the root element

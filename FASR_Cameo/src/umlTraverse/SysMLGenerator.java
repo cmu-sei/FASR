@@ -78,7 +78,7 @@ public class SysMLGenerator {
 	    return (NamedElement) current;
 	}
 	
-	public void generateElements() {
+	public Package generateElements() {
 		// Used to create signals
 		UMLFactory factory = UMLFactory.eINSTANCE;
 		// Check if package has already been generated
@@ -90,7 +90,7 @@ public class SysMLGenerator {
 
 		// Create package and add it to model
 		Package p = factory.createPackage();
-		p.setName("TestingPackage");
+		p.setName("Generated RAAML Package");
 		this.tm.getModel().getPackagedElements().add(p);
 		Class keyword;
 		for(UnsafeControlAction u : this.actionList) {
@@ -122,6 +122,7 @@ public class SysMLGenerator {
 
 			// Create connection from UnsafeControlAction to ControlAction
 			Dependency d = c.createDependency(signal);
+			d.setName(signal.getName() + "_dependency");
 			Stereotype relventTo = d.getApplicableStereotype("Core Profile::RelevantTo");
 			d.applyStereotype(relventTo);
 				
@@ -181,5 +182,6 @@ public class SysMLGenerator {
 					break;
 			}
 		}
+		return p;
 	}
 }
