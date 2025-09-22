@@ -57,24 +57,26 @@ public class SysMLGenerator {
 	
 	public NamedElement findByQualifiedName(String qualifiedName) {
 		Package root = tm.getModel();
+		String[] segments = qualifiedName.split("::");
+	    Namespace current = root;
+	    
 	    if (qualifiedName == null || !qualifiedName.contains("::")) {
 	        return root.getOwnedMember(qualifiedName);
 	    }
-
-	    String[] segments = qualifiedName.split("::");
-	    Namespace current = root;
-
-	    for (int i = 0; i < segments.length; i++) { // start at 1 to skip "Model"
+	    
+	    // traverse through qualified name searching root for ownedMember
+	    // if ownedMember is found, search its ownedMembers for matching NamedElement
+	    for (int i = 0; i < segments.length; i++) {
 	        NamedElement next = current.getOwnedMember(segments[i]);
 	        if (next instanceof Namespace) {
 	            current = (Namespace) next;
 	        } else if (i == segments.length - 1) {
 	            return next;
-	        } else {
-	            return null;
 	        }
 	    }
-
+	    if(current == root) {
+	    	return null;
+	    }
 	    return (NamedElement) current;
 	}
 	
@@ -129,58 +131,34 @@ public class SysMLGenerator {
 			// Switch statement that will create the connection from our UnsafeControlAction to the correct UCA Guideword 
 			switch(u.guideword()) {
 				case PROVIDING:
-//						findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::Provided");
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::Provided");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::Provided");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case NOT_PROVIDING:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::NotProvided");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::NotProvided");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case TOO_EARLY:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::Early");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::Early");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case TOO_LATE:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::Late");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::Late");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case OUT_OF_SEQUENCE:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::OutOfSequence");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::OutOfSequence");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case APPLIED_TOO_LONG:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::TooLong");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::TooLong");
-					}
-					c.createGeneralization(keyword);
 					break;
 				case STOPPED_TOO_SOON:
 					keyword = (Class) findByQualifiedName("Model::CMOF 2.0 Validation::STPA Library::TooShort");
-					if(keyword == null) {
-						keyword = (Class) findByQualifiedName("STPA Library::TooShort");
-					}
-					c.createGeneralization(keyword);
 					break;
 				default:
+					keyword = null;
 					break;
 			}
+			if(keyword == null) {
+				throw new NullPointerException("STPA Library was not found!");
+			}
+			c.createGeneralization(keyword);
 		}
 		return p;
 	}

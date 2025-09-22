@@ -11,11 +11,10 @@ This repository holds code to support the partial automation of the [System Theo
 3. Right click in the Package Explorer and select Import
 4. Select Git > Projects from Git > GitHub
 5. Search "cmu-sei/FASR" and select it
-6. 
-7. Right click on UCA_Classification and select Import > Install > Install Software Items from File
-8. Select browse and navigate to `SoftwareRequirements.p2f`
-9. Select all software that is not already installed
-10. Restart Eclipse
+6. Right click on UCA_Classification and select Import > Install > Install Software Items from File
+7. Select browse and navigate to `SoftwareRequirements.p2f`
+8. Select all software that is not already installed
+9.  Restart Eclipse
 
 ### The STPA Guideword Classifier
 
@@ -105,6 +104,3 @@ You can now pipe the output from Fortis to the UCA Classifier:
 3. Pass the TraverseModel object and the return from UCA_Classification into a SysMLGenerator object
 4. Use TraverseModel's `exportModel()` to create a new `.uml` file or use `updateModel()` to update the `.uml` file that was passed in
 5. If using `updateModel()`, then you'll need to close your project in Cameo and reopen it for the generated elements to load
-
-#### Work To Be Done
-- [ ] Connect output from UCA Classification into SysML Generator
