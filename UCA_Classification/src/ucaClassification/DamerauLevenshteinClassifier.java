@@ -105,8 +105,6 @@ public class DamerauLevenshteinClassifier {
 	 */
 	private static final String DELAY_ACTION = "Wait";
 
-	private static String source = "##SOURCE-PLACEHOLDER##";
-
 	/**
 	 * The Damerau-Levenshtein algorithm recognizes these four types of atomic
 	 * string edits.
@@ -177,7 +175,11 @@ public class DamerauLevenshteinClassifier {
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
-				ret.add(classify(safe, unsafe, "##INVARIANT-PLACEHOLDER##"));
+				List<String> invariants = mapper.readerForListOf(String.class).readValue(pair.get("violatedInvs"));
+				String invariantStr = String.join(",", invariants);
+				List<String> components = mapper.readerForListOf(String.class).readValue(pair.get("violatingComponents"));
+				String componentStr = String.join(",", components);
+				ret.add(classify(safe, unsafe, invariantStr, componentStr));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -186,7 +188,7 @@ public class DamerauLevenshteinClassifier {
 		return ret;
 	}
 
-	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName) {
+	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName, String sourceName) {
 		if (safe.equals(unsafe)) {
 			throw new IllegalArgumentException(
 					"The unsafe trace is identical to the safe trace; there is no error to classify.");
@@ -195,7 +197,7 @@ public class DamerauLevenshteinClassifier {
 		// We don't use DamerauLevenshtein at all to check if the guideword "Applied Too
 		// Long" or "Stopped too Soon" applies. They're checked using a different
 		// algorithm, so we check for that / return early if possible.
-		Optional<UnsafeControlAction> tooLongOrShort = checkTooLongOrShort(safe, unsafe, invariantName);
+		Optional<UnsafeControlAction> tooLongOrShort = checkTooLongOrShort(safe, unsafe, invariantName, sourceName);
 		if (tooLongOrShort.isPresent()) {
 			return tooLongOrShort.get();
 		}
@@ -282,7 +284,7 @@ public class DamerauLevenshteinClassifier {
 					edit = Edit.TRANSPOSE;
 				}
 				Optional<UnsafeControlAction> newUCA = classifyUCA(safe, unsafe, edit, CG, i, j, d, iPrime, jPrime,
-						invariantName);
+						invariantName, sourceName);
 				if (newUCA.isPresent()) {
 					CG[i][j].addLast(newUCA.get());
 				}
@@ -306,7 +308,7 @@ public class DamerauLevenshteinClassifier {
 	 *         neither "Applied Too Long" or "Stopped Too Soon" apply
 	 */
 	private Optional<UnsafeControlAction> checkTooLongOrShort(List<String> safe, List<String> unsafe,
-			String invariantName) {
+			String invariantName, String sourceName) {
 		var safeActivityDurations = getActivityDurations(safe);
 		if (!safeActivityDurations.isEmpty()) {
 			var unsafeActivityDurations = getActivityDurations(unsafe);
@@ -323,10 +325,10 @@ public class DamerauLevenshteinClassifier {
 					prefix = safe.subList(0, diffIdx);
 				}
 				if (unsafeActivityDurations.get(activityName) < safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.STOPPED_TOO_SOON,
+					return Optional.of(new UnsafeControlAction(sourceName, Guideword.STOPPED_TOO_SOON,
 							activities.get(activityName).end(), prefix, invariantName));
 				} else if (unsafeActivityDurations.get(activityName) > safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.APPLIED_TOO_LONG,
+					return Optional.of(new UnsafeControlAction(sourceName, Guideword.APPLIED_TOO_LONG,
 							activities.get(activityName).end(), prefix, invariantName));
 				}
 			}
@@ -358,7 +360,7 @@ public class DamerauLevenshteinClassifier {
 	}
 
 	private Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
-			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName) {
+			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName, String sourceName) {
 		CG[i][j] = new LinkedList<UnsafeControlAction>();
 		Guideword guideword = null;
 		String controlAction = null;
@@ -460,7 +462,7 @@ public class DamerauLevenshteinClassifier {
 		if (guideword == null || controlAction == null || context == null) {
 			return Optional.empty();
 		} else {
-			return Optional.of(new UnsafeControlAction(source, guideword, controlAction,
+			return Optional.of(new UnsafeControlAction(sourceName, guideword, controlAction,
 					// Remove the "fake" delay action we inserted to make the initialization work
 					context.subList(1, context.size()), invariantName));
 		}
