@@ -21,7 +21,7 @@ class MachineTranslationTests {
 	@Test
 	void test() {
 		System.out.println("Starting tests!");
-		TraverseModel tm = new TraverseModel("/Users/kehanna/GitRepos/FASR/FASR_Cameo/Diagrams/WaterTank.uml");
+		TraverseModel tm = new TraverseModel("Diagrams/WaterTank.uml");
 		EList<BasicEList<Behavior>> diagrams = tm.getDiagrams(null);
 		TLATranslator translator = new TLATranslator(tm);
 		

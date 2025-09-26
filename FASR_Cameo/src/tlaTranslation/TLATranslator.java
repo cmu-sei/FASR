@@ -52,12 +52,6 @@ public class TLATranslator {
 		StateMachine machine = null;
 		for(Behavior d : machineDiagrams) {
 			if(d instanceof StateMachine) {
-				// TODO: Handle StateMachine instance
-				/*
-				 * Gather all activity diagrams
-				 * traverse nodes
-				 * convert nodes into TLA & add them to stringbuilder
-				 */
 				machine = (StateMachine) d;
 			} 
 		}
@@ -127,11 +121,6 @@ public class TLATranslator {
 								notExit = false;
 								break;
 							}
-//							if (!visited.add(outgoing.getTarget())) {
-////								notExit = false;
-//								next = outgoing.getTarget();
-//								break;
-//							}
 							graph.addTransition(outgoing.getSource(), outgoing.getTarget(), step);
 							step++;
 							next = outgoing.getTarget();
