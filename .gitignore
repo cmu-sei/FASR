@@ -1,3 +1,5 @@
 /.metadata/
 .DS_Store
 /target
+/FASR_Cameo/target/
+UCA_Classification/target/
