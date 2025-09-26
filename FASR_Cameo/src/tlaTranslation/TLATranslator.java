@@ -84,9 +84,10 @@ public class TLATranslator {
 		}
 		createMachineSpecBeginning(specName, graph);
 		createMachineSpecEnding(graph);
+		String result = sb.toString();
 		saveSpec(specName + ".tla");
 		
-		return sb.toString();
+		return result;
 	}
 	
 	public String createEnvironmentSpec() throws SizeLimitExceededException {
@@ -133,9 +134,11 @@ public class TLATranslator {
 		}
 		graph.createTLA();
 		
+		String result = sb.toString();
+		
 		saveSpec("Environment.tla");
 		
-		return sb.toString();
+		return result;
 	}
 	
 	
