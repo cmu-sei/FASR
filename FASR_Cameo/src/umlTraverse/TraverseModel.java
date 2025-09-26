@@ -23,6 +23,7 @@
 
 package umlTraverse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +88,10 @@ public class TraverseModel {
 			Resource modelResource; 
 			
 			try {
-				this.modelURI  = URI.createFileURI(path);
+				// Need the absolute path in order to load stereotypes
+				File file = new File(path);
+				String absolutePath = file.getAbsolutePath();
+				this.modelURI  = URI.createFileURI(absolutePath);
 				modelResource = resources.getResource(modelURI  , true);
                 EcoreUtil.resolveAll(modelResource);
 			} catch (RuntimeException e) {
@@ -137,6 +141,17 @@ public class TraverseModel {
 			}
 			result.add(machineList);
 			result.add(environmentList);
+			return result;
+		}
+		
+		public Package getPackageByName(String packageName) {
+			Package result = null; 
+			for(Element e : this.model.getOwnedElements()) {
+				if(e instanceof Package && ((Package)e).getName().equals(packageName)) {
+					result = (Package)e;
+					break;
+				}
+			}
 			return result;
 		}
 		
@@ -330,7 +345,7 @@ public class TraverseModel {
 			options.put(XMIResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
 			options.put(XMIResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
 			
-			URI newUri = URI.createFileURI("/Users/kehanna/GitRepos/fasr/TestUML/Diagrams/modified-model.uml");
+			URI newUri = URI.createFileURI("modified-model.uml");
 			Resource newResource = this.resources.createResource(newUri);
 			Resource modelResource = resources.getResource(modelURI  , true);
 			newResource.getContents().add(modelResource.getContents().get(0)); // add the root element

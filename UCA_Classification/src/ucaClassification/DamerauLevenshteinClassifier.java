@@ -105,8 +105,6 @@ public class DamerauLevenshteinClassifier {
 	 */
 	private static final String DELAY_ACTION = "Wait";
 
-	private static String source = "##SOURCE-PLACEHOLDER##";
-
 	/**
 	 * The Damerau-Levenshtein algorithm recognizes these four types of atomic
 	 * string edits.
@@ -177,7 +175,11 @@ public class DamerauLevenshteinClassifier {
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
-				ret.add(classify(safe, unsafe, "##INVARIANT-PLACEHOLDER##"));
+				List<String> invariants = mapper.readerForListOf(String.class).readValue(pair.get("violatedInvs"));
+				String invariantStr = String.join(",", invariants);
+				List<String> components = mapper.readerForListOf(String.class).readValue(pair.get("violatingComponents"));
+				String componentStr = String.join(",", components);
+				ret.add(classify(safe, unsafe, invariantStr, componentStr));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -186,7 +188,7 @@ public class DamerauLevenshteinClassifier {
 		return ret;
 	}
 
-	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName) {
+	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName, String sourceName) {
 		if (safe.equals(unsafe)) {
 			throw new IllegalArgumentException(
 					"The unsafe trace is identical to the safe trace; there is no error to classify.");
@@ -195,10 +197,26 @@ public class DamerauLevenshteinClassifier {
 		// We don't use DamerauLevenshtein at all to check if the guideword "Applied Too
 		// Long" or "Stopped too Soon" applies. They're checked using a different
 		// algorithm, so we check for that / return early if possible.
-		Optional<UnsafeControlAction> tooLongOrShort = checkTooLongOrShort(safe, unsafe, invariantName);
+		Optional<UnsafeControlAction> tooLongOrShort = checkTooLongOrShort(safe, unsafe, invariantName, sourceName);
 		if (tooLongOrShort.isPresent()) {
 			return tooLongOrShort.get();
 		}
+
+		// The D-L initialization / setup takes advantage of the fact that only edit
+		// distance is being computed, rather than the edits themselves as we track (see
+		// in particular the loops which initialize C[i][0] to i and C[0][j] to j). We
+		// are forced to actually calculate these edits, which we do by prepending an
+		// idle action to both traces. Note this requires subsequent removal for the UCA
+		// context.
+		List<String> newSafe = new LinkedList<>();
+		newSafe.add(DELAY_ACTION);
+		newSafe.addAll(safe);
+		safe = newSafe;
+
+		List<String> newUnsafe = new LinkedList<>();
+		newUnsafe.add(DELAY_ACTION);
+		newUnsafe.addAll(unsafe);
+		unsafe = newUnsafe;
 
 		int[][] C = new int[safe.size() + 1][unsafe.size() + 1];
 
@@ -252,7 +270,7 @@ public class DamerauLevenshteinClassifier {
 					transScore = Optional.of(C[iPrime - 1][jPrime - 1] + (i - iPrime) + (j - jPrime) - 1);
 					C[i][j] = Math.min(C[i][j], transScore.get());
 				}
-				if (safe.get(i - 1).equals(unsafe.get(j - 1))) {
+				if (d == 0) {
 					CS = j;
 				}
 				Edit edit = null;
@@ -266,7 +284,7 @@ public class DamerauLevenshteinClassifier {
 					edit = Edit.TRANSPOSE;
 				}
 				Optional<UnsafeControlAction> newUCA = classifyUCA(safe, unsafe, edit, CG, i, j, d, iPrime, jPrime,
-						invariantName);
+						invariantName, sourceName);
 				if (newUCA.isPresent()) {
 					CG[i][j].addLast(newUCA.get());
 				}
@@ -290,7 +308,7 @@ public class DamerauLevenshteinClassifier {
 	 *         neither "Applied Too Long" or "Stopped Too Soon" apply
 	 */
 	private Optional<UnsafeControlAction> checkTooLongOrShort(List<String> safe, List<String> unsafe,
-			String invariantName) {
+			String invariantName, String sourceName) {
 		var safeActivityDurations = getActivityDurations(safe);
 		if (!safeActivityDurations.isEmpty()) {
 			var unsafeActivityDurations = getActivityDurations(unsafe);
@@ -307,10 +325,10 @@ public class DamerauLevenshteinClassifier {
 					prefix = safe.subList(0, diffIdx);
 				}
 				if (unsafeActivityDurations.get(activityName) < safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.STOPPED_TOO_SOON,
+					return Optional.of(new UnsafeControlAction(sourceName, Guideword.STOPPED_TOO_SOON,
 							activities.get(activityName).end(), prefix, invariantName));
 				} else if (unsafeActivityDurations.get(activityName) > safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(source, Guideword.APPLIED_TOO_LONG,
+					return Optional.of(new UnsafeControlAction(sourceName, Guideword.APPLIED_TOO_LONG,
 							activities.get(activityName).end(), prefix, invariantName));
 				}
 			}
@@ -323,7 +341,8 @@ public class DamerauLevenshteinClassifier {
 	 * the provided trace
 	 * 
 	 * @param actions A trace of system behavior
-	 * @return A mapping from activity name -> number of delay actions between the start and stop action of the named activity
+	 * @return A mapping from activity name -> number of delay actions between the
+	 *         start and stop action of the named activity
 	 */
 	private Map<String, Integer> getActivityDurations(List<String> actions) {
 		Map<String, Integer> ret = new HashMap<>();
@@ -341,13 +360,17 @@ public class DamerauLevenshteinClassifier {
 	}
 
 	private Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
-			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName) {
+			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName, String sourceName) {
 		CG[i][j] = new LinkedList<UnsafeControlAction>();
 		Guideword guideword = null;
 		String controlAction = null;
 		List<String> context = null;
 		if (edit == Edit.DELETE) {
 			CG[i][j].addAll(CG[i - 1][j]);
+			if (!CG[i][j].isEmpty()) {
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				return Optional.empty();
+			}
 			String deletedAction = safeActions.get(i - 1);
 			if (deletedAction.equals(DELAY_ACTION)) {
 				controlAction = unsafeActions.get(j);
@@ -360,14 +383,20 @@ public class DamerauLevenshteinClassifier {
 			}
 		} else if (edit == Edit.ADD) {
 			CG[i][j].addAll(CG[i][j - 1]);
+			if (!CG[i][j].isEmpty()) {
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				return Optional.empty();
+			}
 			String addedAction = unsafeActions.get(j - 1);
 			if (addedAction.equals(DELAY_ACTION)) {
-				// If the trace ends on a wait it doesn't make sense to check what's after the
-				// wait
-				if (unsafeActions.size() > j) {
-					controlAction = unsafeActions.get(j);
-				} else {
-					controlAction = null;
+				// We need to find the next non-wait action, though if the trace ends in all
+				// waits, there will be no subsequent action so we don't have a UCA
+				controlAction = null;
+				for (int k = j; k < unsafeActions.size(); k++) {
+					if (!unsafeActions.get(k).equals(DELAY_ACTION)) {
+						controlAction = unsafeActions.get(k);
+						break;
+					}
 				}
 				context = unsafeActions.subList(0, i);
 				guideword = Guideword.TOO_LATE;
@@ -378,7 +407,20 @@ public class DamerauLevenshteinClassifier {
 			}
 		} else if (edit == Edit.SUBSTITUTE) {
 			CG[i][j].addAll(CG[i - 1][j - 1]);
+			if (!CG[i][j].isEmpty()) {
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				return Optional.empty();
+			}
 			if (d == 1) {
+				/*
+				 * We have a special case where the safe or unsafe traces are singletons. This
+				 * is required because we initialize CG[i][j] slightly differently than C[i][j]
+				 * -- the first row of C is 0, 1, 2... i and the first column is 0, 1, 2... j.
+				 * But CG is initialized with only empty lists of guidewords, so when we have
+				 * single-element traces, we would return an empty list instead of the correct
+				 * guideword.
+				 */
+
 				String correctAction = safeActions.get(i - 1);
 				String incorrectAction = unsafeActions.get(j - 1);
 				if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
@@ -397,6 +439,10 @@ public class DamerauLevenshteinClassifier {
 			}
 		} else if (edit == Edit.TRANSPOSE) {
 			CG[i][j].addAll(CG[iPrime - 1][jPrime - 1]);
+			if (!CG[i][j].isEmpty()) {
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				return Optional.empty();
+			}
 			String correctAction = safeActions.get(iPrime - 1);
 			String incorrectAction = unsafeActions.get(jPrime - 1);
 			if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
@@ -416,7 +462,9 @@ public class DamerauLevenshteinClassifier {
 		if (guideword == null || controlAction == null || context == null) {
 			return Optional.empty();
 		} else {
-			return Optional.of(new UnsafeControlAction(source, guideword, controlAction, context, invariantName));
+			return Optional.of(new UnsafeControlAction(sourceName, guideword, controlAction,
+					// Remove the "fake" delay action we inserted to make the initialization work
+					context.subList(1, context.size()), invariantName));
 		}
 	}
 }

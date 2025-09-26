@@ -1,47 +1,384 @@
 [
-    {
-        "goodTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "Wait",
-            "TurnPumpOff"
-        ],
-        "badTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "Wait",
-            "Wait"
-        ]
-    },
-    {
-        "goodTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "Wait"
-        ],
-        "badTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "TurnPumpOff",
-            "TurnPumpOn",
-            "Wait",
-            "Wait"
-        ]
-    },
-    {
-        "goodTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "Wait",
-            "TurnPumpOff"
-        ],
-        "badTrace": [
-            "TurnPumpOn",
-            "Wait",
-            "Wait",
-            "TurnPumpOff",
-            "TurnPumpOn",
-            "Wait"
-        ]
-    }
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "Wait",
+      "Wait",
+      "SetMode"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "Wait",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "Wait",
+      "ArmAutobrake"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "Wait",
+      "SetMode",
+      "ArmAutobrake"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "Wait",
+      "Wait",
+      "SelfCheck"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "Wait",
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "Wait",
+      "Wait",
+      "TurnBSCUOn"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake",
+      "SetDecelRate"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "Wait",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "Wait",
+      "SetMode",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "SelfCheck",
+      "SetMode",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "Wait",
+      "Wait",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "Wait",
+      "SelfCheck",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "TurnBSCUOn",
+      "SelfCheck",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "Wait",
+      "Wait",
+      "Wait",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "Wait",
+      "TurnBSCUOn",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn"
+    ],
+    "badTrace": [
+      "Wait",
+      "Wait",
+      "Wait",
+      "Wait",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  },
+  {
+    "goodTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake",
+      "SetDecelRate",
+      "Wait"
+    ],
+    "badTrace": [
+      "TurnBSCUOn",
+      "SelfCheck",
+      "SetMode",
+      "ArmAutobrake",
+      "SetDecelRate",
+      "Wait"
+    ],
+    "violatingComponents": [
+      ""
+    ],
+    "violatedInvs": []
+  }
 ]

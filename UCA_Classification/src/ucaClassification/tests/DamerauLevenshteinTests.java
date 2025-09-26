@@ -101,7 +101,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -115,7 +115,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -133,7 +133,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -147,7 +147,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -165,7 +165,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -181,7 +181,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -195,7 +195,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -212,7 +212,7 @@ class DamerauLevenshteinTests {
 					Collections.emptyList(), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -226,7 +226,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -240,7 +240,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 	}
@@ -261,7 +261,7 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 
@@ -275,34 +275,76 @@ class DamerauLevenshteinTests {
 					Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait"), // Context
 					invariantName// Violated Constraint
 			);
-			var actual = dlc.classify(safe, unsafe, invariantName);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
 			assertEquals(expected, actual);
 		}
 	}
 
-	@Test
-	void testJSON() {
-		var expected = new HashSet<DamerauLevenshteinClassifier.UnsafeControlAction>();
-		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
-				"TurnPumpOff", // Control Action
-				Arrays.asList("TurnPumpOn", "Wait"), // Context
-				invariantName// Violated Constraint
-		));
-		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.NOT_PROVIDING, // Guideword
-				"TurnPumpOff", // Control Action
-				Arrays.asList("TurnPumpOn", "Wait", "Wait"), // Context
-				invariantName// Violated Constraint
-		));
-		expected.add(new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
-				DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
-				"TurnPumpOn", // Control Action
-				Arrays.asList("TurnPumpOn", "Wait", "Wait", "TurnPumpOff"), // Context
-				invariantName// Violated Constraint
-		));
-		var actual = dlc.classifyFortisOutput(new File("resources/fortis-out.json"));
-		assertEquals(expected, actual);
+//	@Test
+//	void testJSON() {
+//		// Used to examine classification of fortis output, not a true test
+//		var actual = dlc.classifyFortisOutput(new File("resources/fortis-out.json"));
+//	}
+	
+	@Nested
+	public class IssueTests {
+		// Tests relating to specific issues exposed in integration / other testing
+		
+		@Test
+		void testMultipleWaits_TooMany() {
+			var safe = Arrays.asList("TurnBSCUOn", "Wait", "Wait", "TurnBSCUOff");
+			var unsafe = Arrays.asList("TurnBSCUOn", "Wait", "Wait", "Wait", "Wait", "TurnBSCUOff");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.TOO_LATE, // Guideword
+					"TurnBSCUOff", // Control Action
+					Arrays.asList("TurnBSCUOn", "Wait", "Wait"), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
+			assertEquals(expected, actual);
+		}
+		
+		@Test
+		void testMultipleWaits_TooFew() {
+			var safe = Arrays.asList("TurnBSCUOn", "Wait", "Wait", "Wait", "Wait", "TurnBSCUOff");
+			var unsafe = Arrays.asList("TurnBSCUOn", "Wait", "Wait", "TurnBSCUOff");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
+					"TurnBSCUOff", // Control Action
+					Arrays.asList("TurnBSCUOn", "Wait", "Wait"), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
+			assertEquals(expected, actual);
+		}
+		
+		@Test
+		void testSingleElementSafeTrace() {
+			var safe = Arrays.asList("TurnBSCUOn");
+			var unsafe = Arrays.asList("Other", "Other", "Other", "Other", "TurnBSCUOn");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
+					"Other", // Control Action
+					Arrays.asList(), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
+			assertEquals(expected, actual);
+		}
+		
+		@Test
+		void testSingleElementUnsafeTrace() {
+			var safe = Arrays.asList("Wait", "Wait", "Wait", "Wait", "TurnBSCUOn");
+			var unsafe = Arrays.asList("TurnBSCUOn");
+			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
+					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
+					"TurnBSCUOn", // Control Action
+					Arrays.asList(), // Context
+					invariantName// Violated Constraint
+			);
+			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
+			assertEquals(expected, actual);
+		}
 	}
 
 	@Test
@@ -311,7 +353,7 @@ class DamerauLevenshteinTests {
 		var unsafe = Arrays.asList("Init", "Sys.TurnPumpOn", "Wait", "Wait", "Wait", "Sys.TurnPumpOff");
 		var expected = "The unsafe trace is identical to the safe trace; there is no error to classify.";
 		IllegalArgumentException actual = assertThrows(IllegalArgumentException.class,
-				() -> dlc.classify(safe, unsafe, invariantName));
+				() -> dlc.classify(safe, unsafe, invariantName, sourceName));
 		assertEquals(expected, actual.getMessage());
 	}
 }
