@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:MagicDrawProfile="http://www.omg.org/spec/UML/20131001/MagicDrawProfile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/UML/20131001/MagicDrawProfile UML_Standard_Profile.MagicDraw_Profile.profile.uml#_erznK6LcEfCLhaJUTjhiAw">
+  <uml:Profile xmi:id="_18_5_3_f720368_1544384771830_305848_23660" name="Core Profile" visibility="public" URI="https://www.omg.org/spec/RAAML/20211101/Core" metamodelReference="_18_5_3_f720368_1524487814372_335961_6041">
+    <eAnnotations xmi:id="_eryY3qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <contents xmi:type="ecore:EPackage" xmi:id="_eryY36LcEfCLhaJUTjhiAw" name="CoreProfile" nsURI="https://www.omg.org/spec/RAAML/20211101/Core" nsPrefix="CoreProfile">
+        <eAnnotations xmi:id="_eryY4KLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details xmi:id="_eryY4aLcEfCLhaJUTjhiAw" key="originalName" value="Core Profile"/>
+        </eAnnotations>
+        <eAnnotations xmi:id="_eryY4qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/4.0.0/UML">
+          <references xmi:type="uml:Package" href="SysML.profile.uml#_12_0EAPbeta_be00301_1162212177466_124550_157_convert"/>
+        </eAnnotations>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryY46LcEfCLhaJUTjhiAw" name="ControllingMeasure" abstract="true" eSuperTypes="_eryY7KLcEfCLhaJUTjhiAw">
+          <eAnnotations xmi:id="_eryY5KLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1532684752407_253868_16273"/>
+          <eAnnotations xmi:id="_eryY5aLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/emf/2002/GenModel">
+            <details xmi:id="_eryY5qLcEfCLhaJUTjhiAw" key="documentation" value="-- supplier of the ControllingMeasure must be a Situation&#xA;Situation.allInstances().base_Class->includesAll(self.base_Dependency.supplier)"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY56LcEfCLhaJUTjhiAw" name="base_Dependency" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY6aLcEfCLhaJUTjhiAw" name="affects" ordered="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryY7KLcEfCLhaJUTjhiAw" name="SysML_Blocks_DirectedRelationshipPropertyPath" abstract="true">
+          <eAnnotations xmi:id="_eryY7aLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="uml:Stereotype" href="SysML.profile.uml#_17_0_5beta_17530432_1382583834110_524897_11405"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY7qLcEfCLhaJUTjhiAw" name="base_DirectedRelationship" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//DirectedRelationship"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY8KLcEfCLhaJUTjhiAw" name="sourcePropertyPath" unique="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY8qLcEfCLhaJUTjhiAw" name="targetPropertyPath" unique="false" upperBound="-1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY9KLcEfCLhaJUTjhiAw" name="sourceContext" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Classifier"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY9qLcEfCLhaJUTjhiAw" name="targetContext" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Classifier"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryY-KLcEfCLhaJUTjhiAw" name="Violates">
+          <eAnnotations xmi:id="_eryY-aLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1524491029745_66957_16213"/>
+          <eAnnotations xmi:id="_eryY-qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/emf/2002/GenModel">
+            <details xmi:id="_eryY-6LcEfCLhaJUTjhiAw" key="documentation" value="-- client of the Violates must be a Situation&#xA;Situation.allInstances().base_Class->includesAll(self.base_Dependency.client)"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryY_KLcEfCLhaJUTjhiAw" name="base_Dependency" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryY_qLcEfCLhaJUTjhiAw" name="RelevantTo" eSuperTypes="_eryY7KLcEfCLhaJUTjhiAw">
+          <eAnnotations xmi:id="_eryY_6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1524491016847_184659_16201"/>
+          <eAnnotations xmi:id="_eryZAKLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/emf/2002/GenModel">
+            <details xmi:id="_eryZAaLcEfCLhaJUTjhiAw" key="documentation" value="-- client of the RelevantTo must be a Situation&#xA;Situation.allInstances().base_Class->includesAll(self.base_Dependency.client)"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryZAqLcEfCLhaJUTjhiAw" name="base_Dependency" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Dependency"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryZBaLcEfCLhaJUTjhiAw" name="Situation" eSuperTypes="_eryZDqLcEfCLhaJUTjhiAw">
+          <eAnnotations xmi:id="_eryZBqLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1524487856534_440989_15656"/>
+          <eAnnotations xmi:id="_eryZB6LcEfCLhaJUTjhiAw" source="duplicates">
+            <eAnnotations xmi:id="_eryZCKLcEfCLhaJUTjhiAw" source="base_Class">
+              <details xmi:id="_eryZCaLcEfCLhaJUTjhiAw" key="lowerBound" value="1"/>
+            </eAnnotations>
+            <contents xmi:type="ecore:EReference" xmi:id="_eryZCqLcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
+              <eAnnotations xmi:id="_eryZC6LcEfCLhaJUTjhiAw" source="redefines" references="_eryZEKLcEfCLhaJUTjhiAw"/>
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+            </contents>
+          </eAnnotations>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryZDqLcEfCLhaJUTjhiAw" name="SysML_Blocks_Block">
+          <eAnnotations xmi:id="_eryZD6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="uml:Stereotype" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147424179914_458922_958"/>
+          </eAnnotations>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryZEKLcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_eryZEqLcEfCLhaJUTjhiAw" name="isEncapsulated" ordered="false">
+            <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryZFKLcEfCLhaJUTjhiAw" name="IDCarrier">
+          <eAnnotations xmi:id="_eryZFaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1537908456824_164369_16433"/>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryZFqLcEfCLhaJUTjhiAw" name="base_Element" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
+          </eStructuralFeatures>
+          <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_eryZGKLcEfCLhaJUTjhiAw" name="Id" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//String"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+        <eSubpackages xmi:id="_eryZGqLcEfCLhaJUTjhiAw" name="Extension" nsURI="http:///CoreProfile/Extension.ecore" nsPrefix="CoreProfile.Extension">
+          <eAnnotations xmi:id="_eryZG6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/4.0.0/UML" references="_19_0_3_8db0281_1562653746235_6817_13987"/>
+          <eClassifiers xmi:type="ecore:EClass" xmi:id="_eryZHKLcEfCLhaJUTjhiAw" name="InputField">
+            <eAnnotations xmi:id="_eryZHaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_3_8db0281_1562653759446_665194_13988"/>
+            <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eryZHqLcEfCLhaJUTjhiAw" name="base_Property" ordered="false" lowerBound="1">
+              <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_eryZIKLcEfCLhaJUTjhiAw" name="multiple" ordered="false" lowerBound="1">
+              <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
+            </eStructuralFeatures>
+          </eClassifiers>
+        </eSubpackages>
+      </contents>
+    </eAnnotations>
+    <packageImport xmi:id="_18_5_3_f720368_1524487814372_335961_6041">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_19_0_3_30b0125_1604650678972_519127_566">
+      <importedPackage xmi:type="uml:Profile" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147434586638_637562_1900"/>
+    </packageImport>
+    <packageImport xmi:id="_0primitiveTypesCore_Profile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_0javaPrimitiveTypesCore_Profile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1532684752407_253868_16273" name="ControllingMeasure" visibility="public" isAbstract="true">
+      <ownedComment xmi:id="_18_5_3_f720368_1544389285007_207290_33549" annotatedElement="_18_5_3_f720368_1532684752407_253868_16273" body="A measure taken to address (mitigate severity, reduce probability of occurrence, increase probability of detection) a potential or real adverse situation."/>
+      <ownedRule xmi:id="_18_5_3_30b0125_1560781534868_896334_12617" name="SupplierIsSituation" visibility="public" constrainedElement="_18_5_3_f720368_1532684752407_253868_16273">
+        <specification xmi:type="uml:OpaqueExpression" xmi:id="_18_5_3_30b0125_1560781534868_859137_12618" name="" visibility="public">
+          <language>OCL2.0</language>
+          <body>-- supplier of the ControllingMeasure must be a Situation
+Situation.allInstances().base_Class->includesAll(self.base_Dependency.supplier)</body>
+        </specification>
+      </ownedRule>
+      <generalization xmi:id="_18_5_3_8760274_1544283775913_284967_35280">
+        <general xmi:type="uml:Stereotype" href="SysML.profile.uml#_17_0_5beta_17530432_1382583834110_524897_11405"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1532684765370_14215_16301" name="base_Dependency" visibility="private" association="_18_5_3_f720368_1532684765370_58851_16300">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321559_511053_13" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_881189_14" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1532684862223_452512_16305" name="affects" visibility="private">
+        <ownedComment xmi:id="_18_5_3_f720368_1544389003824_768423_33462" annotatedElement="_18_5_3_f720368_1532684862223_452512_16305" body="Indicates that this controlling measure influences (typically improves) a particular quantitative attribute of the situation."/>
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1532684879738_874935_16307" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_18_5_3_f720368_1532684879738_814147_16308" name="" visibility="public" value="*"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1524491029745_66957_16213" name="Violates" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544388827673_570131_33447" annotatedElement="_18_5_3_f720368_1524491029745_66957_16213" body="The violates relationship indicates a situation where a system is violating a prescription (requirement, constraint, etc.). It is used to connect situations to requirements, design constraints and any other elements of system models which prescribe a characteristic of the system.&#xA; &#xA;For example, a Situation where the insulin pump drains the battery in 3 days violates the requirement that “The system must work for 1 week without the need to replace batteries”.&#xA;"/>
+      <ownedRule xmi:id="_18_5_3_30b0125_1560781899436_251935_13265" name="ClientIsSituation" visibility="public" constrainedElement="_18_5_3_f720368_1524491029745_66957_16213">
+        <specification xmi:type="uml:OpaqueExpression" xmi:id="_18_5_3_30b0125_1560781899436_994925_13266" name="" visibility="public">
+          <language>OCL2.0</language>
+          <body>-- client of the Violates must be a Situation
+Situation.allInstances().base_Class->includesAll(self.base_Dependency.client)</body>
+        </specification>
+      </ownedRule>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1524491029745_58898_16215" name="base_Dependency" visibility="private" association="_18_5_3_f720368_1524491029745_95752_16214">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321559_928756_11" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_959019_12" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1524491029745_95752_16214" name="" visibility="public" memberEnd="_18_5_3_f720368_1524491029745_58898_16215 _18_5_3_f720368_1524491029745_112818_16216" navigableOwnedEnd="_18_5_3_f720368_1524491029745_112818_16216">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1524491029745_112818_16216" name="extension_InState" visibility="private" type="_18_5_3_f720368_1524491029745_66957_16213" aggregation="composite" association="_18_5_3_f720368_1524491029745_95752_16214">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1524491029745_161923_16217" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_941705_5" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1532684765370_58851_16300" name="" visibility="public" memberEnd="_18_5_3_f720368_1532684765370_14215_16301 _18_5_3_f720368_1532684765370_422760_16302" navigableOwnedEnd="_18_5_3_f720368_1532684765370_422760_16302">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1532684765370_422760_16302" name="extension_" visibility="private" type="_18_5_3_f720368_1532684752407_253868_16273" aggregation="composite" association="_18_5_3_f720368_1532684765370_58851_16300">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1532684765370_754616_16303" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321558_831264_4" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1524491016847_184659_16201" name="RelevantTo" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544386716171_265095_32862" annotatedElement="_18_5_3_f720368_1524491016847_184659_16201" body="The RelevantTo relationship is used to link situations to system model elements to provide context and relevance for the Situation.  Furthermore, the relationship reuses the following functionality from the DirectedRelationshipPropertyPath concept: targetContext and targetPropertyPath.&#xA; &#xA;For example, in an insulin pump, a Situation where the insulin pump cannot be charged would be related to the main battery element in the system model.&#xA;"/>
+      <ownedRule xmi:id="_18_5_3_30b0125_1560781829721_536262_13243" name="ClientIsSituation" visibility="public" constrainedElement="_18_5_3_f720368_1524491016847_184659_16201">
+        <specification xmi:type="uml:OpaqueExpression" xmi:id="_18_5_3_30b0125_1560781829721_160175_13244" name="" visibility="public">
+          <language>OCL2.0</language>
+          <body>-- client of the RelevantTo must be a Situation
+Situation.allInstances().base_Class->includesAll(self.base_Dependency.client)</body>
+        </specification>
+      </ownedRule>
+      <generalization xmi:id="_18_5_3_f720368_1537715176659_913394_14247">
+        <general xmi:type="uml:Stereotype" href="SysML.profile.uml#_17_0_5beta_17530432_1382583834110_524897_11405"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1524491027982_678967_16209" name="base_Dependency" visibility="private" association="_18_5_3_f720368_1524491027982_307037_16208">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Dependency"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321559_183460_6" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_886730_7" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1524491027982_307037_16208" name="" visibility="public" memberEnd="_18_5_3_f720368_1524491027982_678967_16209 _18_5_3_f720368_1524491027982_1311_16210" navigableOwnedEnd="_18_5_3_f720368_1524491027982_1311_16210">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1524491027982_1311_16210" name="extension_InState" visibility="private" type="_18_5_3_f720368_1524491016847_184659_16201" aggregation="composite" association="_18_5_3_f720368_1524491027982_307037_16208">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1524491027982_592763_16211" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_306010_10" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1524487856534_440989_15656" name="Situation" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544386559593_530409_32164" annotatedElement="_18_5_3_f720368_1524487856534_440989_15656" body="A situation is a SysML v1.6 Block. The situation reuses the following functionality from the Block concept: Generalizations, Parts, Value properties, and Parametrics. The situation stereotype is only needed to distinguish situations from other types of blocks. See AnySituation for the definition of a situation concept."/>
+      <generalization xmi:id="_18_5_3_f720368_1524487999228_499717_15842">
+        <general xmi:type="uml:Stereotype" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147424179914_458922_958"/>
+      </generalization>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1524487866565_573432_15663" name="base_Class" visibility="private" association="_18_5_3_f720368_1524487866565_954641_15662">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321559_144146_15" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_515087_16" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1524487866565_954641_15662" name="" visibility="public" memberEnd="_18_5_3_f720368_1524487866565_573432_15663 _18_5_3_f720368_1524487866565_26626_15664" navigableOwnedEnd="_18_5_3_f720368_1524487866565_26626_15664">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1524487866565_26626_15664" name="extension_Situation" visibility="private" type="_18_5_3_f720368_1524487856534_440989_15656" aggregation="composite" association="_18_5_3_f720368_1524487866565_954641_15662">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1524487866565_480923_15665" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_473283_17" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1537908456824_164369_16433" name="IDCarrier" visibility="public">
+      <ownedComment xmi:id="_18_5_3_f720368_1544470041364_508137_50782" annotatedElement="_18_5_3_f720368_1537908456824_164369_16433" body="Additional stereotype for carrying human-readable identification data."/>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537908456835_278611_16435" name="base_Element" visibility="private" association="_18_5_3_f720368_1537908456835_169752_16434">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Element"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321559_837201_8" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321559_675078_9" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_18_5_3_f720368_1537908468825_451660_16460" name="Id" visibility="private">
+        <ownedComment xmi:id="_18_5_3_f720368_1544470108471_731390_50783" annotatedElement="_18_5_3_f720368_1537908468825_451660_16460" body="Human readable identifier."/>
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_1_30b0125_1656418321558_602648_2" name="" visibility="public" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321558_490816_3" name="" visibility="public" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1537908456835_169752_16434" name="" visibility="public" memberEnd="_18_5_3_f720368_1537908456835_278611_16435 _18_5_3_f720368_1537908456835_579037_16436" navigableOwnedEnd="_18_5_3_f720368_1537908456835_579037_16436">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1537908456835_579037_16436" name="extension_" visibility="private" type="_18_5_3_f720368_1537908456824_164369_16433" aggregation="composite" association="_18_5_3_f720368_1537908456835_169752_16434">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1537908456835_693553_16437" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_1_30b0125_1656418321556_441942_1" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_19_0_3_8db0281_1562653746235_6817_13987" name="Extension" visibility="public" URI="">
+      <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_3_8db0281_1562653759446_665194_13988" name="InputField" visibility="public">
+        <ownedAttribute xmi:id="_19_0_3_8db0281_1562653878521_910320_14059" name="base_Property" visibility="private" association="_19_0_3_8db0281_1562653878521_820473_14058">
+          <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_19_0_3_8db0281_1562660439176_957503_14075" name="multiple" visibility="private">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_8db0281_1562653878521_820473_14058" name="" visibility="public" memberEnd="_19_0_3_8db0281_1562653878521_910320_14059 _19_0_3_8db0281_1562653878521_364942_14060" navigableOwnedEnd="_19_0_3_8db0281_1562653878521_364942_14060">
+        <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_8db0281_1562653878521_364942_14060" name="extension_InputField" visibility="private" type="_19_0_3_8db0281_1562653759446_665194_13988" aggregation="composite" association="_19_0_3_8db0281_1562653878521_820473_14058">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_8db0281_1562653878521_336726_14061" name="" visibility="public"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_19_0_3_8db0281_1562653878521_992055_14062" name="" visibility="public" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+    </packagedElement>
+    <profileApplication xmi:id="_be00301_1073394351331_445580_2profileApplicationCore_Profile">
+      <eAnnotations xmi:id="_es_Q8qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_erznK6LcEfCLhaJUTjhiAw"/>
+      </eAnnotations>
+      <appliedProfile href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_be00301_1073394351331_445580_2"/>
+    </profileApplication>
+  </uml:Profile>
+  <MagicDrawProfile:auxiliaryResource xmi:id="_es_Q86LcEfCLhaJUTjhiAw" base_Element="_18_5_3_f720368_1544384771830_305848_23660"/>
+</xmi:XMI>
