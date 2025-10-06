@@ -77,8 +77,8 @@ public class TLATranslator {
 			}
 			if(ng.name.equals("Init")) continue;
 			Set<String> missing = graph.findMatches(ng);
-			for(String m : missing) {
-				sb.append("/\\ UNCHANGED " + m.substring(0, m.length()-1) + "\n");
+			if(!missing.isEmpty()) {
+				sb.append("/\\ UNCHANGED <<" + String.join(", ", missing) + ">>\n");
 			}
 			
 		}
@@ -156,25 +156,15 @@ public class TLATranslator {
 		StringBuilder varString = new StringBuilder();
 		varString.append("\n\nVARIABLES ");
 		
-		for(int i = 0; i < g.variables.size(); i++) {
-			if(i != g.variables.size()-1) {
-				varString.append(String.format("%s, ", g.variables.toArray()[i].toString().substring(0, g.variables.toArray()[i].toString().length()-1)));
-			} else {
-				varString.append(String.format("%s\n\n", g.variables.toArray()[i].toString().substring(0, g.variables.toArray()[i].toString().length()-1)));
-			}
-		}
+		String commaSepVars = String.join(", ", g.variables);
+		varString.append(commaSepVars);
 		
-		varString.append("vars == <<");
+		varString.append("\n\nvars == <<");
+		varString.append(commaSepVars);
+		varString.append(">>\n\n");
 		
-		
-		for(int i = 0; i < g.variables.size(); i++) {
-			if(i != g.variables.size()-1) {
-				varString.append(String.format("%s, ", g.variables.toArray()[i].toString().substring(0, g.variables.toArray()[i].toString().length()-1)));
-			} else {
-				varString.append(String.format("%s>>\n\n", g.variables.toArray()[i].toString().substring(0, g.variables.toArray()[i].toString().length()-1)));
-			}
-		}
 		sb.insert(0, varString.toString());
+		
 		sb.insert(0, "\nEXTENDS Integers");
 		
 //				+ "Init ==\n/\\ step = 0\n\n");
@@ -241,7 +231,7 @@ public class TLATranslator {
 		}
 		
 		public void addVariable(String s) {
-			this.variables.add(s + "'");
+			this.variables.add(s);
 		}
 		
 		public void addNode(String signal, String condition) {
