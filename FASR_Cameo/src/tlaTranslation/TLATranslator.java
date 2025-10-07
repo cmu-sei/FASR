@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.naming.SizeLimitExceededException;
@@ -143,13 +144,28 @@ public class TLATranslator {
 	
 	
 	private void createInitMachine(Transition t, TLAMachineGraph g) {
-		if(t.getEffect() != null) {
-			OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
-			String[] newEffect = effect.getBodies().get(0).split("=");
-			newEffect[0] = newEffect[0].strip();
-			g.addNode("Init", "/\\ state = \"" + t.getTarget().getName() + "\"");
-			g.addNode("Init", "/\\ " + effect.getBodies().get(0));
-		} 
+		Scanner sc;
+	    if (t.getEffect() != null) {OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
+	            String[] newEffect = effect.getBodies().get(0).split("\n");
+	            // see if there is a name, otherwise add state prefix
+	            for (String s : newEffect) {
+	                String[] temp = s.split("=");
+	                if (temp.length == 2) {
+	                    sc = new Scanner(temp[1].strip());
+	                    if (temp[1].strip().toLowerCase().equals("true")) {
+	                        g.addNode("Init", "/\\" + temp[0].strip() + " = TRUE");
+	                    } else if (temp[1].strip().toLowerCase().equals("false")) {
+	                        g.addNode("Init", "/\\" + temp[0].strip() + " = FALSE");
+	                    } else if (sc.hasNextInt()) {
+	                        g.addNode("Init", "/\\" + temp[0].strip() + " = " + sc.nextInt());
+	                    } else {
+	                        g.addNode("Init", "/\\" + temp[0].strip() + " = \"" + temp[1].strip() + "\"");
+	                    }
+	                } else {
+	                    g.addNode("Init", "/\\ state = \"" + t.getTarget().getName() + "\"");
+	                }
+	            }
+	        }
 	}
 	
 	private void createMachineSpecBeginning(String name, TLAMachineGraph g) {	
@@ -226,7 +242,6 @@ public class TLATranslator {
 		public TLAMachineGraph(EList<State> states) {
 			// TODO Auto-generated constructor stub
 			this.conditions = states;
-			addVariable("state");
 			createNodes();
 		}
 		
@@ -247,7 +262,7 @@ public class TLATranslator {
 					for(Trigger trigger : t.getTriggers()) {
 						if(trigger.getName().length() == 0) {
 							Signal signal = TLATranslator.this.tm.getTransitionTrigger(t);
-							if(t.getEffect() != null) { // Happens when it's Wait and water level changes
+							if(t.getEffect() != null) { // Happens when there is no effect during a transition
 								OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
 								String[] newEffect = effect.getBodies().get(0).split("=");
 								newEffect[0] = newEffect[0].strip();
