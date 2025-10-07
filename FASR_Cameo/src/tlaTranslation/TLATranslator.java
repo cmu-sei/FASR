@@ -145,23 +145,24 @@ public class TLATranslator {
 	
 	private void createInitMachine(Transition t, TLAMachineGraph g) {
 		Scanner sc;
-	    if (t.getEffect() != null) {OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
+	    if (t.getEffect() != null) {
+	    		OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
 	            String[] newEffect = effect.getBodies().get(0).split("\n");
 	            // see if there is a name, otherwise add state prefix
-	            for (String s : newEffect) {
-	                String[] temp = s.split("=");
+	            for (String assignment : newEffect) {
+	                String[] temp = assignment.split("=");
 	                if (temp.length == 2) {
-	                    sc = new Scanner(temp[1].strip());
-	                    if (temp[1].strip().toLowerCase().equals("true")) {
-	                        g.addNode("Init", "/\\" + temp[0].strip() + " = TRUE");
-	                    } else if (temp[1].strip().toLowerCase().equals("false")) {
-	                        g.addNode("Init", "/\\" + temp[0].strip() + " = FALSE");
+		                String lhs = temp[0].strip();
+		                String rhs = temp[1].strip();
+	                    sc = new Scanner(rhs);
+	                    if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+	                        g.addNode("Init", "/\\ " + lhs + " = " + rhs.toUpperCase());
 	                    } else if (sc.hasNextInt()) {
-	                        g.addNode("Init", "/\\" + temp[0].strip() + " = " + sc.nextInt());
+	                        g.addNode("Init", "/\\ " + lhs + " = " + sc.nextInt());
 	                    } else {
-	                        g.addNode("Init", "/\\" + temp[0].strip() + " = \"" + temp[1].strip() + "\"");
+	                        g.addNode("Init", "/\\ " + lhs + " = \"" + rhs + "\"");
 	                    }
-	                    g.addVariable(temp[0].strip());
+	                    g.addVariable(lhs);
 	                } else {
 	                    g.addNode("Init", "/\\ state = \"" + t.getTarget().getName() + "\"");
 	                }
