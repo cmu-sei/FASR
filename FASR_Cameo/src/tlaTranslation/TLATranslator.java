@@ -161,6 +161,7 @@ public class TLATranslator {
 	                    } else {
 	                        g.addNode("Init", "/\\" + temp[0].strip() + " = \"" + temp[1].strip() + "\"");
 	                    }
+	                    g.addVariable(temp[0].strip());
 	                } else {
 	                    g.addNode("Init", "/\\ state = \"" + t.getTarget().getName() + "\"");
 	                }
@@ -266,7 +267,6 @@ public class TLATranslator {
 								OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
 								String[] newEffect = effect.getBodies().get(0).split("=");
 								newEffect[0] = newEffect[0].strip();
-								addVariable(newEffect[0]);
 								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state = \"" + s.getName() + "\" => " + newEffect[0] + "' =" + newEffect[1]));
 							} else {
 								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state' = "+ s.getName()));
