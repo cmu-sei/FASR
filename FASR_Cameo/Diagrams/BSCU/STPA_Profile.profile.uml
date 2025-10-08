@@ -1,142 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Profile xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_18_5_3_f720368_1542038599573_528052_23622" name="STPA Profile" visibility="public" URI="https://www.omg.org/spec/RAAML/20211101/STPA" metamodelReference="_18_5_3_f720368_1542038599575_988425_23623">
-  <eAnnotations xmi:id="_er4ft6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_er4fuKLcEfCLhaJUTjhiAw" name="STPAProfile" nsURI="https://www.omg.org/spec/RAAML/20211101/STPA" nsPrefix="STPAProfile">
-      <eAnnotations xmi:id="_er4fuaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <details xmi:id="_er4fuqLcEfCLhaJUTjhiAw" key="originalName" value="STPA Profile"/>
+<uml:Profile xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_18_5_3_f720368_1542038599573_528052_23622" name="STPA Profile" visibility="public" URI="" metamodelReference="_0metamodelReferenceSTPA_Profile">
+  <eAnnotations xmi:id="_ElAx5KRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_ElAx5aRMEfCD1uKD0E-dmw" name="STPAProfile" nsURI="http://STPA_Profile/_18_5_3_f720368_1542038599573_528052_23622" nsPrefix="STPAProfile">
+      <eAnnotations xmi:id="_ElAx5qRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details xmi:id="_ElAx56RMEfCD1uKD0E-dmw" key="originalName" value="STPA Profile"/>
       </eAnnotations>
-      <eAnnotations xmi:id="_er4fu6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/4.0.0/UML">
-        <references xmi:type="uml:Profile" href="Core_Profile.profile.uml#_18_5_3_f720368_1544384771830_305848_23660"/>
-      </eAnnotations>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4fvKLcEfCLhaJUTjhiAw" name="ControlAction">
-        <eAnnotations xmi:id="_er4fvaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542114290161_511478_13572"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fvqLcEfCLhaJUTjhiAw" name="base_Signal" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Signal"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fwKLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fwqLcEfCLhaJUTjhiAw" name="base_DataType" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//DataType"/>
-        </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4fxKLcEfCLhaJUTjhiAw" name="Feedback">
-        <eAnnotations xmi:id="_er4fxaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542114337851_305227_13708"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fxqLcEfCLhaJUTjhiAw" name="base_Signal" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Signal"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fyKLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4fyqLcEfCLhaJUTjhiAw" name="base_DataType" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//DataType"/>
-        </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4fzKLcEfCLhaJUTjhiAw" name="UnsafeControlAction" eSuperTypes="_er4f1aLcEfCLhaJUTjhiAw">
-        <eAnnotations xmi:id="_er4fzaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542114949313_504334_16334"/>
-        <eAnnotations xmi:id="_er4fzqLcEfCLhaJUTjhiAw" source="duplicates">
-          <eAnnotations xmi:id="_er4fz6LcEfCLhaJUTjhiAw" source="base_Class">
-            <details xmi:id="_er4f0KLcEfCLhaJUTjhiAw" key="lowerBound" value="1"/>
-          </eAnnotations>
-          <contents xmi:type="ecore:EReference" xmi:id="_er4f0aLcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
-            <eAnnotations xmi:id="_er4f0qLcEfCLhaJUTjhiAw" source="redefines" references="_er4f4aLcEfCLhaJUTjhiAw _er4f26LcEfCLhaJUTjhiAw"/>
-            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-          </contents>
-        </eAnnotations>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f1aLcEfCLhaJUTjhiAw" name="CoreProfile_Situation" eSuperTypes="_er4f36LcEfCLhaJUTjhiAw">
-        <eAnnotations xmi:id="_er4f1qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-          <details xmi:id="_er4f16LcEfCLhaJUTjhiAw" key="originalName" value="Core Profile_Situation"/>
-          <references xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
-        </eAnnotations>
-        <eAnnotations xmi:id="_er4f2KLcEfCLhaJUTjhiAw" source="duplicates">
-          <eAnnotations xmi:id="_er4f2aLcEfCLhaJUTjhiAw" source="base_Class">
-            <details xmi:id="_er4f2qLcEfCLhaJUTjhiAw" key="lowerBound" value="1"/>
-          </eAnnotations>
-          <contents xmi:type="ecore:EReference" xmi:id="_er4f26LcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
-            <eAnnotations xmi:id="_er4f3KLcEfCLhaJUTjhiAw" source="redefines" references="_er4f4aLcEfCLhaJUTjhiAw"/>
-            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-          </contents>
-        </eAnnotations>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f36LcEfCLhaJUTjhiAw" name="SysML_Blocks_Block">
-        <eAnnotations xmi:id="_er4f4KLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-          <references xmi:type="uml:Stereotype" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147424179914_458922_958"/>
-        </eAnnotations>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f4aLcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er4f46LcEfCLhaJUTjhiAw" name="isEncapsulated" ordered="false">
-          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
-        </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f5aLcEfCLhaJUTjhiAw" name="LossScenario" eSuperTypes="_er4f1aLcEfCLhaJUTjhiAw">
-        <eAnnotations xmi:id="_er4f5qLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_3_30b0125_1632759830524_658261_441"/>
-        <eAnnotations xmi:id="_er4f56LcEfCLhaJUTjhiAw" source="duplicates">
-          <eAnnotations xmi:id="_er4f6KLcEfCLhaJUTjhiAw" source="base_Class">
-            <details xmi:id="_er4f6aLcEfCLhaJUTjhiAw" key="lowerBound" value="1"/>
-          </eAnnotations>
-          <contents xmi:type="ecore:EReference" xmi:id="_er4f6qLcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
-            <eAnnotations xmi:id="_er4f66LcEfCLhaJUTjhiAw" source="redefines" references="_er4f4aLcEfCLhaJUTjhiAw _er4f26LcEfCLhaJUTjhiAw"/>
-            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-          </contents>
-        </eAnnotations>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f7qLcEfCLhaJUTjhiAw" name="ControlledProcess">
-        <eAnnotations xmi:id="_er4f76LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542118835237_159672_19891"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f8KLcEfCLhaJUTjhiAw" name="base_Property" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f8qLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_ElAx6KRMEfCD1uKD0E-dmw" name="UnsafeControlAction">
+        <eAnnotations xmi:id="_ElAx6aRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542114949313_504334_16334"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_ElAx6qRMEfCD1uKD0E-dmw" name="base_Class" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
         </eStructuralFeatures>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f9KLcEfCLhaJUTjhiAw" name="Actuator">
-        <eAnnotations xmi:id="_er4f9aLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542118835238_604538_19892"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f9qLcEfCLhaJUTjhiAw" name="base_Property" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f-KLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_ElAx7KRMEfCD1uKD0E-dmw" name="LossScenario">
+        <eAnnotations xmi:id="_ElAx7aRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_3_30b0125_1632759830524_658261_441"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_ElAx7qRMEfCD1uKD0E-dmw" name="base_Class" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
         </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4f-qLcEfCLhaJUTjhiAw" name="Sensor">
-        <eAnnotations xmi:id="_er4f-6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542118835239_309097_19893"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f_KLcEfCLhaJUTjhiAw" name="base_Property" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4f_qLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-        </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4gAKLcEfCLhaJUTjhiAw" name="Controller">
-        <eAnnotations xmi:id="_er4gAaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542118835239_942456_19894"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4gAqLcEfCLhaJUTjhiAw" name="base_Property" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
-        </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er4gBKLcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
-          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-        </eStructuralFeatures>
-      </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er4gBqLcEfCLhaJUTjhiAw" name="ControlStructure" eSuperTypes="_er4f36LcEfCLhaJUTjhiAw">
-        <eAnnotations xmi:id="_er4gB6LcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_5_3_f720368_1542118835239_435309_19895"/>
-        <eAnnotations xmi:id="_er4gCKLcEfCLhaJUTjhiAw" source="duplicates">
-          <eAnnotations xmi:id="_er4gCaLcEfCLhaJUTjhiAw" source="base_Class">
-            <details xmi:id="_er4gCqLcEfCLhaJUTjhiAw" key="lowerBound" value="1"/>
-          </eAnnotations>
-          <contents xmi:type="ecore:EReference" xmi:id="_er4gC6LcEfCLhaJUTjhiAw" name="base_Class" ordered="false">
-            <eAnnotations xmi:id="_er4gDKLcEfCLhaJUTjhiAw" source="redefines" references="_er4f4aLcEfCLhaJUTjhiAw"/>
-            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
-          </contents>
-        </eAnnotations>
       </eClassifiers>
     </contents>
   </eAnnotations>
-  <packageImport xmi:id="_18_5_3_f720368_1542038599575_988425_23623">
+  <packageImport xmi:id="_0metamodelReferenceSTPA_Profile">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
-  </packageImport>
-  <packageImport xmi:id="_19_0_3_30b0125_1604651872325_462867_1451">
-    <importedPackage xmi:type="uml:Profile" href="General_Concepts_Profile.profile.uml#_18_5_3_f720368_1537716950274_148762_15249"/>
   </packageImport>
   <packageImport xmi:id="_0primitiveTypesSTPA_Profile">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
@@ -144,227 +28,20 @@
   <packageImport xmi:id="_0javaPrimitiveTypesSTPA_Profile">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
   </packageImport>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542114290161_511478_13572" name="ControlAction" visibility="public">
-    <ownedComment xmi:id="_18_5_3_f720368_1542114290162_115997_13574" annotatedElement="_18_5_3_f720368_1542114290161_511478_13572" body="A Control Action (CA) is an output signal from a functional / logical Controller to a ControlledProcess (via the Actuator), that determines the receiving process behavior."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114290227_832755_13591" name="base_Signal" visibility="private" association="_18_5_3_f720368_1542114290227_954690_13590">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Signal"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_181902_48" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_503584_49" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114290231_293919_13596" name="base_Class" visibility="private" association="_18_5_3_f720368_1542114290230_367519_13595">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_159240_10" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_794124_11" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114290234_782018_13601" name="base_DataType" visibility="private" association="_18_5_3_f720368_1542114290234_395471_13600">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#DataType"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_191947_41" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_988877_42" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114290227_954690_13590" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114290227_832755_13591 _18_5_3_f720368_1542114290228_323075_13592" navigableOwnedEnd="_18_5_3_f720368_1542114290228_323075_13592">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114290228_323075_13592" name="extension_ControlAction" visibility="private" type="_18_5_3_f720368_1542114290161_511478_13572" aggregation="composite" association="_18_5_3_f720368_1542114290227_954690_13590">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114290228_779764_13593" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_869023_38" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114290230_367519_13595" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114290231_293919_13596 _18_5_3_f720368_1542114290231_708914_13597" navigableOwnedEnd="_18_5_3_f720368_1542114290231_708914_13597">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114290231_708914_13597" name="extension_ControlAction" visibility="private" type="_18_5_3_f720368_1542114290161_511478_13572" aggregation="composite" association="_18_5_3_f720368_1542114290230_367519_13595">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114290231_119074_13598" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_433367_28" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114290234_395471_13600" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114290234_782018_13601 _18_5_3_f720368_1542114290235_984034_13602" navigableOwnedEnd="_18_5_3_f720368_1542114290235_984034_13602">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114290235_984034_13602" name="extension_ControlAction" visibility="private" type="_18_5_3_f720368_1542114290161_511478_13572" aggregation="composite" association="_18_5_3_f720368_1542114290234_395471_13600">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114290235_888943_13603" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_601733_43" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542114337851_305227_13708" name="Feedback" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560693304841_957133_14289" annotatedElement="_18_5_3_f720368_1542114337851_305227_13708" body="A Feedback is an input signal to a functional / logical Controller from a ControlledProcess (via the Sensor), that characterizes the current processes behavior (or the environment)."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114337853_270331_13710" name="base_Signal" visibility="private" association="_18_5_3_f720368_1542114337853_840134_13709">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Signal"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_812070_4" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_603245_5" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114337859_167122_13715" name="base_Class" visibility="private" association="_18_5_3_f720368_1542114337859_187841_13714">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_888144_7" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_909986_8" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542114337861_521109_13720" name="base_DataType" visibility="private" association="_18_5_3_f720368_1542114337861_528849_13719">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#DataType"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_380492_13" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_583391_14" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114337853_840134_13709" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114337853_270331_13710 _18_5_3_f720368_1542114337854_299577_13711" navigableOwnedEnd="_18_5_3_f720368_1542114337854_299577_13711">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114337854_299577_13711" name="extension_Feedback" visibility="private" type="_18_5_3_f720368_1542114337851_305227_13708" aggregation="composite" association="_18_5_3_f720368_1542114337853_840134_13709">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114337854_783278_13712" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_563516_22" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114337859_187841_13714" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114337859_167122_13715 _18_5_3_f720368_1542114337860_853046_13716" navigableOwnedEnd="_18_5_3_f720368_1542114337860_853046_13716">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114337860_853046_13716" name="extension_Feedback" visibility="private" type="_18_5_3_f720368_1542114337851_305227_13708" aggregation="composite" association="_18_5_3_f720368_1542114337859_187841_13714">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114337860_370843_13717" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_697852_9" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114337861_528849_13719" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114337861_521109_13720 _18_5_3_f720368_1542114337862_312673_13721" navigableOwnedEnd="_18_5_3_f720368_1542114337862_312673_13721">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114337862_312673_13721" name="extension_Feedback" visibility="private" type="_18_5_3_f720368_1542114337851_305227_13708" aggregation="composite" association="_18_5_3_f720368_1542114337861_528849_13719">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114337862_576151_13722" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_491511_25" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
   <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542114949313_504334_16334" name="UnsafeControlAction" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560692416106_879350_14228" annotatedElement="_18_5_3_f720368_1542114949313_504334_16334" body="Stereotype used to demarcate all the UnsafeControlActions."/>
-    <generalization xmi:id="_18_5_3_f720368_1542114993640_244880_16450">
-      <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
-    </generalization>
     <ownedAttribute xmi:id="_18_5_3_f720368_1542114993654_683009_16452" name="base_Class" visibility="private" association="_18_5_3_f720368_1542114993653_63691_16451">
       <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_470270_2" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_302513_3" name="" visibility="public" value="1"/>
     </ownedAttribute>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114993653_63691_16451" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114993654_683009_16452 _18_5_3_f720368_1542114993654_236792_16453" navigableOwnedEnd="_18_5_3_f720368_1542114993654_236792_16453">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114993654_236792_16453" name="extension_MalfunctioningBehavior" visibility="private" type="_18_5_3_f720368_1542114949313_504334_16334" aggregation="composite" association="_18_5_3_f720368_1542114993653_63691_16451">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542114993654_486134_16454" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_799828_1" name="" visibility="public" value="1"/>
-    </ownedEnd>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542114993653_63691_16451" name="" visibility="public" memberEnd="_18_5_3_f720368_1542114993654_683009_16452 _18_5_3_f720368_1542114993654_236792_16453">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542114993654_236792_16453" name="extension_MalfunctioningBehavior" visibility="private" type="_18_5_3_f720368_1542114949313_504334_16334" aggregation="composite" association="_18_5_3_f720368_1542114993653_63691_16451"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_3_30b0125_1632759830524_658261_441" name="LossScenario" visibility="public">
-    <ownedComment xmi:id="_19_0_3_30b0125_1632760236446_737367_887" annotatedElement="_19_0_3_30b0125_1632759830524_658261_441" body="Stereotype used to demarcate all the LossScenarios."/>
-    <generalization xmi:id="_19_0_3_30b0125_1632759858913_290577_469">
-      <general xmi:type="uml:Stereotype" href="Core_Profile.profile.uml#_18_5_3_f720368_1524487856534_440989_15656"/>
-    </generalization>
     <ownedAttribute xmi:id="_19_0_3_30b0125_1632759858964_678712_472" name="base_Class" visibility="private" association="_19_0_3_30b0125_1632759858964_664302_471">
       <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_897619_19" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_487834_20" name="" visibility="public" value="1"/>
     </ownedAttribute>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_30b0125_1632759858964_664302_471" name="" visibility="public" memberEnd="_19_0_3_30b0125_1632759858964_678712_472 _19_0_3_30b0125_1632759858964_620797_473" navigableOwnedEnd="_19_0_3_30b0125_1632759858964_620797_473">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_30b0125_1632759858964_620797_473" name="extension_LossScenario" visibility="private" type="_19_0_3_30b0125_1632759830524_658261_441" aggregation="composite" association="_19_0_3_30b0125_1632759858964_664302_471">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_30b0125_1632759858965_383006_474" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_371961_29" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542118835237_159672_19891" name="ControlledProcess" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560692791761_982803_14251" annotatedElement="_18_5_3_f720368_1542118835237_159672_19891" body="An abstract representation of the system and it's behaviors that need to be supervised and governed.&#xA;Controller is controlling this process through the ControlAction via the Actuator."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1544550739652_601035_19187" name="base_Property" visibility="private" association="_18_5_3_f720368_1544550739652_834964_19186">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_158567_46" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_196408_47" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_19_0_3_8e60263_1603290591666_290396_192" name="base_Class" visibility="private" association="_19_0_3_8e60263_1603290591666_693914_191">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_557436_36" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_815094_37" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542118835238_604538_19892" name="Actuator" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560692702266_712561_14233" annotatedElement="_18_5_3_f720368_1542118835238_604538_19892" body="Actuator receives ControlActions from Controller and influences the ControlledProcess in some way."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1544550734807_560976_19171" name="base_Property" visibility="private" association="_18_5_3_f720368_1544550734807_426878_19170">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_592034_16" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_302002_17" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_19_0_3_8e60263_1603290582367_656006_176" name="base_Class" visibility="private" association="_19_0_3_8e60263_1603290582366_2214_175">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_497907_30" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_783810_31" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542118835239_309097_19893" name="Sensor" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560692724033_62780_14236" annotatedElement="_18_5_3_f720368_1542118835239_309097_19893" body="Sensor assesses the ControlledProcess (also environment or other controllers) and gives Feedback to the Controller."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1544550737474_336926_19179" name="base_Property" visibility="private" association="_18_5_3_f720368_1544550737474_926170_19178">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_620748_39" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_401682_40" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_19_0_3_8e60263_1603290586946_478176_184" name="base_Class" visibility="private" association="_19_0_3_8e60263_1603290586946_941649_183">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_198039_23" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_450902_24" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542118835239_942456_19894" name="Controller" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560692282466_229809_14219" annotatedElement="_18_5_3_f720368_1542118835239_942456_19894" body="Controller sends the ControlActions and receives Feedback."/>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1544550730659_167599_19163" name="base_Property" visibility="private" association="_18_5_3_f720368_1544550730658_914961_19162">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246017_588920_26" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_996871_27" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_19_0_3_8e60263_1603290576940_828628_168" name="base_Class" visibility="private" association="_19_0_3_8e60263_1603290576940_223098_167">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_493804_44" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_942639_45" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Stereotype" xmi:id="_18_5_3_f720368_1542118835239_435309_19895" name="ControlStructure" visibility="public">
-    <ownedComment xmi:id="_18_5_3_30b0125_1560693196441_296729_14280" annotatedElement="_18_5_3_f720368_1542118835239_435309_19895" body="ControlStructure is a system-of-systems composed of ControlledProcess, Controller and their functional relationships - ControllActions, Feedbacks, describing feedback control loops."/>
-    <generalization xmi:id="_18_5_3_f720368_1542118835240_313072_19900">
-      <general xmi:type="uml:Stereotype" href="SysML.profile.uml#_11_5EAPbeta_be00301_1147424179914_458922_958"/>
-    </generalization>
-    <ownedAttribute xmi:id="_18_5_3_f720368_1542118835280_805565_19922" name="base_Class" visibility="private" association="_18_5_3_f720368_1542118835279_570863_19921">
-      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2022x_30b0125_1664968246018_819160_32" name="" visibility="public" value="1"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_271790_33" name="" visibility="public" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1542118835279_570863_19921" name="" visibility="public" memberEnd="_18_5_3_f720368_1542118835280_805565_19922 _18_5_3_f720368_1542118835280_220366_19923" navigableOwnedEnd="_18_5_3_f720368_1542118835280_220366_19923">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1542118835280_220366_19923" name="extension_ControlStructure" visibility="private" type="_18_5_3_f720368_1542118835239_435309_19895" aggregation="composite" association="_18_5_3_f720368_1542118835279_570863_19921">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1542118835280_415352_19924" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_71972_50" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1544550730658_914961_19162" name="" visibility="public" memberEnd="_18_5_3_f720368_1544550730659_167599_19163 _18_5_3_f720368_1544550730659_668175_19164" navigableOwnedEnd="_18_5_3_f720368_1544550730659_668175_19164">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1544550730659_668175_19164" name="extension_Controller" visibility="private" type="_18_5_3_f720368_1542118835239_942456_19894" aggregation="composite" association="_18_5_3_f720368_1544550730658_914961_19162">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1544550730659_232334_19165" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_995227_18" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1544550734807_426878_19170" name="" visibility="public" memberEnd="_18_5_3_f720368_1544550734807_560976_19171 _18_5_3_f720368_1544550734808_965564_19172" navigableOwnedEnd="_18_5_3_f720368_1544550734808_965564_19172">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1544550734808_965564_19172" name="extension_Actuator" visibility="private" type="_18_5_3_f720368_1542118835238_604538_19892" aggregation="composite" association="_18_5_3_f720368_1544550734807_426878_19170">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1544550734808_331254_19173" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_195652_15" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1544550737474_926170_19178" name="" visibility="public" memberEnd="_18_5_3_f720368_1544550737474_336926_19179 _18_5_3_f720368_1544550737474_96882_19180" navigableOwnedEnd="_18_5_3_f720368_1544550737474_96882_19180">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1544550737474_96882_19180" name="extension_Sensor" visibility="private" type="_18_5_3_f720368_1542118835239_309097_19893" aggregation="composite" association="_18_5_3_f720368_1544550737474_926170_19178">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1544550737474_800219_19181" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_157880_21" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_18_5_3_f720368_1544550739652_834964_19186" name="" visibility="public" memberEnd="_18_5_3_f720368_1544550739652_601035_19187 _18_5_3_f720368_1544550739653_295014_19188" navigableOwnedEnd="_18_5_3_f720368_1544550739653_295014_19188">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_18_5_3_f720368_1544550739653_295014_19188" name="extension_Process" visibility="private" type="_18_5_3_f720368_1542118835237_159672_19891" aggregation="composite" association="_18_5_3_f720368_1544550739652_834964_19186">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_18_5_3_f720368_1544550739653_191813_19189" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_865964_51" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_8e60263_1603290576940_223098_167" name="" visibility="public" memberEnd="_19_0_3_8e60263_1603290576940_828628_168 _19_0_3_8e60263_1603290576970_192590_169" navigableOwnedEnd="_19_0_3_8e60263_1603290576970_192590_169">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_8e60263_1603290576970_192590_169" name="extension_Controller" visibility="private" type="_18_5_3_f720368_1542118835239_942456_19894" aggregation="composite" association="_19_0_3_8e60263_1603290576940_223098_167">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_8e60263_1603290576970_458742_170" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_467720_35" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_8e60263_1603290582366_2214_175" name="" visibility="public" memberEnd="_19_0_3_8e60263_1603290582367_656006_176 _19_0_3_8e60263_1603290582367_70399_177" navigableOwnedEnd="_19_0_3_8e60263_1603290582367_70399_177">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_8e60263_1603290582367_70399_177" name="extension_Actuator" visibility="private" type="_18_5_3_f720368_1542118835238_604538_19892" aggregation="composite" association="_19_0_3_8e60263_1603290582366_2214_175">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_8e60263_1603290582367_411486_178" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246018_912418_34" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_8e60263_1603290586946_941649_183" name="" visibility="public" memberEnd="_19_0_3_8e60263_1603290586946_478176_184 _19_0_3_8e60263_1603290586946_879361_185" navigableOwnedEnd="_19_0_3_8e60263_1603290586946_879361_185">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_8e60263_1603290586946_879361_185" name="extension_Sensor" visibility="private" type="_18_5_3_f720368_1542118835239_309097_19893" aggregation="composite" association="_19_0_3_8e60263_1603290586946_941649_183">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_8e60263_1603290586946_693798_186" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_390241_6" name="" visibility="public" value="1"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_8e60263_1603290591666_693914_191" name="" visibility="public" memberEnd="_19_0_3_8e60263_1603290591666_290396_192 _19_0_3_8e60263_1603290591667_595641_193" navigableOwnedEnd="_19_0_3_8e60263_1603290591667_595641_193">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_8e60263_1603290591667_595641_193" name="extension_ControlledProcess" visibility="private" type="_18_5_3_f720368_1542118835237_159672_19891" aggregation="composite" association="_19_0_3_8e60263_1603290591666_693914_191">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_3_8e60263_1603290591667_76202_194" name="" visibility="public"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2022x_30b0125_1664968246017_94324_12" name="" visibility="public" value="1"/>
-    </ownedEnd>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_3_30b0125_1632759858964_664302_471" name="" visibility="public" memberEnd="_19_0_3_30b0125_1632759858964_678712_472 _19_0_3_30b0125_1632759858964_620797_473">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_3_30b0125_1632759858964_620797_473" name="extension_LossScenario" visibility="private" type="_19_0_3_30b0125_1632759830524_658261_441" aggregation="composite" association="_19_0_3_30b0125_1632759858964_664302_471"/>
   </packagedElement>
 </uml:Profile>

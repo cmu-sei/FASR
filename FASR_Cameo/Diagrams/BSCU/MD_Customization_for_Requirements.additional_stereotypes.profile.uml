@@ -1,87 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_18_0beta_8f90291_1391001597107_586303_6259" name="additional_stereotypes" visibility="public" URI="http://www.magicdraw.com/spec/Customization/180/Requirements" metamodelReference="_18_0beta_8f90291_1391001597108_594438_6260">
-  <eAnnotations xmi:id="_er1aqKLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_er1aqaLcEfCLhaJUTjhiAw" name="additional_stereotypes" nsURI="http://www.magicdraw.com/spec/Customization/180/Requirements" nsPrefix="additional_stereotypes">
-      <eAnnotations xmi:id="_er1aqqLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/4.0.0/UML">
+  <eAnnotations xmi:id="_Ek-TAaRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_Ek-TAqRMEfCD1uKD0E-dmw" name="additional_stereotypes" nsURI="http://www.magicdraw.com/spec/Customization/180/Requirements" nsPrefix="additional_stereotypes">
+      <eAnnotations xmi:id="_Ek-TA6RMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/4.0.0/UML">
         <references xmi:type="uml:Profile" href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_be00301_1073394351331_445580_2"/>
       </eAnnotations>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er1aq6LcEfCLhaJUTjhiAw" name="numberOwner" eSuperTypes="_er1auKLcEfCLhaJUTjhiAw">
-        <eAnnotations xmi:id="_er1arKLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679108375_756172_3723"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1araLcEfCLhaJUTjhiAw" name="base_Package" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_Ek-TBKRMEfCD1uKD0E-dmw" name="numberOwner" eSuperTypes="_Ek-TEaRMEfCD1uKD0E-dmw">
+        <eAnnotations xmi:id="_Ek-TBaRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679108375_756172_3723"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TBqRMEfCD1uKD0E-dmw" name="base_Package" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Package"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1ar6LcEfCLhaJUTjhiAw" name="base_Class" ordered="false" lowerBound="1">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TCKRMEfCD1uKD0E-dmw" name="base_Class" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1asaLcEfCLhaJUTjhiAw" name="numberingStyle" ordered="false" eType="_er1avaLcEfCLhaJUTjhiAw" defaultValueLiteral="nested"/>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1as6LcEfCLhaJUTjhiAw" name="prefix" ordered="false" eType="_er1awaLcEfCLhaJUTjhiAw" defaultValueLiteral=""/>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1ataLcEfCLhaJUTjhiAw" name="separator" ordered="false" eType="_er1awaLcEfCLhaJUTjhiAw" defaultValueLiteral="."/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TCqRMEfCD1uKD0E-dmw" name="numberingStyle" ordered="false" eType="_Ek-TFqRMEfCD1uKD0E-dmw" defaultValueLiteral="nested"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TDKRMEfCD1uKD0E-dmw" name="prefix" ordered="false" eType="_Ek-TGqRMEfCD1uKD0E-dmw" defaultValueLiteral=""/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TDqRMEfCD1uKD0E-dmw" name="separator" ordered="false" eType="_Ek-TGqRMEfCD1uKD0E-dmw" defaultValueLiteral="."/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er1auKLcEfCLhaJUTjhiAw" name="MagicDrawProfile_InvisibleStereotype">
-        <eAnnotations xmi:id="_er1auaLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-          <details xmi:id="_er1auqLcEfCLhaJUTjhiAw" key="originalName" value="MagicDraw Profile_InvisibleStereotype"/>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_Ek-TEaRMEfCD1uKD0E-dmw" name="MagicDrawProfile_InvisibleStereotype">
+        <eAnnotations xmi:id="_Ek-TEqRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details xmi:id="_Ek-TE6RMEfCD1uKD0E-dmw" key="originalName" value="MagicDraw Profile_InvisibleStereotype"/>
           <references xmi:type="uml:Stereotype" href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_9_0_be00301_1108044721245_236588_411"/>
         </eAnnotations>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1au6LcEfCLhaJUTjhiAw" name="base_Element" ordered="false" lowerBound="1">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TFKRMEfCD1uKD0E-dmw" name="base_Element" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
         </eStructuralFeatures>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_er1avaLcEfCLhaJUTjhiAw" name="NumberingStyle">
-        <eAnnotations xmi:id="_er1avqLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679155093_134579_3750"/>
-        <eLiterals xmi:id="_er1av6LcEfCLhaJUTjhiAw" name="nested"/>
-        <eLiterals xmi:id="_er1awKLcEfCLhaJUTjhiAw" name="normal" value="1"/>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_Ek-TFqRMEfCD1uKD0E-dmw" name="NumberingStyle">
+        <eAnnotations xmi:id="_Ek-TF6RMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679155093_134579_3750"/>
+        <eLiterals xmi:id="_Ek-TGKRMEfCD1uKD0E-dmw" name="nested"/>
+        <eLiterals xmi:id="_Ek-TGaRMEfCD1uKD0E-dmw" name="normal" value="1"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EDataType" xmi:id="_er1awaLcEfCLhaJUTjhiAw" name="ReqNumber" instanceClassName="java.lang.String">
-        <eAnnotations xmi:id="_er1awqLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679155109_265508_3751"/>
+      <eClassifiers xmi:type="ecore:EDataType" xmi:id="_Ek-TGqRMEfCD1uKD0E-dmw" name="ReqNumber" instanceClassName="java.lang.String">
+        <eAnnotations xmi:id="_Ek-TG6RMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5beta1_2104050f_1236679155109_265508_3751"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er1aw6LcEfCLhaJUTjhiAw" name="RequirementTable">
-        <eAnnotations xmi:id="_er1axKLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_6beta_bb002ea_1245402130171_170238_5692"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1axaLcEfCLhaJUTjhiAw" name="base_Diagram" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_Ek-THKRMEfCD1uKD0E-dmw" name="RequirementTable">
+        <eAnnotations xmi:id="_Ek-THaRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_6beta_bb002ea_1245402130171_170238_5692"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-THqRMEfCD1uKD0E-dmw" name="base_Diagram" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1ax6LcEfCLhaJUTjhiAw" name="showColumns" ordered="false" upperBound="-1">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TIKRMEfCD1uKD0E-dmw" name="showColumns" ordered="false" upperBound="-1">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1ayaLcEfCLhaJUTjhiAw" name="columnsWidth" ordered="false" upperBound="-1">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TIqRMEfCD1uKD0E-dmw" name="columnsWidth" ordered="false" upperBound="-1">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Integer"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1ay6LcEfCLhaJUTjhiAw" name="customColumnElements" upperBound="-1" changeable="false" derived="true">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TJKRMEfCD1uKD0E-dmw" name="customColumnElements" upperBound="-1" changeable="false" derived="true">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1azaLcEfCLhaJUTjhiAw" name="showCustomColumns" upperBound="-1" changeable="false" derived="true">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TJqRMEfCD1uKD0E-dmw" name="showCustomColumns" upperBound="-1" changeable="false" derived="true">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1az6LcEfCLhaJUTjhiAw" name="context" ordered="false">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TKKRMEfCD1uKD0E-dmw" name="context" ordered="false">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//NamedElement"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1a0aLcEfCLhaJUTjhiAw" name="showContext" ordered="false">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TKqRMEfCD1uKD0E-dmw" name="showContext" ordered="false">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Boolean"/>
         </eStructuralFeatures>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er1a06LcEfCLhaJUTjhiAw" name="RequirementTerms">
-        <eAnnotations xmi:id="_er1a1KLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_4beta_9250292_1457443991636_873761_6733"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1a1aLcEfCLhaJUTjhiAw" name="base_Diagram" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_Ek-TLKRMEfCD1uKD0E-dmw" name="RequirementTerms">
+        <eAnnotations xmi:id="_Ek-TLaRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_4beta_9250292_1457443991636_873761_6733"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TLqRMEfCD1uKD0E-dmw" name="base_Diagram" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
         </eStructuralFeatures>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_er1a16LcEfCLhaJUTjhiAw" name="VerificationStatus">
-        <eAnnotations xmi:id="_er1a2KLcEfCLhaJUTjhiAw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_0_5_eb50346_1456994235763_277473_5257"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1a2aLcEfCLhaJUTjhiAw" name="status" ordered="false" lowerBound="1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_Ek-TMKRMEfCD1uKD0E-dmw" name="VerificationStatus">
+        <eAnnotations xmi:id="_Ek-TMaRMEfCD1uKD0E-dmw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_18_0_5_eb50346_1456994235763_277473_5257"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TMqRMEfCD1uKD0E-dmw" name="status" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//EnumerationLiteral"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1a26LcEfCLhaJUTjhiAw" name="requirement" ordered="false" upperBound="-1">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TNKRMEfCD1uKD0E-dmw" name="requirement" ordered="false" upperBound="-1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1a3aLcEfCLhaJUTjhiAw" name="constraint" ordered="false" upperBound="-1">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TNqRMEfCD1uKD0E-dmw" name="constraint" ordered="false" upperBound="-1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_er1a36LcEfCLhaJUTjhiAw" name="base_ValueSpecification" ordered="false" lowerBound="1">
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_Ek-TOKRMEfCD1uKD0E-dmw" name="base_ValueSpecification" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//ValueSpecification"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1a4aLcEfCLhaJUTjhiAw" name="timestamp" ordered="false" lowerBound="1">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TOqRMEfCD1uKD0E-dmw" name="timestamp" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//String"/>
         </eStructuralFeatures>
-        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_er1a46LcEfCLhaJUTjhiAw" name="margin" ordered="false">
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_Ek-TPKRMEfCD1uKD0E-dmw" name="margin" ordered="false">
           <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
         </eStructuralFeatures>
       </eClassifiers>
@@ -145,7 +145,7 @@
     <ownedLiteral xmi:id="_16_5beta1_2104050f_1236679155109_541706_3753" name="normal" visibility="public"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Stereotype" xmi:id="_16_6beta_bb002ea_1245402130171_170238_5692" name="RequirementTable" visibility="public">
-    <ownedComment xmi:id="_16_6_bb002ea_1255588528187_359462_5723" annotatedElement="_16_6beta_bb002ea_1245402130171_170238_5692" body="&lt;html>&#xA;  &lt;head>&#xA;&#x9;&#x9;&lt;style>&#xA;&#x9;&#x9;&#x9;p {padding:0px; margin:0px;}&#xA;&#x9;&#x9;&lt;/style>&#xA;&#x9;&lt;/head>&#xA;  &lt;body>&#xA;&lt;b>A Requirements Table&lt;/b> allows you to organize your requirements in a tabular form. As requirements are text-based, this table provides a convenient way for filling-in requirements' information using a spreadsheet-like tabular format, instead of limited-size boxes in a diagram. Each row in the table represents a requirement. The table columns represents the properties of each requirement in the table. With this table, you can:&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Create new requirements directly in the table, or import the existing ones from your model to the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Directly edit the properties of the requirements in the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Directly generate requirement reports, renumber requirements' IDs, or export the table into CSV or HTML format.&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;There are 3 methods to add requirement(s) to the table:&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;1. Create a new requirement and add to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Click the &lt;b>&amp;quot;Add New&amp;quot;&lt;/b> button on the table toolbar, and then select a requirement types you would like to create from the drop-down menu. The owner of the newly-created requirement will be similar to the owner of the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;To select a different owner, hold Shift and then select a requirement type from the drop-down menu.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Insert&lt;/b> (&lt;b>Cmd+I&lt;/b> on MAC)&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;2. Create a new nested requirement and add to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Click the &lt;b>&amp;quot;Add Nested&amp;quot;&lt;/b> button on the table toolbar while an existing requirement is highlighted in the table, and then select a requirement types you would like to create from the drop-down menu. The owner of the newly-created requirement will be the highlighted requirement.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Alternatively, just right-click the requirement row in the table, and then select &lt;b>Add Nested&lt;/b> option in the displayed shortcut menu.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Alt+Insert &lt;/b>(&lt;b>Alt+I&lt;/b> on MAC).&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;3. Add existing requirement(s) to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Click &lt;b>&amp;quot;Add Existing&amp;quot;&lt;/b> button. In the dialog, select requirement(s) already existed in your model to display it(them) in the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Or, directly drag existing requirement(s) from a browser to the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Ctrl+Insert&lt;/b> (&lt;b>Cmd+E&lt;/b> on MAC) Additional commands are available when right-click on a cell in the table.&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;&lt;/body>&#xA;&lt;/html>"/>
+    <ownedComment xmi:id="_16_6_bb002ea_1255588528187_359462_5723" annotatedElement="_16_6beta_bb002ea_1245402130171_170238_5692" body="&lt;html>&#xA;  &lt;head>&#xA;&#x9;&#x9;&lt;style>&#xA;&#x9;&#x9;&#x9;p {padding:0px; margin:0px;}&#xA;&#x9;&#x9;&lt;/style>&#xA;&#x9;&lt;/head>&#xA;  &lt;body>&#xA;&lt;b>A Requirements Table&lt;/b> allows you to organize your requirements in a tabular form. Because requirements are text-based, this table provides a convenient way to fill in requirement information using a tabular format rather than limited-sized boxes in a diagram. Each row in the table represents a requirement, while each column in the table represents the properties of each requirement. With this table, you can:&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Create new requirements directly in the table or import existing ones from your model to the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Edit requirement properties directly in the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Directly generate requirement reports, renumber requirement IDs, or export the table into CSV or HTML format.&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;There are three methods to add requirements to the table:&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;1. Create a new requirement and add it to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Click the &lt;b>&amp;quot;Add New&amp;quot;&lt;/b> button on the table toolbar, then select a requirement type you would like to create from the drop-down menu. The owner of the newly-created requirement will be the same as that of the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;To select a different owner, hold &lt;b>Shift&lt;/b> and select a requirement type from the drop-down menu.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Insert&lt;/b> (&lt;b>Cmd+I&lt;/b> on MAC)&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;2. Create a new nested requirement and add it to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Highlight an existing requirement in the table, then click the &lt;b>&amp;quot;Add Nested&amp;quot;&lt;/b> button on the table toolbar and select the requirement type you would like to create from the drop-down menu. The owner of the newly-created requirement will be the highlighted requirement.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Alternatively, right-click the requirement row in the table and select the &lt;b>&amp;quot;Add Nested&amp;quot;&lt;/b> option in the shortcut menu.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Alt+Insert &lt;/b>(&lt;b>Alt+I&lt;/b> on MAC).&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;    &lt;p>&#xA;&amp;#160;&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;p>&#xA;3. Add existing requirements to the table.&#xA;&#xA;    &lt;/p>&#xA;&#xA;    &lt;ul>&#xA;      &lt;li>&#xA;Click &lt;b>&amp;quot;Add Existing&amp;quot;&lt;/b> button. In the dialog, select requirements that already exist in your model to display in the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Or, drag the existing requirement from the model browser directly to the table.&#xA;&#xA;      &lt;/li>&#xA;      &lt;li>&#xA;Shortcut: &lt;b>Ctrl+Insert&lt;/b> (&lt;b>Cmd+E&lt;/b> on MAC)). Additional commands are available when right-clicking on a cell in the table.&#xA;&#xA;      &lt;/li>&#xA;    &lt;/ul>&#xA;&lt;/body>&#xA;&lt;/html>"/>
     <ownedAttribute xmi:id="_16_6beta_bb002ea_1245402187328_735136_5699" name="base_Diagram" visibility="private" association="_16_6beta_bb002ea_1245402187328_327249_5698">
       <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Element"/>
     </ownedAttribute>

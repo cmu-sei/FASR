@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.naming.SizeLimitExceededException;
 
@@ -24,6 +26,7 @@ import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.FinalNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.OpaqueBehavior;
+import org.eclipse.uml2.uml.OpaqueExpression;
 import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.StateMachine;
@@ -74,12 +77,12 @@ public class TLATranslator {
 		for(tlaTranslation.TLATranslator.TLAMachineGraph.CompressedNode ng : graph.compressedNodes) {
 			sb.append(ng.getName() + " == \n");
 			for(String s : ng.states) {
-				sb.append(s + "\n");
+				sb.append(s);
 			}
 			if(ng.name.equals("Init")) continue;
 			Set<String> missing = graph.findMatches(ng);
 			if(!missing.isEmpty()) {
-				sb.append("/\\ UNCHANGED <<" + String.join(", ", missing) + ">>\n");
+				sb.append("\t/\\ UNCHANGED <<" + String.join(", ", missing) + ">>\n\n");
 			}
 			
 		}
@@ -156,17 +159,16 @@ public class TLATranslator {
 		                String rhs = temp[1].strip();
 	                    sc = new Scanner(rhs);
 	                    if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
-	                        g.addNode("Init", "/\\ " + lhs + " = " + rhs.toUpperCase());
+	                        g.addNode("Init", "\t/\\ " + lhs + " = " + rhs.toUpperCase() + "\n");
 	                    } else if (sc.hasNextInt()) {
-	                        g.addNode("Init", "/\\ " + lhs + " = " + sc.nextInt());
+	                        g.addNode("Init", "\t/\\ " + lhs + " = " + sc.nextInt() + "\n");
 	                    } else {
-	                        g.addNode("Init", "/\\ " + lhs + " = \"" + rhs + "\"");
+	                        g.addNode("Init", "\t/\\ " + lhs + " = " + rhs + "\n");
 	                    }
 	                    g.addVariable(lhs);
-	                } else {
-	                    g.addNode("Init", "/\\ state = \"" + t.getTarget().getName() + "\"");
 	                }
 	            }
+	            g.addNode("Init", "\n");
 	        }
 	}
 	
@@ -186,16 +188,17 @@ public class TLATranslator {
 		sb.insert(0, "\nEXTENDS Integers");
 		
 //				+ "Init ==\n/\\ step = 0\n\n");
-		sb.insert(0, String.format("----------------------------- MODULE %s -----------------------------", name));
+		sb.insert(0, String.format("----------------------------- MODULE %s -----------------------------\n", name));
 	}
 	
 	private void createMachineSpecEnding(TLAMachineGraph g) {
 		sb.append("Next ==");
 		for(CompressedNode node : g.getCompressedNodes()) {
 			if(node.name.equals("Init")) continue;
-			sb.append("\n\\/ " + node.name);
+			sb.append("\n\t\\/ " + node.name);
 		}
-		sb.append("\n=============================================================================");
+		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
+		sb.append("\n\n=============================================================================");
 	}
 	
 	private void createEnvironmentSpecEnding() {
@@ -203,6 +206,7 @@ public class TLATranslator {
 		for(Entry<ActivityNode, EList<tlaTranslation.TLATranslator.TLAEnvGraph.TLAEnvTransition>> entry : this.graph.edges.entrySet()) {
 			sb.append("\n\\/ " + entry.getKey().getName());
 		}
+		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
 		sb.append("\n=============================================================================");
 	}
 	
@@ -260,21 +264,57 @@ public class TLATranslator {
 		 */
 		public void createNodes() {
 			for(State s : this.conditions) {
+				StringBuilder tlaConditions = new StringBuilder("\t/\\\n");
+				StringBuilder tlaAssignments = new StringBuilder("\t/\\\n");
 				for(Transition t : s.getIncomings()) {					
+					tlaConditions.append("\t\t\\/\n");					
+					tlaAssignments.append("\t\t\\/\n");
 					for(Trigger trigger : t.getTriggers()) {
 						if(trigger.getName().length() == 0) {
 							Signal signal = TLATranslator.this.tm.getTransitionTrigger(t);
 							if(t.getEffect() != null) { // Happens when there is no effect during a transition
+								OpaqueExpression guard = ((OpaqueExpression) t.getGuard().getSpecification());
 								OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
-								String[] newEffect = effect.getBodies().get(0).split("=");
-								newEffect[0] = newEffect[0].strip();
-								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state = \"" + s.getName() + "\" => " + newEffect[0] + "' =" + newEffect[1]));
+								String[] conditions = guard.getBodies().get(0).split("\n");
+								String[] assignments = effect.getBodies().get(0).split("\n");
+								for(String condition : conditions) {
+									String[] condit_pieces = condition.split("[=<>!]");
+									String[] op_pieces = condition.split("[^=<>!]");
+									String lhs = condit_pieces[0].trim();
+									String rhs = condit_pieces[condit_pieces.length - 1].trim();
+									if(rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+										rhs = rhs.toUpperCase();
+									}
+									String op = getTLAOperatorFromCEAOpeator(String.join("", op_pieces).trim());
+									tlaConditions.append("\t\t\t/\\ ");
+									tlaConditions.append(lhs);
+									tlaConditions.append(op);
+									tlaConditions.append(rhs);
+									tlaConditions.append("\n");
+								}
+								for(String assignment : assignments) {
+									String[] assig_pieces = assignment.split("=");
+									String lhs = assig_pieces[0].trim()+"'";
+									String rhs = assig_pieces[1].trim();
+									if(rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+										rhs = rhs.toUpperCase();
+									}
+									tlaAssignments.append("\t\t\t/\\ ");
+									tlaAssignments.append(lhs);
+									tlaAssignments.append(" = ");
+									tlaAssignments.append(rhs);
+									tlaAssignments.append("\n");
+								}
+								MachineNode newNode = new MachineNode(signal.getName(), tlaConditions.toString() + tlaAssignments.toString());
+								tlaNodes.add(newNode);
+//								String[] newEffect = effect.getBodies().get(0).split("=");
+//								newEffect[0] = newEffect[0].strip();
+//								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state = \"" + s.getName() + "\" => " + newEffect[0] + "' =" + newEffect[1]));
 							} else {
-								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state' = "+ s.getName()));
+//								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state' = "+ s.getName()));
+								tlaNodes.add(new MachineNode(signal.getName(), ""));
 							}
 							
-						}else {
-							tlaNodes.add(new MachineNode(trigger.getName(), s.getName()));
 						}
 						
 					}
@@ -284,6 +324,14 @@ public class TLATranslator {
 			}
 		}
 		
+		private String getTLAOperatorFromCEAOpeator(String ceaOperator) {
+			switch(ceaOperator) {
+				case "==":
+					return " = ";
+			}
+			return " UNSUPPORTED OPERATOR ";
+		}
+
 		public EList<CompressedNode> getCompressedNodes(){
 			return this.compressedNodes;
 		}
@@ -313,11 +361,12 @@ public class TLATranslator {
 		
 		public Set<String> findMatches(CompressedNode node) {
 		    Set<String> matches = new HashSet<>();
+		    Set<String> modVars = variables.stream().map(var -> var + "'").collect(Collectors.toSet());
 		    for (String state : node.getStates()) {
 	            String[] words = state.split("\\s+"); // split on whitespace
 	            for (String word : words) {
-	                if (variables.contains(word)) {
-	                    matches.add(word); // collect the variable name
+	                if (modVars.contains(word)) {
+	                    matches.add(word.substring(0, word.length()-1)); // collect the variable name
 	                }
 	            }
 	        }
