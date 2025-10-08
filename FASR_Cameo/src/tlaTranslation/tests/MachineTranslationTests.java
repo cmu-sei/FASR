@@ -2,6 +2,8 @@ package tlaTranslation.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import javax.naming.SizeLimitExceededException;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,12 +15,23 @@ import umlTraverse.TraverseModel;
 
 class MachineTranslationTests {
 	
-	protected String tla = "UNSET";
+	protected String machineTLA = "UNSET";
+	protected String environmentTLA = "UNSET";
+	private TLATranslator translator;
 	
 	protected String getMachineSpec(String path) {
-		TLATranslator translator = new TLATranslator(new TraverseModel(path));
+		translator = new TLATranslator(new TraverseModel(path));
 		
 		return translator.createMachineSpec();
+	}
+	
+	protected String getEnvironmentSpec() {
+		try {
+			return translator.createEnvironmentSpec();
+		} catch (SizeLimitExceededException e) {
+			e.printStackTrace();
+			return "Size Limit Exceeded Exception!";
+		}
 	}
 	
 	@Nested
@@ -26,12 +39,14 @@ class MachineTranslationTests {
 	public class WaterTankTests {
 		@BeforeAll
 		void setup() {
-			tla = getMachineSpec("Diagrams/WaterTank/WaterTank.uml");
+			machineTLA = getMachineSpec("Diagrams/WaterTank/WaterTank.uml");
+			environmentTLA = getEnvironmentSpec();
 		}
 	
 		@Test
 		void test() {
-			System.out.println(tla);
+			System.out.println(machineTLA);
+			System.out.println(environmentTLA);
 			fail("Not yet implemented");
 		}
 	}
@@ -41,12 +56,14 @@ class MachineTranslationTests {
 	public class BSCUTests {
 		@BeforeAll
 		void setup() {
-			tla = getMachineSpec("Diagrams/BSCU/BSCU.uml");
+			machineTLA = getMachineSpec("Diagrams/BSCU/BSCU.uml");
+			environmentTLA = getEnvironmentSpec();
 		}
 	
 		@Test
 		void test() {
-			System.out.println(tla);
+			System.out.println(machineTLA);
+			System.out.println(environmentTLA);
 			fail("Not yet implemented");
 		}
 	}

@@ -27,6 +27,7 @@ import org.eclipse.uml2.uml.FinalNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.OpaqueBehavior;
 import org.eclipse.uml2.uml.OpaqueExpression;
+import org.eclipse.uml2.uml.SendSignalAction;
 import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.StateMachine;
@@ -109,7 +110,7 @@ public class TLATranslator {
 		// Adds activity Nodes to StringBuilder
 		// TODO: Fill in states
 		int step = 0;
-		this.graph = new TLAEnvGraph();
+		this.graph = new TLAEnvGraph(envDiagrams.get(0).getName());
 		HashSet<ActivityNode> visited = new HashSet<ActivityNode>();
 		for(ActivityNode an : this.tm.getAllNodesFromActivity((Activity)envDiagrams.get(0))) {
 			if(an instanceof InitialNode) {
@@ -140,7 +141,7 @@ public class TLATranslator {
 		
 		String result = sb.toString();
 		
-		saveSpec("Environment.tla");
+		saveSpec(this.graph.getName() + ".tla");
 		
 		return result;
 	}
@@ -201,13 +202,26 @@ public class TLATranslator {
 		sb.append("\n\n=============================================================================");
 	}
 	
+	private void createEnvironmentSpecBeginning(String name) {	
+		StringBuilder header = new StringBuilder();
+		header.append("----------------------------- MODULE ");
+		header.append(name);
+		header.append(" -----------------------------\n\n");
+		header.append("EXTENDS Integers\n\n");
+		header.append("VARIABLES step\n\n");
+		header.append("vars == <<step>>\n\n");
+		header.append("Init ==\n");
+		header.append("\tstep = 0\n\n");
+		sb.insert(0, header.toString());
+	}
+	
 	private void createEnvironmentSpecEnding() {
 		sb.append("Next ==");
 		for(Entry<ActivityNode, EList<tlaTranslation.TLATranslator.TLAEnvGraph.TLAEnvTransition>> entry : this.graph.edges.entrySet()) {
-			sb.append("\n\\/ " + entry.getKey().getName());
+			sb.append("\n\t\\/ " + ((SendSignalAction)entry.getKey()).getSignal().getName());
 		}
 		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
-		sb.append("\n=============================================================================");
+		sb.append("\n\n=============================================================================");
 	}
 	
 	/*
@@ -420,7 +434,7 @@ public class TLATranslator {
 		        this.name = name; this.states = states;
 		    }
 		    public String getName() { return name; }
-		    public java.util.List<String> getStates() { return states; }
+		    public List<String> getStates() { return states; }
 		}
 	}
 	
@@ -463,6 +477,16 @@ public class TLATranslator {
 		
 		private Map<ActivityNode, EList<TLAEnvTransition>> edges = new HashMap<>();
 
+		private String envName;
+		
+		public TLAEnvGraph(String name) {
+			this.envName = name;
+		}
+		
+		public String getName() {
+			return envName;
+		}
+		
 		public void addTransition(ActivityNode from, ActivityNode to, int step) {
 			from = getOrInsertByName(from);
 			to = getOrInsertByName(to);
@@ -471,7 +495,10 @@ public class TLATranslator {
 		}
 		
 		private ActivityNode getOrInsertByName(ActivityNode node) {
-	        String name = node.getName();
+			String name = "UNSET";
+			if(node instanceof SendSignalAction) {
+				name = ((SendSignalAction)node).getSignal().getName();
+			}
 	        if (name == null) {
 	            throw new IllegalArgumentException("ActivityNode must have a name.");
 	        }
@@ -480,10 +507,10 @@ public class TLATranslator {
 	    }
 		
 		public void createTLA() {
-//			createSpecBeginning("Environment", null); //TODO : update to include initial transition
+			createEnvironmentSpecBeginning(envName); //TODO : update to include initial transition
 			for (Entry<ActivityNode, EList<TLAEnvTransition>> entry : edges.entrySet()) {
-				sb.append(entry.getKey().getName() + " ==\n");
-				sb.append("/\\ ");
+				sb.append(((SendSignalAction)entry.getKey()).getSignal().getName() + " ==\n");
+				sb.append("\t/\\ ");
 				
 				if(entry.getValue().size() > 1) {
 					sb.append("step \\in {"); 
@@ -499,7 +526,7 @@ public class TLATranslator {
 				}
 				
 				sb.append("\n");
-				sb.append("/\\ step' = step + 1\n\n");
+				sb.append("\t/\\ step' = step + 1\n\n");
 
 			}
 			createEnvironmentSpecEnding();
