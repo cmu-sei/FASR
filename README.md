@@ -13,7 +13,7 @@ This repository holds code to support the partial automation of the [System Theo
 5. Search "cmu-sei/FASR" and select it
 6. Right click on UCA_Classification and select Import > Install > Install Software Items from File
 7. Select browse and navigate to `SoftwareRequirements.p2f` in the root directory of the cmu-sei/FASR clone.
-8. Select all software that is not already installed
+8. Select all software that is not already installed, uncheck "Install latest version of selected software"
 9.  Restart Eclipse
 
 ### The STPA Guideword Classifier
