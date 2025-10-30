@@ -73,7 +73,7 @@ public class DamerauLevenshteinClassifier {
 	 * These five elements describe an Unsafe Control Action -- see page 37 of the
 	 * STPA Handbook
 	 */
-	public record UnsafeControlAction(String source, Guideword guideword, String controlAction, List<String> context,
+	public record UnsafeControlAction(String source, Guideword guideword, String controlAction, String context,
 			String violatedConstraint) {
 	};
 
@@ -177,7 +177,8 @@ public class DamerauLevenshteinClassifier {
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
 				List<String> invariants = mapper.readerForListOf(String.class).readValue(pair.get("violatedInvs"));
 				String invariantStr = String.join(",", invariants);
-				List<String> components = mapper.readerForListOf(String.class).readValue(pair.get("violatingComponents"));
+				List<String> components = mapper.readerForListOf(String.class)
+						.readValue(pair.get("violatingComponents"));
 				String componentStr = String.join(",", components);
 				ret.add(classify(safe, unsafe, invariantStr, componentStr));
 			}
@@ -188,7 +189,8 @@ public class DamerauLevenshteinClassifier {
 		return ret;
 	}
 
-	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName, String sourceName) {
+	public UnsafeControlAction classify(List<String> safe, List<String> unsafe, String invariantName,
+			String sourceName) {
 		if (safe.equals(unsafe)) {
 			throw new IllegalArgumentException(
 					"The unsafe trace is identical to the safe trace; there is no error to classify.");
@@ -317,19 +319,27 @@ public class DamerauLevenshteinClassifier {
 					continue;
 				}
 				List<String> prefix = Collections.emptyList();
+				List<String> suffix = Collections.emptyList();
 				if (safeActivityDurations != unsafeActivityDurations) {
 					int diffIdx = 0;
 					while (safe.get(diffIdx).equals(unsafe.get(diffIdx))) {
 						diffIdx++;
 					}
 					prefix = safe.subList(0, diffIdx);
+					suffix = safe.subList(Math.min(diffIdx + 2, safe.size()), safe.size());
 				}
+				Guideword guideword = null;
+				String controlAction = activities.get(activityName).end();
 				if (unsafeActivityDurations.get(activityName) < safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(sourceName, Guideword.STOPPED_TOO_SOON,
-							activities.get(activityName).end(), prefix, invariantName));
+					guideword = Guideword.STOPPED_TOO_SOON;
 				} else if (unsafeActivityDurations.get(activityName) > safeActivityDurations.get(activityName)) {
-					return Optional.of(new UnsafeControlAction(sourceName, Guideword.APPLIED_TOO_LONG,
-							activities.get(activityName).end(), prefix, invariantName));
+					guideword = Guideword.APPLIED_TOO_LONG;
+				}
+				if (guideword != null) {
+					String explanation = buildExplanation(prefix, suffix, guideword, Optional.empty(), controlAction,
+							Optional.empty(), Optional.of(activityName));
+					return Optional.of(
+							new UnsafeControlAction(sourceName, guideword, controlAction, explanation, invariantName));
 				}
 			}
 		}
@@ -360,31 +370,37 @@ public class DamerauLevenshteinClassifier {
 	}
 
 	private Optional<UnsafeControlAction> classifyUCA(List<String> safeActions, List<String> unsafeActions, Edit edit,
-			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName, String sourceName) {
+			Deque<UnsafeControlAction>[][] CG, int i, int j, int d, int iPrime, int jPrime, String invariantName,
+			String sourceName) {
 		CG[i][j] = new LinkedList<UnsafeControlAction>();
 		Guideword guideword = null;
 		String controlAction = null;
+		Optional<String> alternateAction = Optional.empty();
 		List<String> context = null;
+		List<String> suffix = null;
 		if (edit == Edit.DELETE) {
 			CG[i][j].addAll(CG[i - 1][j]);
 			if (!CG[i][j].isEmpty()) {
-				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				// Calculating subsequent UCAs is both difficult and unnecessary, so we skip it
 				return Optional.empty();
 			}
 			String deletedAction = safeActions.get(i - 1);
 			if (deletedAction.equals(DELAY_ACTION)) {
 				controlAction = unsafeActions.get(j);
 				context = unsafeActions.subList(0, i - 1);
+				suffix = unsafeActions.subList(i, unsafeActions.size());
 				guideword = Guideword.TOO_EARLY;
 			} else {
 				controlAction = deletedAction;
 				context = unsafeActions.subList(0, i - 1);
+				suffix = unsafeActions.subList(i - 1, unsafeActions.size());
 				guideword = Guideword.NOT_PROVIDING;
 			}
 		} else if (edit == Edit.ADD) {
 			CG[i][j].addAll(CG[i][j - 1]);
 			if (!CG[i][j].isEmpty()) {
-				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip
+				// it
 				return Optional.empty();
 			}
 			String addedAction = unsafeActions.get(j - 1);
@@ -392,79 +408,187 @@ public class DamerauLevenshteinClassifier {
 				// We need to find the next non-wait action, though if the trace ends in all
 				// waits, there will be no subsequent action so we don't have a UCA
 				controlAction = null;
-				for (int k = j; k < unsafeActions.size(); k++) {
+				int k;
+				for (k = j; k < unsafeActions.size(); k++) {
 					if (!unsafeActions.get(k).equals(DELAY_ACTION)) {
 						controlAction = unsafeActions.get(k);
 						break;
 					}
 				}
 				context = unsafeActions.subList(0, i);
+				System.out.println("k = " + String.valueOf(k) + ", j = " + String.valueOf(j));
+				suffix = unsafeActions.subList(i + 2, unsafeActions.size());
 				guideword = Guideword.TOO_LATE;
 			} else {
 				controlAction = addedAction;
 				context = unsafeActions.subList(0, i);
+				suffix = unsafeActions.subList(i + 1, unsafeActions.size());
 				guideword = Guideword.PROVIDING;
 			}
 		} else if (edit == Edit.SUBSTITUTE) {
 			CG[i][j].addAll(CG[i - 1][j - 1]);
 			if (!CG[i][j].isEmpty()) {
-				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip
+				// it
 				return Optional.empty();
 			}
 			if (d == 1) {
-				/*
-				 * We have a special case where the safe or unsafe traces are singletons. This
-				 * is required because we initialize CG[i][j] slightly differently than C[i][j]
-				 * -- the first row of C is 0, 1, 2... i and the first column is 0, 1, 2... j.
-				 * But CG is initialized with only empty lists of guidewords, so when we have
-				 * single-element traces, we would return an empty list instead of the correct
-				 * guideword.
-				 */
-
 				String correctAction = safeActions.get(i - 1);
 				String incorrectAction = unsafeActions.get(j - 1);
-				if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
-					controlAction = incorrectAction;
-					context = unsafeActions.subList(0, i - 1);
-					guideword = Guideword.PROVIDING;
-				} else if (incorrectAction.equals(DELAY_ACTION)) {
+				if (incorrectAction.equals(DELAY_ACTION)) {
 					controlAction = correctAction;
 					context = unsafeActions.subList(0, i - 1);
+					suffix = unsafeActions.subList(i, unsafeActions.size());
 					guideword = Guideword.NOT_PROVIDING;
-				} else if (correctAction.equals(DELAY_ACTION)) {
+				} else {
 					controlAction = incorrectAction;
+					alternateAction = Optional.of(correctAction);
 					context = unsafeActions.subList(0, i - 1);
+					suffix = unsafeActions.subList(i, unsafeActions.size());
 					guideword = Guideword.PROVIDING;
 				}
 			}
 		} else if (edit == Edit.TRANSPOSE) {
 			CG[i][j].addAll(CG[iPrime - 1][jPrime - 1]);
 			if (!CG[i][j].isEmpty()) {
-				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip it
+				// Calculating subsequent UCAs is difficult and unnecessary, so we skip it
 				return Optional.empty();
 			}
 			String correctAction = safeActions.get(iPrime - 1);
 			String incorrectAction = unsafeActions.get(jPrime - 1);
 			if (!incorrectAction.equals(DELAY_ACTION) && !correctAction.equals(DELAY_ACTION)) {
 				controlAction = incorrectAction;
+				alternateAction = Optional.of(correctAction);
 				context = unsafeActions.subList(0, i - 2);
+				suffix = unsafeActions.subList(i, unsafeActions.size());
 				guideword = Guideword.OUT_OF_SEQUENCE;
 			} else if (incorrectAction.equals(DELAY_ACTION)) {
 				controlAction = correctAction;
 				context = safeActions.subList(0, iPrime - 1);
+				suffix = unsafeActions.subList(iPrime + 1, unsafeActions.size());
 				guideword = Guideword.TOO_LATE;
 			} else if (correctAction.equals(DELAY_ACTION)) {
 				controlAction = incorrectAction;
 				context = unsafeActions.subList(0, iPrime - 1);
+				suffix = unsafeActions.subList(iPrime, unsafeActions.size());
 				guideword = Guideword.TOO_EARLY;
 			}
 		}
 		if (guideword == null || controlAction == null || context == null) {
 			return Optional.empty();
 		} else {
-			return Optional.of(new UnsafeControlAction(sourceName, guideword, controlAction,
-					// Remove the "fake" delay action we inserted to make the initialization work
-					context.subList(1, context.size()), invariantName));
+			// Remove the "fake" delay action we inserted to make the initialization work
+			List<String> prefix = context.subList(1, context.size());
+			String explanation = buildExplanation(prefix, suffix, guideword, Optional.of(edit), controlAction,
+					alternateAction, Optional.empty());
+			return Optional
+					.of(new UnsafeControlAction(sourceName, guideword, controlAction, explanation, invariantName));
 		}
+	}
+
+	private String buildExplanation(List<String> prefix, List<String> suffix, Guideword guideword, Optional<Edit> edit,
+			String controlAction, Optional<String> alternateAction, Optional<String> activityName) {
+		StringBuilder exp = new StringBuilder();
+		// Prefix
+		if (prefix.size() == 0) {
+			exp.append("At the start, ");
+		} else {
+			List<String> mangledPrefix = new LinkedList<String>(prefix);
+			mangledPrefix.replaceAll(s -> "\"" + s + "\"");
+			exp.append("After ");
+			exp.append(String.join(" -> ", mangledPrefix));
+			exp.append(" ");
+		}
+		// Body
+		if (guideword == Guideword.TOO_EARLY) {
+			if (edit.isPresent() && edit.get() == Edit.DELETE) {
+				exp.append("the environment should have performed a \"Wait\" action, but instead performed a \"");
+				exp.append(controlAction);
+				exp.append("\" early.");
+			} else if (edit.isPresent() && edit.get() == Edit.TRANSPOSE) {
+				exp.append("the environment should have performed \"Wait\" -> \"");
+				exp.append(controlAction);
+				exp.append("\" but instead swapped their order, making \"");
+				exp.append(controlAction);
+				exp.append("\" early.");
+			} else {
+				// TODO: Error
+			}
+		} else if (guideword == Guideword.TOO_LATE) {
+			if (edit.isPresent() && edit.get() == Edit.ADD) {
+				exp.append("the environment performed an unexpected \"Wait\" action, making \"");
+				exp.append(controlAction);
+				exp.append("\" late.");
+			} else if (edit.isPresent() && edit.get() == Edit.TRANSPOSE) {
+				exp.append("the environment should have performed \"");
+				exp.append(controlAction);
+				exp.append("\" -> \"Wait\" but instead swapped their order, making \"");
+				exp.append(controlAction);
+				exp.append("\" late.");
+			} else {
+				// TODO: Error
+			}
+		} else if (guideword == Guideword.NOT_PROVIDING) {
+			if (edit.isPresent() && edit.get() == Edit.DELETE) {
+				exp.append("the environment should have performed a \"");
+				exp.append(controlAction);
+				exp.append("\" action, but instead did nothing.");
+			} else if (edit.isPresent() && edit.get() == Edit.SUBSTITUTE) {
+				exp.append("the environment did not perform the expected \"");
+				exp.append(controlAction);
+				exp.append("\" action; it instead performed \"Wait\".");
+			} else {
+				// TODO: Error
+			}
+		} else if (guideword == Guideword.PROVIDING) {
+			if (edit.isPresent() && edit.get() == Edit.ADD) {
+				exp.append("the environment performed an unexpected \"");
+				exp.append(controlAction);
+				exp.append("\" action.");
+			} else if (edit.isPresent() && edit.get() == Edit.SUBSTITUTE) {
+				exp.append("the environment should have performed a \"");
+				exp.append(alternateAction.get());
+				exp.append("\" action, but instead it performed \"");
+				exp.append(controlAction);
+				exp.append("\".");
+			} else {
+				// TODO: Error
+			}
+		} else if (guideword == Guideword.OUT_OF_SEQUENCE) {
+			exp.append("the environment should have performed \"");
+			exp.append(alternateAction.get());
+			exp.append("\" -> \"");
+			exp.append(controlAction);
+			exp.append("\" but instead swapped their order and performed \"");
+			exp.append(controlAction);
+			exp.append("\" -> \"");
+			exp.append(alternateAction.get());
+			exp.append("\".");
+		} else if (guideword == Guideword.STOPPED_TOO_SOON) {
+			exp.append("the environment should have performed an additional \"Wait\" but didn't; \"");
+			exp.append(controlAction);
+			exp.append("\" was early and stopped the \"");
+			exp.append(activityName.get());
+			exp.append("\" activity too soon.");
+		} else if (guideword == Guideword.APPLIED_TOO_LONG) {
+			exp.append("the environment should have performed \"");
+			exp.append(controlAction);
+			exp.append("\" but performed \"Wait\" instead. This allowed the \"");
+			exp.append(activityName.get());
+			exp.append("\" activity to go on too long.");
+		}
+		// Suffix
+		if (suffix.size() == 1) {
+			exp.append(" It subsequently performed a \"");
+			exp.append(suffix.get(0));
+			exp.append("\" action.");
+		} else if (suffix.size() > 1) {
+			List<String> mangledSuffix = new LinkedList<String>(suffix);
+			mangledSuffix.replaceAll(s -> "\"" + s + "\"");
+			exp.append(" It subsequently performed ");
+			exp.append(String.join(" -> ", mangledSuffix));
+			exp.append(".");
+		}
+		return exp.toString();
 	}
 }
