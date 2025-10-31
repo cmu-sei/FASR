@@ -98,7 +98,7 @@ class DamerauLevenshteinTests {
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
 					"Sys.TurnPumpOff", // Control Action
-					"After \"Init\" -> \"Sys.TurnPumpOn\" -> \"Wait\" -> \"Wait\" the environment should have performed a \"Wait\" action, but instead performed a \"Sys.TurnPumpOff\" early.",
+					"After \"Init\" -> \"Sys.TurnPumpOn\" -> \"Wait\" -> \"Wait\" the environment should have performed a \"Wait\" action, but instead performed the \"Sys.TurnPumpOff\" action early.",
 					invariantName// Violated Constraint
 			);
 			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
@@ -130,7 +130,7 @@ class DamerauLevenshteinTests {
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 					DamerauLevenshteinClassifier.Guideword.TOO_LATE, // Guideword
 					"Sys.TurnPumpOff", // Control Action
-					"After \"Init\" -> \"Sys.TurnPumpOn\" -> \"Wait\" -> \"Wait\" the environment performed an unexpected \"Wait\" action, making \"Sys.TurnPumpOff\" late.",
+					"After \"Init\" -> \"Sys.TurnPumpOn\" -> \"Wait\" -> \"Wait\" the environment performed an unexpected \"Wait\" action, making \"Sys.TurnPumpOff\" late. It subsequently performed a \"Sys.TurnPumpOff\" action.",
 					invariantName// Violated Constraint
 			);
 			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
@@ -311,7 +311,7 @@ class DamerauLevenshteinTests {
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
 					"TurnBSCUOff", // Control Action
-					"PLACEHOLDER",
+					"After \"TurnBSCUOn\" -> \"Wait\" -> \"Wait\" the environment should have performed a \"Wait\" action, but instead performed the \"TurnBSCUOff\" action early.",
 					invariantName// Violated Constraint
 			);
 			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
@@ -325,7 +325,7 @@ class DamerauLevenshteinTests {
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 					DamerauLevenshteinClassifier.Guideword.PROVIDING, // Guideword
 					"Other", // Control Action
-					"PLACEHOLDER",
+					"At the start, the environment performed an unexpected \"Other\" action. It subsequently performed \"Other\" -> \"Other\" -> \"Other\" -> \"TurnBSCUOn\".",
 					invariantName// Violated Constraint
 			);
 			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);
@@ -339,7 +339,7 @@ class DamerauLevenshteinTests {
 			var expected = new DamerauLevenshteinClassifier.UnsafeControlAction(sourceName, // Source
 					DamerauLevenshteinClassifier.Guideword.TOO_EARLY, // Guideword
 					"TurnBSCUOn", // Control Action
-					"PLACEHOLDER",
+					"At the start, the environment should have performed a \"Wait\" action, but instead performed the \"TurnBSCUOn\" action early.",
 					invariantName// Violated Constraint
 			);
 			var actual = dlc.classify(safe, unsafe, invariantName, sourceName);

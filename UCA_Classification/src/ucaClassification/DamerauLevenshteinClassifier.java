@@ -416,8 +416,7 @@ public class DamerauLevenshteinClassifier {
 					}
 				}
 				context = unsafeActions.subList(0, i);
-				System.out.println("k = " + String.valueOf(k) + ", j = " + String.valueOf(j));
-				suffix = unsafeActions.subList(i + 2, unsafeActions.size());
+				suffix = unsafeActions.subList(i + 1, unsafeActions.size());
 				guideword = Guideword.TOO_LATE;
 			} else {
 				controlAction = addedAction;
@@ -428,8 +427,7 @@ public class DamerauLevenshteinClassifier {
 		} else if (edit == Edit.SUBSTITUTE) {
 			CG[i][j].addAll(CG[i - 1][j - 1]);
 			if (!CG[i][j].isEmpty()) {
-				// Calculating subsequent UCAs is 1) Difficult, and 2) Unnecessary, so we skip
-				// it
+				// Calculating subsequent UCAs is difficult and unnecessary, so we skip it
 				return Optional.empty();
 			}
 			if (d == 1) {
@@ -502,9 +500,9 @@ public class DamerauLevenshteinClassifier {
 		// Body
 		if (guideword == Guideword.TOO_EARLY) {
 			if (edit.isPresent() && edit.get() == Edit.DELETE) {
-				exp.append("the environment should have performed a \"Wait\" action, but instead performed a \"");
+				exp.append("the environment should have performed a \"Wait\" action, but instead performed the \"");
 				exp.append(controlAction);
-				exp.append("\" early.");
+				exp.append("\" action early.");
 			} else if (edit.isPresent() && edit.get() == Edit.TRANSPOSE) {
 				exp.append("the environment should have performed \"Wait\" -> \"");
 				exp.append(controlAction);
