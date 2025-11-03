@@ -11,6 +11,6 @@
     </requires>
 
     <runtime>
-        <library name="fasr.jar"/>
+        <library name="lib/fasr.jar"/>
     </runtime>
 </plugin>
