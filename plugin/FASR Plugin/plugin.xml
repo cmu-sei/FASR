@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+        id="fasr.plugin"
+        name="FASR Plugin"
+        version="1.0"
+        provider-name="CMU/SEI"
+        class="edu.cmu.sei.fasr.FASRPlugin">
+
+    <requires>
+        <api version="1.2"/>
+    </requires>
+
+    <runtime>
+        <library name="fasr.jar"/>
+    </runtime>
+</plugin>

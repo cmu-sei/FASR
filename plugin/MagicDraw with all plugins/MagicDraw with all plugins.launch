@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_MERGE_OUTPUT" value="true"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY/lib/md_api.jar"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17/"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.nomagic.magicdraw.Main"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="MagicDraw with all plugins"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-verbose"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MagicDraw with all plugins"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx4000M -Xss1024K -Dmd.plugins.dir=&quot;${resource_loc:MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY}/plugins;${workspace_loc};${project_loc:TestingCameo}&quot; -Dmd.development=true -Dinstall.root=&quot;${resource_loc:MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY}&quot; -Dfile.encoding=UTF-8 @&quot;${resource_loc:MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY}/bin/vm.options&quot;"/>
+</launchConfiguration>
