@@ -6,6 +6,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/MagicDraw"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/FASR Plugin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
