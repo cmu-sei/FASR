@@ -39,7 +39,7 @@ public class FASRPlugin extends Plugin {
 
 	@Override
 	public boolean close() {
-		return false;
+		return true;
 	}
 
 	@Override

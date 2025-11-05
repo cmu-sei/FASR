@@ -108,10 +108,8 @@ public class TLATranslator {
 		}
 		createMachineSpecBeginning(specName, graph);
 		createMachineSpecEnding(graph);
-		String result = sb.toString();
-		saveSpec(specName + ".tla");
 		
-		return result;
+		return saveSpec(specName + ".tla");
 	}
 	
 	public String createEnvironmentSpec() throws SizeLimitExceededException {
@@ -158,11 +156,7 @@ public class TLATranslator {
 		}
 		graph.createTLA();
 		
-		String result = sb.toString();
-		
-		saveSpec(this.graph.getName() + ".tla");
-		
-		return result;
+		return saveSpec(this.graph.getName() + ".tla");
 	}
 	
 	
@@ -246,7 +240,7 @@ public class TLATranslator {
 	/*
 	 * Creates or updates a TLA file
 	 */
-	private boolean saveSpec(String fileName) {
+	private String saveSpec(String fileName) {
 		try {
 			File file = new File(fileName);
 			if(file.exists()) {
@@ -255,20 +249,19 @@ public class TLATranslator {
 				sb = new StringBuilder();
 				fw.close();
 				System.out.println("File was updated!");
-			}
-			else if(file.createNewFile()) {
+				return file.getAbsolutePath();
+			} else if(file.createNewFile()) {
 				FileWriter fw = new FileWriter(file);
 				fw.write(sb.toString());
 				sb = new StringBuilder();
 				fw.close();
 				System.out.println(fileName + " was successfully created!");
-				return true;
+				return file.getAbsolutePath();
 			}
 		} catch(IOException e){
 			System.out.println("Could not write file " + fileName);
 		}
-		return false;
-		
+		return null;
 	}
 	
 	
