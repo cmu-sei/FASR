@@ -3,12 +3,13 @@ package edu.cmu.sei.fasr;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 import javax.annotation.CheckForNull;
 import javax.naming.SizeLimitExceededException;
@@ -54,6 +55,15 @@ class FASRAction extends MDAction {
 			saveSpec(path, env, envFiles);
 
 			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, false);
+			
+			// clean up files created by tlc
+			try (var dirStream = Files.walk(path.resolve("states"))) {
+			    dirStream
+			        .map(Path::toFile)
+			        .sorted(Comparator.reverseOrder())
+			        .forEach(File::delete);
+			}
+
 			System.out.println(result);
 
 		} catch (Exception exc) {
