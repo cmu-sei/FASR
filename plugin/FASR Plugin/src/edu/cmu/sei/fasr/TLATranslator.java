@@ -58,6 +58,8 @@ import edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode;
 
 public class TLATranslator {
 	
+	public static record TLA(String name, String spec, String cfg) {};
+	
 	String MAX_FORMULA = "max(x,y) == IF x>y THEN x ELSE y"; 
 	TraverseModel tm;
 	StringBuilder sb;
@@ -68,7 +70,7 @@ public class TLATranslator {
 		this.sb = new StringBuilder();
 	}
 	
-	public String createMachineSpec() {
+	public TLA createMachineSpec() {
 		sb = new StringBuilder();
 		
 		List<List<Behavior>> diagrams = tm.getDiagrams(tm.getModel());
@@ -81,7 +83,7 @@ public class TLATranslator {
 		}
 		if(machine == null) {
 			System.err.println("A State Machine was not stereotyped as a Machine in Cameo.");
-			return "";
+			return null;
 		}
 		List<State> states = this.tm.getAllStatesFromStateMachine(machine);
 		Transition firstTransition = this.tm.getFirstTransition(machine);
@@ -109,10 +111,17 @@ public class TLATranslator {
 		createMachineSpecBeginning(specName, graph);
 		createMachineSpecEnding(graph);
 		
-		return saveSpec(specName + ".tla");
+		var spec = sb.toString();
+		//XXX
+		var cfg = """
+				SPECIFICATION Spec
+				INVARIANT TrivialInvariant
+				""";
+		
+		return new TLA(specName, spec, cfg);
 	}
 	
-	public String createEnvironmentSpec() throws SizeLimitExceededException {
+	public TLA createEnvironmentSpec() throws SizeLimitExceededException {
 		sb = new StringBuilder();
 //		HashMap<String, ActivityNode> visitedNodes = new HashMap<String, ActivityNode>(); //Ensures we do not reprint states
 		List<List<Behavior>> diagrams = tm.getDiagrams(tm.getModel()); //Gets Activity diagrams 
@@ -156,7 +165,13 @@ public class TLATranslator {
 		}
 		graph.createTLA();
 		
-		return saveSpec(this.graph.getName() + ".tla");
+		var spec = sb.toString();
+		//XXX
+		var cfg = """
+				SPECIFICATION Spec
+				""";
+		
+		return new TLA(this.graph.getName(), spec, cfg);
 	}
 	
 	
@@ -212,6 +227,8 @@ public class TLATranslator {
 			sb.append("\n\t\\/ " + node.name);
 		}
 		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
+		//XXX
+		sb.append("\n\nTrivialInvariant == abarmed = TRUE => decelrate > 8");
 		sb.append("\n\n=============================================================================");
 	}
 	

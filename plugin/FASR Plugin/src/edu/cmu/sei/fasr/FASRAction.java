@@ -1,6 +1,13 @@
 package edu.cmu.sei.fasr;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.annotation.CheckForNull;
@@ -31,32 +38,67 @@ class FASRAction extends MDAction {
 			SessionManager.getInstance().createSession(project, "Edit");
 		}
 
-		var pkg = project.getPrimaryModel();
+		try {
+			var pkg = project.getPrimaryModel();
 
-		var translator = new TLATranslator(new TraverseModel(pkg));
-		var mSpec = translator.createMachineSpec();
-		var eSpec = getEnvironmentSpec(translator);
-		
-		var sysFiles = new ArrayList<Pair<String, String>>();
-		var envFiles = new ArrayList<Pair<String, String>>();
-		
-		sysFiles.add(new Pair<>(mSpec, mSpec.substring(0, mSpec.length() - 3) + "cfg"));
-		envFiles.add(new Pair<>(eSpec, eSpec.substring(0, eSpec.length() - 3) + "cfg"));
-		
-		var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, false);
-		
-		SessionManager.getInstance().closeSession(project);
+			var translator = new TLATranslator(new TraverseModel(pkg));
+			var machine = translator.createMachineSpec();
+			var env = getEnvironmentSpec(translator);
+
+			var path = createTempDir(machine.name());
+			
+			var sysFiles = new ArrayList<Pair<String, String>>();
+			var envFiles = new ArrayList<Pair<String, String>>();
+
+			saveSpec(path, machine, sysFiles);
+			saveSpec(path, env, envFiles);
+
+			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, false);
+			System.out.println(result);
+
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		} finally {
+			SessionManager.getInstance().closeSession(project);
+		}
 
 //		JOptionPane.showMessageDialog(MDDialogParentProvider.getProvider().getDialogOwner(),
 //				"This is: " + pkg.getName());
 	}
 
-	protected String getEnvironmentSpec(TLATranslator translator) {
+	private TLATranslator.TLA getEnvironmentSpec(TLATranslator translator) {
 		try {
 			return translator.createEnvironmentSpec();
 		} catch (SizeLimitExceededException e) {
 			e.printStackTrace();
-			return "Size Limit Exceeded Exception!";
+			return null;
+			// return "Size Limit Exceeded Exception!";
+		}
+	}
+
+	private Path createTempDir(String name) throws IOException {
+		var dir = Files.createTempDirectory(name);
+		dir.toFile().deleteOnExit();
+		return dir;
+	}
+
+	private void saveSpec(Path path, TLATranslator.TLA tla, ArrayList<Pair<String, String>>fileList) {
+		try {
+			var specPath = path.resolve(tla.name() + ".tla");
+			try (BufferedWriter writer = Files.newBufferedWriter(specPath)) {
+				writer.write(tla.spec());
+			}
+			specPath.toFile().deleteOnExit();
+
+			var cfgPath = path.resolve(tla.name() + ".cfg");
+			try (BufferedWriter writer = Files.newBufferedWriter(cfgPath)) {
+				writer.write(tla.cfg());
+			}
+			cfgPath.toFile().deleteOnExit();
+
+			fileList.add(new Pair<>(specPath.toString(), cfgPath.toString()));
+		} catch (IOException e) {
+			System.out.println("Could not write file " + e.getMessage());
 		}
 	}
 
