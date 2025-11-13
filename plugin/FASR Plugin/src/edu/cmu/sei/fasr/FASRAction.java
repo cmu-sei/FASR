@@ -6,10 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.stream.Stream;
 
 import javax.annotation.CheckForNull;
 import javax.naming.SizeLimitExceededException;
@@ -17,7 +15,11 @@ import javax.swing.KeyStroke;
 
 import com.nomagic.magicdraw.actions.MDAction;
 import com.nomagic.magicdraw.core.Application;
+import com.nomagic.magicdraw.openapi.uml.ModelElementsManager;
 import com.nomagic.magicdraw.openapi.uml.SessionManager;
+import com.nomagic.uml2.MagicDrawProfile.DiagramTableStereotype;
+import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper;
+import com.nomagic.uml2.ext.jmi.helpers.TagsHelper;
 
 import cmu.s3d.fortis.cli.RobustnessKt;
 import kotlin.Pair;
@@ -41,8 +43,8 @@ class FASRAction extends MDAction {
 
 		try {
 			var pkg = project.getPrimaryModel();
-
-			var translator = new TLATranslator(new TraverseModel(pkg));
+			var tm = new TraverseModel(pkg);
+			var translator = new TLATranslator(tm);
 			var machine = translator.createMachineSpec();
 			var env = getEnvironmentSpec(translator);
 
@@ -63,17 +65,27 @@ class FASRAction extends MDAction {
 			        .sorted(Comparator.reverseOrder())
 			        .forEach(File::delete);
 			}
+			
+			var dlc = new DamerauLevenshteinClassifier();
+			var ucas = dlc.classifyFortisOutput(x); // FIXME dlc.classifyFortisOutput(result);
+			
+			var genPkg = new SysMLGenerator(ucas, tm).generateElements(project);
+			pkg.getPackagedElement().add(genPkg);
 
-			System.out.println(result);
-
+			var eManager = ModelElementsManager.getInstance();
+			
+			var table = eManager.createDiagram("Unsafe Control Action Table", genPkg);
+			table.setName("Unsafe Control Actions");
+			project.getDiagram(table).open();
+			
+			var diagramTable = StereotypesHelper.getAppliedStereotypeByString(table, "DiagramTable");
+			TagsHelper.setStereotypePropertyValue(table, diagramTable, DiagramTableStereotype.SCOPE, genPkg);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		} finally {
 			SessionManager.getInstance().closeSession(project);
 		}
 
-//		JOptionPane.showMessageDialog(MDDialogParentProvider.getProvider().getDialogOwner(),
-//				"This is: " + pkg.getName());
 	}
 
 	private TLATranslator.TLA getEnvironmentSpec(TLATranslator translator) {
@@ -111,5 +123,370 @@ class FASRAction extends MDAction {
 			System.out.println("Could not write file " + e.getMessage());
 		}
 	}
+	
+	String x = """
+		[
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "Wait",
+		      "Wait",
+		      "SetMode"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "Wait",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "Wait",
+		      "ArmAutobrake"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "Wait",
+		      "SetMode",
+		      "ArmAutobrake"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "SelfCheck"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "TurnBSCUOn"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake",
+		      "SetDecelRate"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "ArmAutobrake"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "Wait",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "Wait",
+		      "SetMode",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "SelfCheck",
+		      "SetMode",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "SetMode"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "Wait",
+		      "Wait",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "Wait",
+		      "SelfCheck",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "TurnBSCUOn",
+		      "SelfCheck",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn",
+		      "SelfCheck"
+		    ],
+		    "badTrace": [
+		      "TurnBSCUOn",
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "TurnBSCUOn",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  },
+		  {
+		    "goodTrace": [
+		      "TurnBSCUOn"
+		    ],
+		    "badTrace": [
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "Wait",
+		      "Wait"
+		    ],
+		    "violatingComponents": [
+		      ""
+		    ],
+		    "violatedInvs": []
+		  }
+		]
+		""";
 
 }
