@@ -25,7 +25,10 @@ package edu.cmu.sei.fasr;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +44,11 @@ import com.nomagic.uml2.ext.magicdraw.activities.mdbasicactivities.ActivityEdge;
 import com.nomagic.uml2.ext.magicdraw.activities.mdbasicactivities.InitialNode;
 import com.nomagic.uml2.ext.magicdraw.activities.mdfundamentalactivities.Activity;
 import com.nomagic.uml2.ext.magicdraw.activities.mdfundamentalactivities.ActivityNode;
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.NamedElement;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.PackageableElement;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.Behavior;
+import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.OpaqueBehavior;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdcommunications.Signal;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdcommunications.SignalEvent;
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype;
@@ -134,6 +139,62 @@ public class TraverseModel {
 				var e = iter.next();
 				if(e instanceof ActivityNode an) {
 					result.add(an);
+				}
+			}
+			return result;
+		}
+		
+		/*
+		 * Returns a list of regions from a StateMachine. We assume, but do not check, that there is 
+		 * one composite state
+		 * 
+		 * @param	sm	a StateMachine
+		 * @return		a list of Regions
+		 */
+		public List<Region> getAllRegionsFromStateMachine(StateMachine sm){
+			List<Region> result = new ArrayList<>();
+			for (TreeIterator<EObject> iter = EcoreUtil.getAllContents(sm, true); iter.hasNext(); ) {
+				var e = iter.next();
+				if(e instanceof Region r) {
+					result.add(r);
+				}
+			}
+			return result;
+		}
+		
+		/*
+		 * Returns a list of States from a Region
+		 * 
+		 * @param	region	a region
+		 * @return		a list of states
+		 */
+		public List<State> getAllStatesFromRegion(Region region){
+			if(region.getName().isBlank()) {
+				return Collections.emptyList();
+			}
+			List<State> result = new ArrayList<>();
+			for (NamedElement member : region.getMember()) {
+				if(member instanceof State) {
+					result.add((State) member);
+				}
+			}
+			return result;
+		}
+		
+		/*
+		 * Returns a list of Transitions from a Region
+		 * 
+		 * @param	region	a region
+		 * @return		a list of transitions
+		 */
+		public List<Transition> getAllTransitionsFromRegion(Region region){
+			if(region.getName().isBlank()) {
+				return Collections.emptyList();
+			}
+			List<Transition> result = new ArrayList<>();
+			for (NamedElement member : region.getTransition()) {
+				if(member instanceof Transition) {					
+					result.add((Transition) member);
 				}
 			}
 			return result;
@@ -272,6 +333,24 @@ public class TraverseModel {
 
 			return result;
 		}
+		
+		public Map<String, String> getInvariants(StateMachine sm) {
+			Map<String, String> result = new HashMap<>();
+			for(State s : getAllStatesFromStateMachine(sm)) {
+				List<Stereotype> stereotypes = s.getAppliedStereotype();
+				for(Stereotype stereotype : stereotypes) {
+					if(stereotype.getName().equals("Invariant")) {
+						OpaqueBehavior behavior = (OpaqueBehavior) s.getDoActivity();
+						String name = s.getName();
+						String invariantText = behavior.getBody().get(0);
+						result.put(name, invariantText);
+					}
+				}
+			}
+			return result;
+		}
+		
+		
 		
 		/*
 		 * Returns a single Trigger for a given Transition

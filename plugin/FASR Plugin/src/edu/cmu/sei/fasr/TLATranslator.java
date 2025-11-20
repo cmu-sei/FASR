@@ -50,11 +50,20 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.OpaqueExpression;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.Behavior;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.OpaqueBehavior;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdcommunications.Signal;
+import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdcommunications.SignalEvent;
+import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdcommunications.Trigger;
+import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Pseudostate;
+import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.PseudostateKindEnum;
+import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Region;
 import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.State;
 import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.StateMachine;
 import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Transition;
 
 import edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode;
+import edu.cmu.sei.fasr.tla.MachineSpec;
+import edu.cmu.sei.fasr.tla.StateSpec;
+import edu.cmu.sei.fasr.tla.SubmachineSpec;
+import edu.cmu.sei.fasr.tla.TransitionSpec;
 
 public class TLATranslator {
 	
@@ -85,40 +94,90 @@ public class TLATranslator {
 			System.err.println("A State Machine was not stereotyped as a Machine in Cameo.");
 			return null;
 		}
-		List<State> states = this.tm.getAllStatesFromStateMachine(machine);
-		Transition firstTransition = this.tm.getFirstTransition(machine);
-		String specName = machine.getName().replace("\s", "_");
-		
-		
-		TLAMachineGraph graph = new TLAMachineGraph(states);
-		createInitMachine(firstTransition, graph);
-		graph.compressNodes();
-		
-		
-		
-		for(edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode ng : graph.compressedNodes) {
-			sb.append(ng.getName() + " == \n");
-			for(String s : ng.states) {
-				sb.append(s);
-			}
-			if(ng.name.equals("Init")) continue;
-			Set<String> missing = graph.findMatches(ng);
-			if(!missing.isEmpty()) {
-				sb.append("\t/\\ UNCHANGED <<" + String.join(", ", missing) + ">>\n\n");
+		MachineSpec machineSpec = new MachineSpec(machine.getName());
+		List<Region> regions = this.tm.getAllRegionsFromStateMachine(machine);
+		for(Region region : regions) {
+			if(region.getName().isBlank()) {
+				continue;
 			}
 			
+			SubmachineSpec submachine = new SubmachineSpec(region.getName());
+			machineSpec.addSubmachine(submachine);
+			
+			for(State s : this.tm.getAllStatesFromRegion(region)) {
+				String name = s.getName();
+				StateSpec stateSpec = new StateSpec(name);
+				submachine.addState(stateSpec);
+			}
+			
+			for(Transition t : this.tm.getAllTransitionsFromRegion(region)) {
+				String sourceName, targetName;
+				if(t.getSource() instanceof Pseudostate ps && ps.getKind() == PseudostateKindEnum.INITIAL) {
+					sourceName = "INIT";
+				} else {
+					sourceName = t.getSource().getName();
+				}
+				targetName = t.getTarget().getName();
+				TransitionSpec transitionSpec = new TransitionSpec(submachine.getState(sourceName), submachine.getState(targetName), submachine, machineSpec);
+				if(t.getTrigger() != null && !t.getTrigger().isEmpty() && t.getTrigger().iterator().next().getEvent() != null) { 
+					Trigger trigger = t.getTrigger().iterator().next();
+					String name = ((SignalEvent)trigger.getEvent()).getSignal().getName();
+					transitionSpec.setTriggerName(name);
+				}
+				
+				if(t.getGuard()!= null && t.getGuard().getSpecification() != null) {
+					OpaqueExpression guard = ((OpaqueExpression) t.getGuard().getSpecification());
+					String[] conditions = guard.getBody().get(0).split("\n");
+					transitionSpec.addConditions(conditions);
+				}
+				
+				if(t.getEffect() != null) {
+					OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
+					String[] assignments = effect.getBody().get(0).split("\n");
+					transitionSpec.addEffects(assignments, machineSpec);
+				}
+				
+				submachine.addTransition(transitionSpec);
+			}
 		}
-		createMachineSpecBeginning(specName, graph);
-		createMachineSpecEnding(graph);
+		machineSpec.addInvariants(this.tm.getInvariants(machine));
 		
-		var spec = sb.toString();
-		//XXX
-		var cfg = """
-				SPECIFICATION Spec
-				INVARIANT TrivialInvariant
-				""";
+//		List<State> states = this.tm.getAllStatesFromStateMachine(machine);
+//		Transition firstTransition = this.tm.getFirstTransition(machine);
+//		String specName = machine.getName().replace("\s", "_");
+//		
+//		
+//		TLAMachineGraph graph = new TLAMachineGraph(states);
+//		createInitMachine(firstTransition, graph);
+//		graph.compressNodes();
+//		
+//		
+//		
+//		for(edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode ng : graph.compressedNodes) {
+//			sb.append(ng.getName() + " == \n");
+//			for(String s : ng.states) {
+//				sb.append(s);
+//			}
+//			if(ng.name.equals("Init")) continue;
+//			Set<String> missing = graph.findMatches(ng);
+//			if(!missing.isEmpty()) {
+//				sb.append("\t/\\ UNCHANGED <<" + String.join(", ", missing) + ">>\n\n");
+//			}
+//			
+//		}
+//		createMachineSpecBeginning(specName, graph);
+//		createMachineSpecEnding(graph);
+//		
+//		var spec = sb.toString();
+//		//XXX
+//		var cfg = """
+//				SPECIFICATION Spec
+//				INVARIANT TrivialInvariant
+//				""";
+//		
+//		return new TLA(specName, spec, cfg);
 		
-		return new TLA(specName, spec, cfg);
+		return new TLA(machineSpec.getName(), machineSpec.getTLA(), machineSpec.getCFG());
 	}
 	
 	public TLA createEnvironmentSpec() throws SizeLimitExceededException {
