@@ -1,9 +1,9 @@
 package edu.cmu.sei.fasr.tla;
 
-public abstract class Node {
+public abstract class TLANode {
 	protected String name;
 	
-	public Node(String name) {
+	public TLANode(String name) {
 		this.name = name;
 	}
 	

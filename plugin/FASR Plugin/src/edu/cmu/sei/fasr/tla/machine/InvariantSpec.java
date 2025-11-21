@@ -1,9 +1,12 @@
-package edu.cmu.sei.fasr.tla;
+package edu.cmu.sei.fasr.tla.machine;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Invariant extends Node { 
+import edu.cmu.sei.fasr.tla.TLANode;
+import edu.cmu.sei.fasr.tla.tlaTranslationUtil;
+
+public class InvariantSpec extends TLANode { 
 
 	public record InvariantExpression(String variableName, String operator, String value, List<InvariantExpression> children,
 			int depth) {
@@ -11,7 +14,7 @@ public class Invariant extends Node {
 	
 	private List<InvariantExpression> expressions;
 
-	public Invariant(String name) {
+	public InvariantSpec(String name) {
 		super(name);
 		 expressions = new LinkedList<>();
 	}

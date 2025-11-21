@@ -1,4 +1,4 @@
-package edu.cmu.sei.fasr.tla;
+package edu.cmu.sei.fasr.tla.machine;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -7,13 +7,15 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import edu.cmu.sei.fasr.tla.Invariant.InvariantExpression;
+import edu.cmu.sei.fasr.tla.TLANode;
+import edu.cmu.sei.fasr.tla.tlaTranslationUtil;
+import edu.cmu.sei.fasr.tla.machine.InvariantSpec.InvariantExpression;
 
-public class MachineSpec extends Node {
+public class MachineSpec extends TLANode {
 
 	private Collection<SubmachineSpec> submachines;
-	private Collection<Invariant> invariants;
-	private Collection<Variable> variables;
+	private Collection<InvariantSpec> invariants;
+	private Collection<VariableSpec> variables;
 
 	public MachineSpec(String name) {
 		super(name);
@@ -26,7 +28,7 @@ public class MachineSpec extends Node {
 		submachines.add(submachine);
 	}
 
-	public void addVariable(Variable v) {
+	public void addVariable(VariableSpec v) {
 		variables.add(v);
 	}
 
@@ -48,12 +50,12 @@ public class MachineSpec extends Node {
 		tla.append(" -----------------------------\n\n");
 		tla.append("EXTENDS Integers\n\n");
 		tla.append("VARIABLES ");
-		tla.append(variables.stream().map(Variable::getName).collect(Collectors.joining(", ")));
+		tla.append(variables.stream().map(VariableSpec::getName).collect(Collectors.joining(", ")));
 		tla.append("\n\nvars == <<");
-		tla.append(variables.stream().map(Variable::getName).collect(Collectors.joining(", ")));
+		tla.append(variables.stream().map(VariableSpec::getName).collect(Collectors.joining(", ")));
 		tla.append(">>\n\n");
 		tla.append("Init == \n");
-		for(Variable v : variables) {
+		for(VariableSpec v : variables) {
 			tla.append("\t/\\ ");
 			tla.append(v.getName());
 			tla.append(" = ");
@@ -73,7 +75,7 @@ public class MachineSpec extends Node {
 					continue;
 				}
 				selfTransition = t.getSource().getName().equals(t.getTarget().getName());
-				HashSet<String> unchangedVarNames = new HashSet<>(variables.stream().map(Variable::getName).collect(Collectors.toSet()));
+				HashSet<String> unchangedVarNames = new HashSet<>(variables.stream().map(VariableSpec::getName).collect(Collectors.toSet()));
 				unchangedVarNames.removeAll(t.getModifiedVars());
 				if(!selfTransition) {
 					unchangedVarNames.remove(sub.getName() + "_state");
@@ -129,7 +131,7 @@ public class MachineSpec extends Node {
 		tla.append(activityNames.stream().collect(Collectors.joining("\n\t\\/ ")));
 		tla.append("\n\nSpec == Init /\\ [][Next]_vars\n\n");
 		
-		for(Invariant inv : invariants) {
+		for(InvariantSpec inv : invariants) {
 			tla.append(inv.getName());
 			tla.append(" == ");
 			Stack<InvariantExpression> expressions = new Stack<>();
@@ -171,7 +173,7 @@ public class MachineSpec extends Node {
 		StringBuilder cfg = new StringBuilder();
 		cfg.append("SPECIFICATION Spec\n");
 		cfg.append("CHECK_DEADLOCK FALSE\n");
-		for(Invariant i : invariants){
+		for(InvariantSpec i : invariants){
 			cfg.append("INVARIANT ");
 			cfg.append(i.getName());
 			cfg.append("\n");
@@ -179,13 +181,13 @@ public class MachineSpec extends Node {
 		return cfg.toString();
 	}
 
-	private Invariant processInvariant(String invariantName, String invariantText) {
-		Invariant invariant = new Invariant(invariantName);
+	private InvariantSpec processInvariant(String invariantName, String invariantText) {
+		InvariantSpec invariant = new InvariantSpec(invariantName);
 		buildInvariantExpressions(invariant, invariantText);
 		return invariant;
 	}
 
-	private void buildInvariantExpressions(Invariant invariant, String invariantText) {
+	private void buildInvariantExpressions(InvariantSpec invariant, String invariantText) {
 		String[] invariantParts = invariantText.split(" ", 3);
 		String[] expressionParts = getStateExpression(invariantParts[0]);
 		InvariantExpression exp = invariant.addTopLevelExp(expressionParts[0], expressionParts[1], expressionParts[2]);
@@ -194,7 +196,7 @@ public class MachineSpec extends Node {
 		buildInvariantExpressions(invariant, invariantParts[2], exp);
 	}
 
-	private void buildInvariantExpressions(Invariant invariant, String invariantText, InvariantExpression parent) {
+	private void buildInvariantExpressions(InvariantSpec invariant, String invariantText, InvariantExpression parent) {
 		// Strip beginning and ending parentheses
 		if(invariantText.charAt(0) == '(') {
 			// Inner

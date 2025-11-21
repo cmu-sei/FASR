@@ -1,10 +1,12 @@
-package edu.cmu.sei.fasr.tla;
+package edu.cmu.sei.fasr.tla.machine;
 
-public class Variable extends Node{
+import edu.cmu.sei.fasr.tla.TLANode;
+
+public class VariableSpec extends TLANode{
 
 	private String initialValue;
 
-	public Variable(String name, String initialValue) {
+	public VariableSpec(String name, String initialValue) {
 		super(name);
 		this.initialValue = initialValue;
 	}

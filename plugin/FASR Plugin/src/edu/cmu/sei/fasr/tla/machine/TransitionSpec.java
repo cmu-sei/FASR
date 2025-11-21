@@ -1,4 +1,4 @@
-package edu.cmu.sei.fasr.tla;
+package edu.cmu.sei.fasr.tla.machine;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -6,7 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class TransitionSpec extends Node {
+import edu.cmu.sei.fasr.tla.TLANode;
+import edu.cmu.sei.fasr.tla.tlaTranslationUtil;
+
+public class TransitionSpec extends TLANode {
 	private StateSpec source;
 	private StateSpec target;
 	private List<String> guards;
@@ -22,7 +25,7 @@ public class TransitionSpec extends Node {
 		modifiedVars = new HashSet<>();
 		
 		if(source.getName().equals("INIT")) {
-			Variable stateVar = new Variable(submachine.getName() + "_state", target.getName());
+			VariableSpec stateVar = new VariableSpec(submachine.getName() + "_state", target.getName());
 			machineSpec.addVariable(stateVar);
 		}
 	}
@@ -70,7 +73,7 @@ public class TransitionSpec extends Node {
 			tlaAssignment.append(" = ");
 			String rhs = assig_pieces[1].trim();
 			if(this.source.getName().equals("INIT")) {
-				Variable v = new Variable(modifiedVar, rhs);
+				VariableSpec v = new VariableSpec(modifiedVar, rhs);
 				containingMachine.addVariable(v);
 			}
 			String[] rhs_pieces = tlaTranslationUtil.splitExpression(rhs);

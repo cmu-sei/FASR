@@ -60,10 +60,10 @@ import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Stat
 import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Transition;
 
 import edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode;
-import edu.cmu.sei.fasr.tla.MachineSpec;
-import edu.cmu.sei.fasr.tla.StateSpec;
-import edu.cmu.sei.fasr.tla.SubmachineSpec;
-import edu.cmu.sei.fasr.tla.TransitionSpec;
+import edu.cmu.sei.fasr.tla.machine.MachineSpec;
+import edu.cmu.sei.fasr.tla.machine.StateSpec;
+import edu.cmu.sei.fasr.tla.machine.SubmachineSpec;
+import edu.cmu.sei.fasr.tla.machine.TransitionSpec;
 
 public class TLATranslator {
 	
