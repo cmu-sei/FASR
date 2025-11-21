@@ -56,18 +56,18 @@ class FASRAction extends MDAction {
 			saveSpec(path, machine, sysFiles);
 			saveSpec(path, env, envFiles);
 
-			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, false);
-			
+			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, path.toString(), false);
 			// clean up files created by tlc
-			try (var dirStream = Files.walk(path.resolve("states"))) {
-			    dirStream
-			        .map(Path::toFile)
-			        .sorted(Comparator.reverseOrder())
-			        .forEach(File::delete);
-			}
+//			try (var dirStream = Files.walk(path.resolve("states"))) {
+//			    dirStream
+//			        .map(Path::toFile)
+//			        .sorted(Comparator.reverseOrder())
+//			        .forEach(File::delete);
+//			}
 			
 			var dlc = new DamerauLevenshteinClassifier();
-			var ucas = dlc.classifyFortisOutput(x); // FIXME dlc.classifyFortisOutput(result);
+//			var ucas = dlc.classifyFortisOutput(x); // FIXME dlc.classifyFortisOutput(result);
+			var ucas = dlc.classifyFortisOutput(result);
 			
 			var genPkg = new SysMLGenerator(ucas, tm).generateElements(project);
 			pkg.getPackagedElement().add(genPkg);
