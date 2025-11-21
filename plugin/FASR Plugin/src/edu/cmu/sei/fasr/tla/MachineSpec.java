@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import edu.cmu.sei.fasr.tla.Invariant.InvariantExpression;
@@ -38,6 +39,8 @@ public class MachineSpec extends Node {
 	public String getTLA() {
 		int anon_activity_count = 0;
 		String activityName;
+		boolean selfTransition;
+		HashSet<String> processedTransitions = new HashSet<>();
 		HashSet<String> activityNames = new HashSet<>();
 		StringBuilder tla = new StringBuilder();
 		tla.append("----------------------------- MODULE ");
@@ -69,16 +72,26 @@ public class MachineSpec extends Node {
 				if(t.getSource().getName().equals("INIT")) {
 					continue;
 				}
+				selfTransition = t.getSource().getName().equals(t.getTarget().getName());
 				HashSet<String> unchangedVarNames = new HashSet<>(variables.stream().map(Variable::getName).collect(Collectors.toSet()));
 				unchangedVarNames.removeAll(t.getModifiedVars());
-				unchangedVarNames.remove(sub.getName() + "_state");
-				
-				tla.append("\n");
+				if(!selfTransition) {
+					unchangedVarNames.remove(sub.getName() + "_state");
+				}				
 				if(t.getName().equals("ANONYMOUS-TRANSITION")) {
-					activityName = "ANON_ACT_" + String.valueOf(anon_activity_count++);
+					activityName = "ANON_ACT_" + String.valueOf(++anon_activity_count);
 				} else {
 					activityName = t.getName();
 				}
+				if(processedTransitions.contains(activityName)) {
+					// TODO: Merge specs?
+					continue;
+				} else {
+					processedTransitions.add(activityName);
+				}
+				
+				
+				tla.append("\n");
 				tla.append(activityName);
 				activityNames.add(activityName);
 				tla.append(" == \n");
@@ -87,30 +100,70 @@ public class MachineSpec extends Node {
 					tla.append(guard);
 					tla.append("\n");
 				}
-				tla.append("\t/\\ ");
-				tla.append(sub.getName());
-				tla.append("_state = \"");
-				tla.append(t.getSource().getName());
-				tla.append("\"\n");
+				if(!selfTransition) {
+					tla.append("\t/\\ ");
+					tla.append(sub.getName());
+					tla.append("_state = \"");
+					tla.append(t.getSource().getName());
+					tla.append("\"\n");
+				}
 				for(String effect : t.getEffects()) {
 					tla.append("\t/\\ ");
 					tla.append(effect);
 					tla.append("\n");
 				}
-				tla.append("\t/\\ ");
-				tla.append(sub.getName());
-				tla.append("_state' = \"");
-				tla.append(t.getTarget().getName());
-				tla.append("\"\n\t/\\ UNCHANGED <<");
+				if(!selfTransition) {
+					tla.append("\t/\\ ");
+					tla.append(sub.getName());
+					tla.append("_state' = \"");
+					tla.append(t.getTarget().getName());
+					tla.append("\"\n");
+				}
+				tla.append("\t/\\ UNCHANGED <<");
 				tla.append(String.join(", ", unchangedVarNames));
 				tla.append(">>\n");
 			}
 		}
 		
-		tla.append("\nNext ==\n\t/\\ ");
+		tla.append("\nNext ==\n\t\\/ ");
 		tla.append(activityNames.stream().collect(Collectors.joining("\n\t\\/ ")));
 		tla.append("\n\nSpec == Init /\\ [][Next]_vars\n\n");
 		
+		for(Invariant inv : invariants) {
+			tla.append(inv.getName());
+			tla.append(" == ");
+			Stack<InvariantExpression> expressions = new Stack<>();
+			
+			for(InvariantExpression ie : inv.getExpressions()) {
+				expressions.push(ie);
+			}
+			while(!expressions.isEmpty()) {
+				InvariantExpression ie = expressions.pop();
+				tla.append("\n");
+				for(int i = 0; i < ie.depth() + 1; i++) {
+					tla.append("\t");
+				}
+				if(ie.depth() % 2 == 0) {
+					tla.append("/\\");
+				} else {
+					tla.append("\\/");
+				}
+				if(ie.variableName() != null) {
+					tla.append(" ");
+					tla.append(ie.variableName());
+					tla.append(ie.operator());
+					tla.append(ie.value());
+				}
+				if(ie.depth() == 0) {
+					tla.append(" => ");
+				}
+				for(InvariantExpression child : ie.children()) {
+					expressions.push(child);
+				}
+			}
+			tla.append("\n\n");
+		}
+		tla.append("=============================================================================");
 		return tla.toString();
 	}
 	

@@ -32,4 +32,7 @@ public class Invariant extends Node {
 		return addExp(null, "==", null, parent);
 	}
 
+	public List<InvariantExpression> getExpressions(){
+		return expressions;
+	}
 }
