@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,7 +46,10 @@ import com.nomagic.uml2.ext.magicdraw.activities.mdbasicactivities.ActivityEdge;
 import com.nomagic.uml2.ext.magicdraw.activities.mdbasicactivities.InitialNode;
 import com.nomagic.uml2.ext.magicdraw.activities.mdfundamentalactivities.Activity;
 import com.nomagic.uml2.ext.magicdraw.activities.mdfundamentalactivities.ActivityNode;
+import com.nomagic.uml2.ext.magicdraw.activities.mdintermediateactivities.DecisionNode;
 import com.nomagic.uml2.ext.magicdraw.activities.mdintermediateactivities.FinalNode;
+import com.nomagic.uml2.ext.magicdraw.activities.mdintermediateactivities.MergeNode;
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.ElementValue;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.OpaqueExpression;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.Behavior;
 import com.nomagic.uml2.ext.magicdraw.commonbehaviors.mdbasicbehaviors.OpaqueBehavior;
@@ -60,88 +64,96 @@ import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Stat
 import com.nomagic.uml2.ext.magicdraw.statemachines.mdbehaviorstatemachines.Transition;
 
 import edu.cmu.sei.fasr.TLATranslator.TLAMachineGraph.CompressedNode;
+import edu.cmu.sei.fasr.tla.environment.EnvironmentSpec;
 import edu.cmu.sei.fasr.tla.machine.MachineSpec;
 import edu.cmu.sei.fasr.tla.machine.StateSpec;
 import edu.cmu.sei.fasr.tla.machine.SubmachineSpec;
 import edu.cmu.sei.fasr.tla.machine.TransitionSpec;
 
 public class TLATranslator {
-	
-	public static record TLA(String name, String spec, String cfg) {};
-	
-	String MAX_FORMULA = "max(x,y) == IF x>y THEN x ELSE y"; 
+
+	public static record TLA(String name, String spec, String cfg) {
+	};
+
+	String MAX_FORMULA = "max(x,y) == IF x>y THEN x ELSE y";
 	TraverseModel tm;
 	StringBuilder sb;
 	TLAEnvGraph graph;
-	
+	private Integer branchCount;
+	private MachineSpec machineSpec;
+
 	public TLATranslator(TraverseModel tm) {
 		this.tm = tm;
 		this.sb = new StringBuilder();
+		branchCount = 0;
 	}
-	
+
 	public TLA createMachineSpec() {
 		sb = new StringBuilder();
-		
+
 		List<List<Behavior>> diagrams = tm.getDiagrams(tm.getModel());
 		List<Behavior> machineDiagrams = diagrams.get(0);
 		StateMachine machine = null;
-		for(Behavior d : machineDiagrams) {
-			if(d instanceof StateMachine) {
+		for (Behavior d : machineDiagrams) {
+			if (d instanceof StateMachine) {
 				machine = (StateMachine) d;
-			} 
+			}
 		}
-		if(machine == null) {
+		if (machine == null) {
 			System.err.println("A State Machine was not stereotyped as a Machine in Cameo.");
 			return null;
 		}
-		MachineSpec machineSpec = new MachineSpec(machine.getName());
+		machineSpec = new MachineSpec(machine.getName());
 		List<Region> regions = this.tm.getAllRegionsFromStateMachine(machine);
-		for(Region region : regions) {
-			if(region.getName().isBlank()) {
+		int transitionCount = 0;
+		for (Region region : regions) {
+			if (region.getName().isBlank()) {
 				continue;
 			}
-			
+
 			SubmachineSpec submachine = new SubmachineSpec(region.getName());
 			machineSpec.addSubmachine(submachine);
-			
-			for(State s : this.tm.getAllStatesFromRegion(region)) {
+
+			for (State s : this.tm.getAllStatesFromRegion(region)) {
 				String name = s.getName();
 				StateSpec stateSpec = new StateSpec(name);
 				submachine.addState(stateSpec);
 			}
-			
-			for(Transition t : this.tm.getAllTransitionsFromRegion(region)) {
+
+			for (Transition t : this.tm.getAllTransitionsFromRegion(region)) {
 				String sourceName, targetName;
-				if(t.getSource() instanceof Pseudostate ps && ps.getKind() == PseudostateKindEnum.INITIAL) {
+				if (t.getSource() instanceof Pseudostate ps && ps.getKind() == PseudostateKindEnum.INITIAL) {
 					sourceName = "INIT";
 				} else {
 					sourceName = t.getSource().getName();
 				}
 				targetName = t.getTarget().getName();
-				TransitionSpec transitionSpec = new TransitionSpec(submachine.getState(sourceName), submachine.getState(targetName), submachine, machineSpec);
-				if(t.getTrigger() != null && !t.getTrigger().isEmpty() && t.getTrigger().iterator().next().getEvent() != null) { 
+				TransitionSpec transitionSpec = new TransitionSpec(submachine.getState(sourceName),
+						submachine.getState(targetName), submachine, machineSpec, ++transitionCount);
+				if (t.getTrigger() != null && !t.getTrigger().isEmpty()
+						&& t.getTrigger().iterator().next().getEvent() != null) {
 					Trigger trigger = t.getTrigger().iterator().next();
-					String name = ((SignalEvent)trigger.getEvent()).getSignal().getName();
+					String name = ((SignalEvent) trigger.getEvent()).getSignal().getName();
 					transitionSpec.setTriggerName(name);
 				}
-				
-				if(t.getGuard()!= null && t.getGuard().getSpecification() != null) {
+
+				if (t.getGuard() != null && t.getGuard().getSpecification() != null) {
 					OpaqueExpression guard = ((OpaqueExpression) t.getGuard().getSpecification());
 					String[] conditions = guard.getBody().get(0).split("\n");
 					transitionSpec.addConditions(conditions);
 				}
-				
-				if(t.getEffect() != null) {
+
+				if (t.getEffect() != null) {
 					OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
 					String[] assignments = effect.getBody().get(0).split("\n");
 					transitionSpec.addEffects(assignments, machineSpec);
 				}
-				
+
 				submachine.addTransition(transitionSpec);
 			}
 		}
 		machineSpec.addInvariants(this.tm.getInvariants(machine));
-		
+
 //		List<State> states = this.tm.getAllStatesFromStateMachine(machine);
 //		Transition firstTransition = this.tm.getFirstTransition(machine);
 //		String specName = machine.getName().replace("\s", "_");
@@ -176,122 +188,275 @@ public class TLATranslator {
 //				""";
 //		
 //		return new TLA(specName, spec, cfg);
-		
+
 		return new TLA(machineSpec.getName(), machineSpec.getTLA(), machineSpec.getCFG());
 	}
-	
+
 	public TLA createEnvironmentSpec() throws SizeLimitExceededException {
 		sb = new StringBuilder();
 //		HashMap<String, ActivityNode> visitedNodes = new HashMap<String, ActivityNode>(); //Ensures we do not reprint states
-		List<List<Behavior>> diagrams = tm.getDiagrams(tm.getModel()); //Gets Activity diagrams 
+		List<List<Behavior>> diagrams = tm.getDiagrams(tm.getModel()); // Gets Activity diagrams
 		List<Behavior> envDiagrams = diagrams.get(1);
-		
-		// Enforces that there is only 1 activity diagram that is stereotyped as Environment
+
+		// Enforces that there is only 1 activity diagram that is stereotyped as
+		// Environment
 		// Could be extended to more but would need to discuss how this would work
-		if(envDiagrams.size() > 1 || envDiagrams.size() == 0) {
+		if (envDiagrams.size() > 1 || envDiagrams.size() == 0) {
 			throw new IllegalArgumentException("Only 1 Activity diagram may be stereotyped as Environment");
 		}
-		
+
 		// Adds activity Nodes to StringBuilder
 		// TODO: Fill in states
 		int step = 0;
-		this.graph = new TLAEnvGraph(envDiagrams.get(0).getName());
-		HashSet<ActivityNode> visited = new HashSet<ActivityNode>();
-		for(ActivityNode an : this.tm.getAllNodesFromActivity((Activity)envDiagrams.get(0))) {
-			if(an instanceof InitialNode) {
-				boolean notExit = true;
-				ActivityNode next = null;
-				while(notExit) {
-					if(step == 0) {
-						next = an.getOutgoing().stream().findFirst().get().getTarget();
-						step++;
-					} else {
-						for(ActivityEdge outgoing : next.getOutgoing()) {
-							if(outgoing.getTarget() instanceof FinalNode) {
-								graph.addTransition(outgoing.getSource(), outgoing.getTarget(), step);
-								notExit = false;
-								break;
+//		this.graph = new TLAEnvGraph(envDiagrams.get(0).getName());
+		EnvironmentSpec env = new EnvironmentSpec(envDiagrams.get(0).getName());
+		String myName;
+		HashSet<String> predNames = new HashSet<>();
+		HashSet<String> succNames = new HashSet<>();
+		HashMap<String, Integer> branchIds = new HashMap<>();
+		for (ActivityNode an : this.tm.getAllNodesFromActivity((Activity) envDiagrams.get(0))) {
+			predNames.clear();
+			myName = "UNSET";
+			succNames.clear();
+			envFindNeighbors(env, myName, predNames, succNames, branchIds, an);
+
+//				env.addAction("INIT", )
+//			}
+//			if(an instanceof InitialNode) {
+////				env.addAction("INIT", )
+//			}
+		}
+		env.processFlags();
+
+////		HashSet<ActivityNode> visited = new HashSet<ActivityNode>();
+//		for (ActivityNode an : this.tm.getAllNodesFromActivity((Activity) envDiagrams.get(0))) {
+//			if (an instanceof InitialNode) {
+//				boolean notExit = true;
+//				ActivityNode next = null;
+//				while (notExit) {
+//					if (step == 0) {
+//						next = an.getOutgoing().stream().findFirst().get().getTarget();
+//						step++;
+//					} else {
+//						for (ActivityEdge outgoing : next.getOutgoing()) {
+//							if (outgoing.getTarget() instanceof FinalNode) {
+//								graph.addTransition(outgoing.getSource(), outgoing.getTarget(), step);
+//								notExit = false;
+//								break;
+//							}
+//							graph.addTransition(outgoing.getSource(), outgoing.getTarget(), step);
+//							step++;
+//							next = outgoing.getTarget();
+//						}
+//					}
+//
+//				}
+//			}
+//			break;
+//		}
+//		graph.createTLA();
+//
+//		var spec = sb.toString();
+//		// XXX
+//		var cfg = """
+//				SPECIFICATION Spec
+//				""";
+//
+//		return new TLA(this.graph.getName(), spec, cfg);
+		return new TLA(env.getName(), env.getTLA(), env.getCFG());
+	}
+
+	private void envFindNeighbors(EnvironmentSpec env, String myName, HashSet<String> predNames,
+			HashSet<String> succNames, HashMap<String, Integer> branchIds, ActivityNode an) {
+		if (an instanceof InitialNode) {
+			myName = "INIT";
+		} else if (an instanceof FinalNode || an instanceof MergeNode) {
+			return;
+		} else if (an instanceof SendSignalAction) {
+			myName = ((SendSignalAction) an).getSignal().getName();
+		} else if (an instanceof DecisionNode) {
+			HashSet<String> flagsInvolved = new HashSet<>();
+			// ActionName -> StateElements
+			HashMap<String, List<String>> elseActsAndElems = new HashMap<>();
+			for (ActivityEdge outEdge : an.getOutgoing()) {
+				if(outEdge.getGuard() instanceof ElementValue) {
+					ElementValue ev = (ElementValue) outEdge.getGuard();
+					State st = (State)ev.getElement();
+					String stateName = st.getName();
+					Region parent = (Region) st.getOwner();
+					String parentName = parent.getName();
+					String flagName = machineSpec.getName() + "_" + parentName + "_" + stateName;
+					for(SubmachineSpec submachine : machineSpec.getSubmachines()) {
+						if(submachine.getName().equals(parentName)) {
+							for(TransitionSpec transition : submachine.getTransitions()) {
+								if(transition.getTarget().getName().equals(stateName)) {
+									env.addSystemStateObservationAction(transition.getName(), flagName);
+								}
 							}
-							graph.addTransition(outgoing.getSource(), outgoing.getTarget(), step);
-							step++;
-							next = outgoing.getTarget();
 						}
 					}
-					
+					HashSet<String> reqTrueActs = new HashSet<>();
+					HashSet<String> reqTrueStateElements = new HashSet<>();
+					envIncomingEdges(reqTrueStateElements, branchIds, outEdge);
+					envOutgoingEdges(reqTrueActs, branchIds, outEdge);
+					for(String reqTrueAct : reqTrueActs) {
+						for(String reqTrueStateElement : reqTrueStateElements) {
+							env.addFlag(flagName, reqTrueAct, reqTrueStateElement, true);
+							flagsInvolved.add(flagName);
+						}
+					}
+				} else if(outEdge.getGuard() instanceof OpaqueExpression) {
+					OpaqueExpression exp = (OpaqueExpression) outEdge.getGuard();
+					if(exp.getBody().size() != 1) {
+						// Handle this?
+					}
+					if(!exp.getBody().get(0).equals("else")) {
+						// Handle this?
+					}
+					HashSet<String> reqFalseActs = new HashSet<>();
+					HashSet<String> reqFalseStateElements = new HashSet<>();
+					envIncomingEdges(reqFalseStateElements, branchIds, outEdge);
+					envOutgoingEdges(reqFalseActs, branchIds, outEdge);
+					for(String reqFalseAct : reqFalseActs) {
+						for(String reqFalseStateElement : reqFalseStateElements) {
+							if(!elseActsAndElems.containsKey(reqFalseAct)) {
+								elseActsAndElems.put(reqFalseAct, new LinkedList<>());
+							}
+							elseActsAndElems.get(reqFalseAct).add(reqFalseStateElement);
+						}
+					}
+				} else {
+					// Handle this?
 				}
 			}
-			break;
+			if(!elseActsAndElems.isEmpty()) {
+				for(String flagName : flagsInvolved) {
+					for(String actionName : elseActsAndElems.keySet()) {
+						for(String stateElement : elseActsAndElems.get(actionName)) {
+							env.addFlag(flagName, actionName, stateElement, false);
+						}
+					}					
+				}
+			}
+			return;
+		} else {
+			// Unhandled node type -- handle gracefully?
 		}
-		graph.createTLA();
-		
-		var spec = sb.toString();
-		//XXX
-		var cfg = """
-				SPECIFICATION Spec
-				""";
-		
-		return new TLA(this.graph.getName(), spec, cfg);
+		for (ActivityEdge inEdge : an.getIncoming()) {
+			envIncomingEdges(predNames, branchIds, inEdge);
+			for (ActivityEdge outEdge : an.getOutgoing()) {
+				envOutgoingEdges(succNames, branchIds, outEdge);				
+			}
+		}
+		for(String predName : predNames) {
+			for(String succName : succNames) {
+				env.addSimpleAction(myName, predName, succName);		
+			}
+		}
 	}
-	
-	
+
+	private void envOutgoingEdges(HashSet<String> succNames, HashMap<String, Integer> branchIds, ActivityEdge outEdge) {
+		if (outEdge.getTarget() instanceof FinalNode) {
+			succNames.add("FINAL");
+		} else if (outEdge.getTarget() instanceof SendSignalAction) {
+			succNames.add(((SendSignalAction) outEdge.getTarget()).getSignal().getName());
+		} else if (outEdge.getTarget() instanceof DecisionNode) {
+			if(branchIds.containsKey(outEdge.getTarget().getID())) {
+				succNames.add("BRANCH_" + String.valueOf(branchIds.get(outEdge.getTarget().getID())));
+			} else {
+				succNames.add("BRANCH_" + String.valueOf(++branchCount));
+				branchIds.put(outEdge.getTarget().getID(), branchCount);
+			}
+		} else if (outEdge.getTarget() instanceof MergeNode) {
+			for (ActivityEdge outOutEdge : outEdge.getTarget().getOutgoing()) {
+				envOutgoingEdges(succNames, branchIds, outOutEdge);
+			}
+		} else {
+			// Unhandled node type -- handle gracefully?
+		}
+	}
+
+	private void envIncomingEdges(HashSet<String> predNames, HashMap<String, Integer> branchIds,
+			ActivityEdge inEdge) {
+		if (inEdge.getSource() instanceof InitialNode) {
+			predNames.add("INIT");
+		} else if (inEdge.getSource() instanceof SendSignalAction) {
+			predNames.add(((SendSignalAction) inEdge.getSource()).getSignal().getName());
+		} else if (inEdge.getSource() instanceof DecisionNode) {
+			if(branchIds.containsKey(inEdge.getSource().getID())) {
+				predNames.add("BRANCH_" + String.valueOf(branchIds.get(inEdge.getSource().getID()))); 
+			} else {
+				predNames.add("BRANCH_" + String.valueOf(++branchCount));
+				branchIds.put(inEdge.getSource().getID(), branchCount);
+			}
+		} else if (inEdge.getSource() instanceof MergeNode) {
+			for (ActivityEdge inInEdge : inEdge.getSource().getIncoming()) {
+				envIncomingEdges(predNames, branchIds, inInEdge);
+			}
+		} else {
+			// Unhandled node type -- handle gracefully?
+		}
+	}
+
 	private void createInitMachine(Transition t, TLAMachineGraph g) {
 		Scanner sc;
-	    if (t.getEffect() != null) {
-	    		OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
-	            String[] newEffect = effect.getBody().get(0).split("\n");
-	            // see if there is a name, otherwise add state prefix
-	            for (String assignment : newEffect) {
-	                String[] temp = assignment.split("=");
-	                if (temp.length == 2) {
-		                String lhs = temp[0].strip();
-		                String rhs = temp[1].strip();
-	                    sc = new Scanner(rhs);
-	                    if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
-	                        g.addNode("Init", "\t/\\ " + lhs + " = " + rhs.toUpperCase() + "\n");
-	                    } else if (sc.hasNextInt()) {
-	                        g.addNode("Init", "\t/\\ " + lhs + " = " + sc.nextInt() + "\n");
-	                    } else {
-	                        g.addNode("Init", "\t/\\ " + lhs + " = " + rhs + "\n");
-	                    }
-	                    g.addVariable(lhs);
-	                }
-	            }
-	            g.addNode("Init", "\n");
-	        }
+		if (t.getEffect() != null) {
+			OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
+			String[] newEffect = effect.getBody().get(0).split("\n");
+			// see if there is a name, otherwise add state prefix
+			for (String assignment : newEffect) {
+				String[] temp = assignment.split("=");
+				if (temp.length == 2) {
+					String lhs = temp[0].strip();
+					String rhs = temp[1].strip();
+					sc = new Scanner(rhs);
+					if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+						g.addNode("Init", "\t/\\ " + lhs + " = " + rhs.toUpperCase() + "\n");
+					} else if (sc.hasNextInt()) {
+						g.addNode("Init", "\t/\\ " + lhs + " = " + sc.nextInt() + "\n");
+					} else {
+						g.addNode("Init", "\t/\\ " + lhs + " = " + rhs + "\n");
+					}
+					g.addVariable(lhs);
+				}
+			}
+			g.addNode("Init", "\n");
+		}
 	}
-	
-	private void createMachineSpecBeginning(String name, TLAMachineGraph g) {	
+
+	private void createMachineSpecBeginning(String name, TLAMachineGraph g) {
 		StringBuilder varString = new StringBuilder();
 		varString.append("\n\nVARIABLES ");
-		
+
 		String commaSepVars = String.join(", ", g.variables);
 		varString.append(commaSepVars);
-		
+
 		varString.append("\n\nvars == <<");
 		varString.append(commaSepVars);
 		varString.append(">>\n\n");
-		
+
 		sb.insert(0, varString.toString());
-		
+
 		sb.insert(0, "\nEXTENDS Integers");
-		
+
 //				+ "Init ==\n/\\ step = 0\n\n");
 		sb.insert(0, String.format("----------------------------- MODULE %s -----------------------------\n", name));
 	}
-	
+
 	private void createMachineSpecEnding(TLAMachineGraph g) {
 		sb.append("Next ==");
-		for(CompressedNode node : g.getCompressedNodes()) {
-			if(node.name.equals("Init")) continue;
+		for (CompressedNode node : g.getCompressedNodes()) {
+			if (node.name.equals("Init"))
+				continue;
 			sb.append("\n\t\\/ " + node.name);
 		}
 		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
-		//XXX
+		// XXX
 		sb.append("\n\nTrivialInvariant == abarmed = TRUE => decelrate > 8");
 		sb.append("\n\n=============================================================================");
 	}
-	
-	private void createEnvironmentSpecBeginning(String name) {	
+
+	private void createEnvironmentSpecBeginning(String name) {
 		StringBuilder header = new StringBuilder();
 		header.append("----------------------------- MODULE ");
 		header.append(name);
@@ -303,30 +468,31 @@ public class TLATranslator {
 		header.append("\tstep = 0\n\n");
 		sb.insert(0, header.toString());
 	}
-	
+
 	private void createEnvironmentSpecEnding() {
 		sb.append("Next ==");
-		for(Entry<ActivityNode, List<edu.cmu.sei.fasr.TLATranslator.TLAEnvGraph.TLAEnvTransition>> entry : this.graph.edges.entrySet()) {
-			sb.append("\n\t\\/ " + ((SendSignalAction)entry.getKey()).getSignal().getName());
+		for (Entry<ActivityNode, List<edu.cmu.sei.fasr.TLATranslator.TLAEnvGraph.TLAEnvTransition>> entry : this.graph.edges
+				.entrySet()) {
+			sb.append("\n\t\\/ " + ((SendSignalAction) entry.getKey()).getSignal().getName());
 		}
 		sb.append("\n\nSpec == Init /\\ [][Next]_vars");
 		sb.append("\n\n=============================================================================");
 	}
-	
+
 	/*
 	 * Creates or updates a TLA file
 	 */
 	private String saveSpec(String fileName) {
 		try {
 			File file = new File(fileName);
-			if(file.exists()) {
+			if (file.exists()) {
 				FileWriter fw = new FileWriter(file);
 				fw.write(sb.toString());
 				sb = new StringBuilder();
 				fw.close();
 				System.out.println("File was updated!");
 				return file.getAbsolutePath();
-			} else if(file.createNewFile()) {
+			} else if (file.createNewFile()) {
 				FileWriter fw = new FileWriter(file);
 				fw.write(sb.toString());
 				sb = new StringBuilder();
@@ -334,57 +500,56 @@ public class TLATranslator {
 				System.out.println(fileName + " was successfully created!");
 				return file.getAbsolutePath();
 			}
-		} catch(IOException e){
+		} catch (IOException e) {
 			System.out.println("Could not write file " + fileName);
 		}
 		return null;
 	}
-	
-	
+
 	class TLAMachineGraph {
 		HashSet<String> variables = new HashSet<String>();
 		List<State> conditions = new ArrayList<State>();
 		List<MachineNode> tlaNodes = new ArrayList<MachineNode>();
 		List<CompressedNode> compressedNodes = new ArrayList<>();
-		
+
 		public TLAMachineGraph(List<State> states) {
 			// TODO Auto-generated constructor stub
 			this.conditions = states;
 			createNodes();
 		}
-		
+
 		public void addVariable(String s) {
 			this.variables.add(s);
 		}
-		
+
 		public void addNode(String signal, String condition) {
 			tlaNodes.add(new MachineNode(signal, condition));
 		}
-		
+
 		/*
 		 * Creates all uncompressed nodes
 		 */
 		public void createNodes() {
-			for(State s : this.conditions) {
+			for (State s : this.conditions) {
 				StringBuilder tlaConditions = new StringBuilder("\t/\\\n");
 				StringBuilder tlaAssignments = new StringBuilder("\t/\\\n");
-				for(Transition t : s.getIncoming()) {					
-					tlaConditions.append("\t\t\\/\n");					
+				for (Transition t : s.getIncoming()) {
+					tlaConditions.append("\t\t\\/\n");
 					tlaAssignments.append("\t\t\\/\n");
-					for(var trigger : t.getTrigger()) {
-						if(trigger.getName().length() == 0) {
+					for (var trigger : t.getTrigger()) {
+						if (trigger.getName().length() == 0) {
 							Signal signal = TLATranslator.this.tm.getTransitionTrigger(t);
-							if(t.getEffect() != null) { // Happens when there is no effect during a transition
+							if (t.getEffect() != null) { // Happens when there is no effect during a transition
 								OpaqueExpression guard = ((OpaqueExpression) t.getGuard().getSpecification());
 								OpaqueBehavior effect = (OpaqueBehavior) t.getEffect();
 								String[] conditions = guard.getBody().get(0).split("\n");
 								String[] assignments = effect.getBody().get(0).split("\n");
-								for(String condition : conditions) {
+								for (String condition : conditions) {
 									String[] condit_pieces = condition.split("[=<>!]");
 									String[] op_pieces = condition.split("[^=<>!]");
 									String lhs = condit_pieces[0].trim();
 									String rhs = condit_pieces[condit_pieces.length - 1].trim();
-									if(rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+									if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
 										rhs = rhs.toUpperCase();
 									}
 									String op = getTLAOperatorFromCEAOpeator(String.join("", op_pieces).trim());
@@ -394,11 +559,11 @@ public class TLATranslator {
 									tlaConditions.append(rhs);
 									tlaConditions.append("\n");
 								}
-								for(String assignment : assignments) {
+								for (String assignment : assignments) {
 									String[] assig_pieces = assignment.split("=");
-									String lhs = assig_pieces[0].trim()+"'";
+									String lhs = assig_pieces[0].trim() + "'";
 									String rhs = assig_pieces[1].trim();
-									if(rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
+									if (rhs.equalsIgnoreCase("true") || rhs.equalsIgnoreCase("false")) {
 										rhs = rhs.toUpperCase();
 									}
 									tlaAssignments.append("\t\t\t/\\ ");
@@ -407,7 +572,8 @@ public class TLATranslator {
 									tlaAssignments.append(rhs);
 									tlaAssignments.append("\n");
 								}
-								MachineNode newNode = new MachineNode(signal.getName(), tlaConditions.toString() + tlaAssignments.toString());
+								MachineNode newNode = new MachineNode(signal.getName(),
+										tlaConditions.toString() + tlaAssignments.toString());
 								tlaNodes.add(newNode);
 //								String[] newEffect = effect.getBodies().get(0).split("=");
 //								newEffect[0] = newEffect[0].strip();
@@ -416,93 +582,97 @@ public class TLATranslator {
 //								tlaNodes.add(new MachineNode(signal.getName(), "/\\ state' = "+ s.getName()));
 								tlaNodes.add(new MachineNode(signal.getName(), ""));
 							}
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
 		}
-		
+
 		private String getTLAOperatorFromCEAOpeator(String ceaOperator) {
-			switch(ceaOperator) {
-				case "==":
-					return " = ";
+			switch (ceaOperator) {
+			case "==":
+				return " = ";
 			}
 			return " UNSUPPORTED OPERATOR ";
 		}
 
-		public List<CompressedNode> getCompressedNodes(){
+		public List<CompressedNode> getCompressedNodes() {
 			return this.compressedNodes;
 		}
-		
+
 		/*
 		 * Compresses uncompressed nodes
 		 */
 		public List<CompressedNode> compressNodes() {
-		    // Name order preserved via LinkedHashMap; states deduped & ordered via LinkedHashSet
-		    Map<String, LinkedHashSet<String>> map = new LinkedHashMap<>();
+			// Name order preserved via LinkedHashMap; states deduped & ordered via
+			// LinkedHashSet
+			Map<String, LinkedHashSet<String>> map = new LinkedHashMap<>();
 
-		    for (MachineNode n : this.tlaNodes) {
-		        if (n == null) continue; // optional: skip nulls
-		        String name = n.getName();
-		        String var = n.variable;
-		        if (name == null || var == null) continue; // optional: skip partials
-		        map.computeIfAbsent(name, k -> new LinkedHashSet<>()).add(var);
-		    }
+			for (MachineNode n : this.tlaNodes) {
+				if (n == null)
+					continue; // optional: skip nulls
+				String name = n.getName();
+				String var = n.variable;
+				if (name == null || var == null)
+					continue; // optional: skip partials
+				map.computeIfAbsent(name, k -> new LinkedHashSet<>()).add(var);
+			}
 
-		    List<CompressedNode> out = new ArrayList<>(map.size());
-		    for (Map.Entry<String, LinkedHashSet<String>> e : map.entrySet()) {
-		        out.add(new CompressedNode(e.getKey(), new ArrayList<>(e.getValue())));
-		    }
-		    this.compressedNodes = out;
-		    return out;
+			List<CompressedNode> out = new ArrayList<>(map.size());
+			for (Map.Entry<String, LinkedHashSet<String>> e : map.entrySet()) {
+				out.add(new CompressedNode(e.getKey(), new ArrayList<>(e.getValue())));
+			}
+			this.compressedNodes = out;
+			return out;
 		}
-		
+
 		public Set<String> findMatches(CompressedNode node) {
-		    Set<String> matches = new HashSet<>();
-		    Set<String> modVars = variables.stream().map(var -> var + "'").collect(Collectors.toSet());
-		    for (String state : node.getStates()) {
-	            String[] words = state.split("\\s+"); // split on whitespace
-	            for (String word : words) {
-	                if (modVars.contains(word)) {
-	                    matches.add(word.substring(0, word.length()-1)); // collect the variable name
-	                }
-	            }
-	        }
-		    
-		    Set<String> missing = new HashSet<>(variables);
-	        missing.removeAll(matches);
-		    return missing;
+			Set<String> matches = new HashSet<>();
+			Set<String> modVars = variables.stream().map(var -> var + "'").collect(Collectors.toSet());
+			for (String state : node.getStates()) {
+				String[] words = state.split("\\s+"); // split on whitespace
+				for (String word : words) {
+					if (modVars.contains(word)) {
+						matches.add(word.substring(0, word.length() - 1)); // collect the variable name
+					}
+				}
+			}
+
+			Set<String> missing = new HashSet<>(variables);
+			missing.removeAll(matches);
+			return missing;
 		}
-		
+
 		/*
 		 * Class that represents uncompressed nodes pulled from UML diagram
 		 */
 		class MachineNode {
 			String name;
 			String variable;
-			
-			MachineNode(String name, String variable){
+
+			MachineNode(String name, String variable) {
 				this.name = name;
 				this.variable = variable;
 			}
-			
+
 			public String getName() {
 				return this.name;
 			}
-			
+
 //			public String getState() {
 //				return this.variable;
 //			}
-			
+
 		}
-		
+
 		class NewCompressedNode {
 			String name;
 			HashMap<String, String> variables;
+
 			public NewCompressedNode(String name, HashSet<String> variables) {
 				this.name = name;
 				this.variables = new HashMap<String, String>();
@@ -511,124 +681,132 @@ public class TLATranslator {
 				}
 			}
 		}
-		
+
 		/*
 		 * Class that represents compressed nodes
 		 */
 		class CompressedNode {
-		    private final String name;
-		    private final java.util.List<String> states;
-		    public CompressedNode(String name, java.util.List<String> states) {
-		        this.name = name; this.states = states;
-		    }
-		    public String getName() { return name; }
-		    public List<String> getStates() { return states; }
+			private final String name;
+			private final java.util.List<String> states;
+
+			public CompressedNode(String name, java.util.List<String> states) {
+				this.name = name;
+				this.states = states;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public List<String> getStates() {
+				return states;
+			}
 		}
 	}
-	
+
 	class NewTLAMachine {
 		public List<TLANode> nodeList;
 		public HashSet<String> variables;
-		
+
 		public NewTLAMachine() {
 			this.nodeList = new ArrayList<TLANode>();
 		}
-		
+
 		public void addVariable(String var) {
 			this.variables.add(var + "'");
 		}
-		
+
 		public void addNode(String name) {
 			this.nodeList.add(new TLANode(name, this.variables));
 		}
-		
-		class TLANode{
+
+		class TLANode {
 			private String name;
-		    private HashMap<String, String> variables;
-		    
-			TLANode(String name, HashSet<String> keys){
+			private HashMap<String, String> variables;
+
+			TLANode(String name, HashSet<String> keys) {
 				this.name = name;
-		        this.variables = new HashMap<>();
-		        for (String key : keys) {
-		            variables.put(key, null);
-		        }
+				this.variables = new HashMap<>();
+				for (String key : keys) {
+					variables.put(key, null);
+				}
 			}
-			
+
 			public void setVariable(String key, String val) {
 				variables.put(key, val);
 			}
 		}
 	}
-	
+
 	class TLAEnvGraph {
 		private Map<String, ActivityNode> nodes = new HashMap<>();
-		
+
 		private Map<ActivityNode, List<TLAEnvTransition>> edges = new HashMap<>();
 
 		private String envName;
-		
+
 		public TLAEnvGraph(String name) {
 			this.envName = name;
 		}
-		
+
 		public String getName() {
 			return envName;
 		}
-		
+
 		public void addTransition(ActivityNode from, ActivityNode to, int step) {
 			from = getOrInsertByName(from);
 			to = getOrInsertByName(to);
-			edges.computeIfAbsent(from, k -> new ArrayList<TLAEnvTransition>())
-			        .add(new TLAEnvTransition(to, step));
+			edges.computeIfAbsent(from, k -> new ArrayList<TLAEnvTransition>()).add(new TLAEnvTransition(to, step));
 		}
-		
+
 		private ActivityNode getOrInsertByName(ActivityNode node) {
 			String name = "UNSET";
-			if(node instanceof SendSignalAction) {
-				name = ((SendSignalAction)node).getSignal().getName();
+			if (node instanceof SendSignalAction) {
+				name = ((SendSignalAction) node).getSignal().getName();
 			}
-	        if (name == null) {
-	            throw new IllegalArgumentException("ActivityNode must have a name.");
-	        }
+			if (name == null) {
+				throw new IllegalArgumentException("ActivityNode must have a name.");
+			}
 
-	        return nodes.computeIfAbsent(name, n -> node);
-	    }
-		
+			return nodes.computeIfAbsent(name, n -> node);
+		}
+
 		public void createTLA() {
-			createEnvironmentSpecBeginning(envName); //TODO : update to include initial transition
+			createEnvironmentSpecBeginning(envName); // TODO : update to include initial transition
 			for (Entry<ActivityNode, List<TLAEnvTransition>> entry : edges.entrySet()) {
-				sb.append(((SendSignalAction)entry.getKey()).getSignal().getName() + " ==\n");
+				sb.append(((SendSignalAction) entry.getKey()).getSignal().getName() + " ==\n");
 				sb.append("\t/\\ ");
-				
-				if(entry.getValue().size() > 1) {
-					sb.append("step \\in {"); 
-					for(int i = 0; i < entry.getValue().size(); i++) {
-						if(i != entry.getValue().size()-1) {
+
+				if (entry.getValue().size() > 1) {
+					sb.append("step \\in {");
+					for (int i = 0; i < entry.getValue().size(); i++) {
+						if (i != entry.getValue().size() - 1) {
 							sb.append(entry.getValue().get(i).step + ",");
 						} else {
 							sb.append(entry.getValue().get(i).step + "}");
 						}
 					}
-				}else {
-					sb.append("step = " + (entry.getValue().get(0).step-1));
+				} else {
+					sb.append("step = " + (entry.getValue().get(0).step - 1));
 				}
-				
+
 				sb.append("\n");
 				sb.append("\t/\\ step' = step + 1\n\n");
 
 			}
 			createEnvironmentSpecEnding();
-				
-		}
-		class TLAEnvTransition {
-	        ActivityNode to;
-	        int step;
 
-	        public TLAEnvTransition(ActivityNode to, int step) {
-	            this.to = to;
-	            this.step = step;
-	        }
-	    }
-	
+		}
+
+		class TLAEnvTransition {
+			ActivityNode to;
+			int step;
+
+			public TLAEnvTransition(ActivityNode to, int step) {
+				this.to = to;
+				this.step = step;
+			}
+		}
+
 	}
 }

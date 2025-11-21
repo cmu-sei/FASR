@@ -38,8 +38,11 @@ public class MachineSpec extends TLANode {
 		}
 	}
 	
+	public Collection<SubmachineSpec> getSubmachines() {
+		return submachines;
+	}
+	
 	public String getTLA() {
-		int anon_activity_count = 0;
 		String activityName;
 		boolean selfTransition;
 		HashSet<String> processedTransitions = new HashSet<>();
@@ -79,12 +82,8 @@ public class MachineSpec extends TLANode {
 				unchangedVarNames.removeAll(t.getModifiedVars());
 				if(!selfTransition) {
 					unchangedVarNames.remove(sub.getName() + "_state");
-				}				
-				if(t.getName().equals("ANONYMOUS-TRANSITION")) {
-					activityName = "ANON_ACT_" + String.valueOf(++anon_activity_count);
-				} else {
-					activityName = t.getName();
 				}
+				activityName = t.getName();
 				if(processedTransitions.contains(activityName)) {
 					// TODO: Merge specs?
 					continue;

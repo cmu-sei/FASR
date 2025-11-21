@@ -16,8 +16,8 @@ public class TransitionSpec extends TLANode {
 	private List<String> effects;
 	private Set<String> modifiedVars;
 
-	public TransitionSpec(StateSpec source, StateSpec target, SubmachineSpec submachine, MachineSpec machineSpec) {
-		super("ANONYMOUS-TRANSITION");
+	public TransitionSpec(StateSpec source, StateSpec target, SubmachineSpec submachine, MachineSpec machineSpec, int transitionCount) {
+		super("ANON_ACT_" + String.valueOf(transitionCount));
 		this.source = source;
 		this.target = target;
 		effects = new LinkedList<>();
@@ -28,6 +28,7 @@ public class TransitionSpec extends TLANode {
 			VariableSpec stateVar = new VariableSpec(submachine.getName() + "_state", target.getName());
 			machineSpec.addVariable(stateVar);
 		}
+		//TODO: Put state test and change into guard and effects to eliminate special case in TLA rendering
 	}
 
 	public void setTriggerName(String triggerName) {
