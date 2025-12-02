@@ -56,17 +56,16 @@ class FASRAction extends MDAction {
 			saveSpec(path, machine, sysFiles);
 			saveSpec(path, env, envFiles);
 
-			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, path.toString(), false);
+			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, "", false);
 			// clean up files created by tlc
-//			try (var dirStream = Files.walk(path.resolve("states"))) {
-//			    dirStream
-//			        .map(Path::toFile)
-//			        .sorted(Comparator.reverseOrder())
-//			        .forEach(File::delete);
-//			}
+			try (var dirStream = Files.walk(path.resolve("states"))) {
+			    dirStream
+			        .map(Path::toFile)
+			        .sorted(Comparator.reverseOrder())
+			        .forEach(File::delete);
+			}
 			
 			var dlc = new DamerauLevenshteinClassifier();
-//			var ucas = dlc.classifyFortisOutput(x); // FIXME dlc.classifyFortisOutput(result);
 			var ucas = dlc.classifyFortisOutput(result);
 			
 			var genPkg = new SysMLGenerator(ucas, tm).generateElements(project);
@@ -76,10 +75,11 @@ class FASRAction extends MDAction {
 			
 			var table = eManager.createDiagram("Unsafe Control Action Table", genPkg);
 			table.setName("Unsafe Control Actions");
-			project.getDiagram(table).open();
 			
 			var diagramTable = StereotypesHelper.getAppliedStereotypeByString(table, "DiagramTable");
 			TagsHelper.setStereotypePropertyValue(table, diagramTable, DiagramTableStereotype.SCOPE, genPkg);
+
+			project.getDiagram(table).open();
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		} finally {
