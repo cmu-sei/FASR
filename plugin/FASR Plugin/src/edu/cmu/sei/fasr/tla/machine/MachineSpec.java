@@ -120,9 +120,11 @@ public class MachineSpec extends TLANode {
 					tla.append(t.getTarget().getName());
 					tla.append("\"\n");
 				}
-				tla.append("\t/\\ UNCHANGED <<");
-				tla.append(String.join(", ", unchangedVarNames));
-				tla.append(">>\n");
+				if(!unchangedVarNames.isEmpty()) {
+					tla.append("\t/\\ UNCHANGED <<");
+					tla.append(String.join(", ", unchangedVarNames));
+					tla.append(">>\n");
+				}
 			}
 		}
 		
@@ -149,12 +151,16 @@ public class MachineSpec extends TLANode {
 				} else {
 					tla.append("\\/");
 				}
-				if(ie.variableName() != null) {
+				if(ie.value() != null) {
 					tla.append(" ");
-					tla.append(ie.variableName());
-					tla.append(ie.operator());
-					tla.append(ie.value());
-				}
+					if(ie.variableName() != null) {
+						tla.append(ie.variableName());
+						tla.append(ie.operator());
+						tla.append(ie.value());
+					} else { 
+						tla.append(ie.value());
+					}
+				} 
 				if(ie.depth() == 0) {
 					tla.append(" => ");
 				}
@@ -218,16 +224,20 @@ public class MachineSpec extends TLANode {
 			if(invariantText.contains("AND")) {
 				for(String stateExpression : invariantText.split("AND")) {
 					String[] stExpPieces = getExpression(stateExpression);
-					invariant.addExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
+					invariant.addBinaryExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
 				}
 			} else if(invariantText.contains("OR")) {
 				for(String stateExpression : invariantText.split("OR")) {
 					String[] stExpPieces = getExpression(stateExpression);
-					invariant.addExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
+					invariant.addBinaryExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
 				}
 			} else {
 				String[] stExpPieces = getExpression(invariantText);
-				invariant.addExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
+				if(stExpPieces.length == 3) {
+					invariant.addBinaryExp(stExpPieces[0], stExpPieces[1], stExpPieces[2], parent);
+				} else if (stExpPieces.length == 1) {
+					invariant.addUnaryExp(stExpPieces[0], parent);
+				}
 			}
 		}
 	}
