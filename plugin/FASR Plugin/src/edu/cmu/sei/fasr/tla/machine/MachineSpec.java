@@ -73,57 +73,53 @@ public class MachineSpec extends TLANode {
 		}
 		
 		for(SubmachineSpec sub : submachines) {
-			for(TransitionSpec t : sub.getTransitions()) {
-				if(t.getSource().getName().equals("INIT")) {
-					continue;
-				}
-				selfTransition = t.getSource().getName().equals(t.getTarget().getName());
-				HashSet<String> unchangedVarNames = new HashSet<>(variables.stream().map(VariableSpec::getName).collect(Collectors.toSet()));
-				unchangedVarNames.removeAll(t.getModifiedVars());
-				if(!selfTransition) {
-					unchangedVarNames.remove(sub.getName() + "_state");
-				}
-				activityName = t.getName();
-				if(processedTransitions.contains(activityName)) {
-					// TODO: Merge specs?
-					continue;
-				} else {
-					processedTransitions.add(activityName);
-				}
-				
-				
+			var groupedTransitions = sub.getTransitions().stream().filter(t -> !t.getSource().getName().equals("INIT")).collect(Collectors.groupingBy(TransitionSpec::getName));
+			
+			for (var e : groupedTransitions.entrySet()) {
+				activityName = e.getKey();
+				processedTransitions.add(activityName);
 				tla.append("\n");
 				tla.append(activityName);
 				activityNames.add(activityName);
 				tla.append(" == \n");
-				for(String guard : t.getGuards()) {
-					tla.append("\t/\\ ");
-					tla.append(guard);
-					tla.append("\n");
-				}
-				if(!selfTransition) {
-					tla.append("\t/\\ ");
-					tla.append(sub.getName());
-					tla.append("_state = \"");
-					tla.append(t.getSource().getName());
-					tla.append("\"\n");
-				}
-				for(String effect : t.getEffects()) {
-					tla.append("\t/\\ ");
-					tla.append(effect);
-					tla.append("\n");
-				}
-				if(!selfTransition) {
-					tla.append("\t/\\ ");
-					tla.append(sub.getName());
-					tla.append("_state' = \"");
-					tla.append(t.getTarget().getName());
-					tla.append("\"\n");
-				}
-				if(!unchangedVarNames.isEmpty()) {
-					tla.append("\t/\\ UNCHANGED <<");
-					tla.append(String.join(", ", unchangedVarNames));
-					tla.append(">>\n");
+
+				for (var t : e.getValue()) {
+					selfTransition = t.getSource().getName().equals(t.getTarget().getName());
+					HashSet<String> unchangedVarNames = new HashSet<>(variables.stream().map(VariableSpec::getName).collect(Collectors.toSet()));
+					unchangedVarNames.removeAll(t.getModifiedVars());
+					if(!selfTransition) {
+						unchangedVarNames.remove(sub.getName() + "_state");
+					}
+					tla.append("\t\\/\n");					
+					for(String guard : t.getGuards()) {
+						tla.append("\t\t/\\ ");
+						tla.append(guard);
+						tla.append("\n");
+					}
+					if(!selfTransition) {
+						tla.append("\t\t/\\ ");
+						tla.append(sub.getName());
+						tla.append("_state = \"");
+						tla.append(t.getSource().getName());
+						tla.append("\"\n");
+					}
+					for(String effect : t.getEffects()) {
+						tla.append("\t\t/\\ ");
+						tla.append(effect);
+						tla.append("\n");
+					}
+					if(!selfTransition) {
+						tla.append("\t\t/\\ ");
+						tla.append(sub.getName());
+						tla.append("_state' = \"");
+						tla.append(t.getTarget().getName());
+						tla.append("\"\n");
+					}
+					if(!unchangedVarNames.isEmpty()) {
+						tla.append("\t\t/\\ UNCHANGED <<");
+						tla.append(String.join(", ", unchangedVarNames));
+						tla.append(">>\n");
+					}
 				}
 			}
 		}
