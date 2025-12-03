@@ -103,11 +103,15 @@ public class EnvironmentSpec extends TLANode {
 				tla.append("\n\t\\/");
 				tla.append("\n\t\t/\\ ");
 				tla.append(stateVar);
-				tla.append(" = \"in_");
-				tla.append(n.pred());
-				tla.append("_out_");
-				tla.append(actionName);
-				tla.append("\"");
+				if(n.pred().contains("INIT")) {
+					tla.append(" = \"INIT\"");
+				} else {
+					tla.append(" = \"in_");
+					tla.append(n.pred());
+					tla.append("_out_");
+					tla.append(actionName);
+					tla.append("\"");
+				}
 				for(Flag flag : n.flags()) {
 					tla.append("\n\t\t/\\ ");
 					tla.append(flag.flagName());
