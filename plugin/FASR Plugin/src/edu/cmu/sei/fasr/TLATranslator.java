@@ -129,7 +129,7 @@ public class TLATranslator {
 				}
 				targetName = t.getTarget().getName();
 				TransitionSpec transitionSpec = new TransitionSpec(submachine.getState(sourceName),
-						submachine.getState(targetName), submachine, machineSpec, ++transitionCount);
+						submachine.getState(targetName), submachine, machineSpec, ++transitionCount, t.getName());
 				if (t.getTrigger() != null && !t.getTrigger().isEmpty()
 						&& t.getTrigger().iterator().next().getEvent() != null) {
 					Trigger trigger = t.getTrigger().iterator().next();

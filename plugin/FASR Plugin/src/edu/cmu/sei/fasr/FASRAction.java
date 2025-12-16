@@ -56,7 +56,7 @@ class FASRAction extends MDAction {
 			saveSpec(path, machine, sysFiles);
 			saveSpec(path, env, envFiles);
 
-			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, "", false);
+			var result = RobustnessKt.computeSTPARobustness(sysFiles, envFiles, "", false, true);
 			// clean up files created by tlc
 			try (var dirStream = Files.walk(path.resolve("states"))) {
 			    dirStream

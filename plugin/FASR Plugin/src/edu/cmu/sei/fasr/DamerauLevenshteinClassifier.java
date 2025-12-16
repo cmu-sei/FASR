@@ -175,6 +175,9 @@ public class DamerauLevenshteinClassifier {
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
+//				System.out.println(String.join("->", unsafe));
+//				System.out.print("\t");
+//				System.out.println(String.join("->", safe));
 				List<String> invariants = mapper.readerForListOf(String.class).readValue(pair.get("violatedInvs"));
 				String invariantStr = String.join(",", invariants);
 				List<String> components = mapper.readerForListOf(String.class)

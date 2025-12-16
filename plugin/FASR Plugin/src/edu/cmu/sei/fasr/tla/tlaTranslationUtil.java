@@ -31,7 +31,12 @@ public class tlaTranslationUtil {
 	}
 	
 	public static String[] splitExpression(String expression) {
-		return expression.split("((?=<|^|>|%|\\+|-|/|==|<=|>=)|(?<=<|^|>|%|\\+|-|/|==|<=|>=))");
+		String[] ret = expression.split("((?=^|%|\\+|-|/|==|<=|>=)|(?<=^|%|\\+|-|/|==|<=|>=))");
+		if (ret.length > 1){
+			return ret;
+		} else {
+			return expression.split("((?=<|^|>|%|\\+|-|/|==)|(?<=<|^|>|%|\\+|-|/|==))");
+		}
 	}
 	
 }

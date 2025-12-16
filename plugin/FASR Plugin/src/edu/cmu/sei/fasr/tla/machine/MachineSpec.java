@@ -189,12 +189,21 @@ public class MachineSpec extends TLANode {
 	}
 
 	private void buildInvariantExpressions(InvariantSpec invariant, String invariantText) {
-		String[] invariantParts = invariantText.split(" ", 3);
-		String[] expressionParts = getStateExpression(invariantParts[0]);
-		InvariantExpression exp = invariant.addTopLevelExp(expressionParts[0], expressionParts[1], expressionParts[2]);
-		// invariantParts[1].equals("IMPLIES"); // Must be true, implication is only top
-		// level operator supported
-		buildInvariantExpressions(invariant, invariantParts[2], exp);
+		String[] invariantParts = invariantText.split("IMPLIES", 3);
+		String[] expressionParts = null;
+		String reducedInvariantText = null;
+		InvariantExpression exp = null;
+		if(invariantParts[0].contains(".")) {
+			expressionParts = getStateExpression(invariantParts[0]);
+			reducedInvariantText = invariantParts[1].trim();
+			exp = invariant.addTopLevelExp(expressionParts[0], expressionParts[1], expressionParts[2]);
+			buildInvariantExpressions(invariant, reducedInvariantText, exp);
+		} else {
+			reducedInvariantText = invariantParts[0].trim();
+			String[] stExpPieces = getExpression(reducedInvariantText);
+			exp = invariant.addTopLevelExp(stExpPieces[0], stExpPieces[1], stExpPieces[2]);
+			buildInvariantExpressions(invariant, invariantParts[1], exp);
+		}
 	}
 
 	private void buildInvariantExpressions(InvariantSpec invariant, String invariantText, InvariantExpression parent) {

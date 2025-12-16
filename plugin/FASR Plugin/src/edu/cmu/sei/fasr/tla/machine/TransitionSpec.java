@@ -16,8 +16,11 @@ public class TransitionSpec extends TLANode {
 	private List<String> effects;
 	private Set<String> modifiedVars;
 
-	public TransitionSpec(StateSpec source, StateSpec target, SubmachineSpec submachine, MachineSpec machineSpec, int transitionCount) {
+	public TransitionSpec(StateSpec source, StateSpec target, SubmachineSpec submachine, MachineSpec machineSpec, int transitionCount, String transitionName) {
 		super("ANON_ACT_" + String.valueOf(transitionCount));
+		if (!transitionName.isBlank()) {
+			this.name = transitionName;
+		}
 		this.source = source;
 		this.target = target;
 		effects = new LinkedList<>();

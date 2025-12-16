@@ -104,31 +104,40 @@ public class EnvironmentSpec extends TLANode {
 				tla.append("\n\t\t/\\ ");
 				tla.append(stateVar);
 				if(n.pred().contains("INIT")) {
-					tla.append(" = \"INIT\"");
+					tla.append(" = \"INIT");
+				} else if (n.pred().contains("BRANCH")){
+					tla.append(" = \"");
+					tla.append(n.pred());
 				} else {
 					tla.append(" = \"in_");
 					tla.append(n.pred());
 					tla.append("_out_");
 					tla.append(actionName);
-					tla.append("\"");
 				}
+				tla.append("\"");
 				for(Flag flag : n.flags()) {
 					tla.append("\n\t\t/\\ ");
 					tla.append(flag.flagName());
 					tla.append(" = ");
 					if(flag.isRequired()) {
-						tla.append(" TRUE");
+						tla.append("TRUE");
 					} else {
-						tla.append(" FALSE");
+						tla.append("FALSE");
 					}
 				}
 				tla.append("\n\t\t/\\ ");
 				tla.append(stateVar);
+				if (n.succ().contains("BRANCH")){
+					tla.append("' = \"");
+					tla.append(n.succ());
+				} else {
 				tla.append("' = \"in_");
 				tla.append(actionName);
 				tla.append("_out_");
 				tla.append(n.succ());
+				}
 				tla.append("\"");
+				
 				if(!flagData.isEmpty()) {
 					tla.append("\n\t\t/\\ UNCHANGED <<");
 					tla.append(flagData.stream().map(FlagData::flagName).distinct().collect(Collectors.joining(", ")));
