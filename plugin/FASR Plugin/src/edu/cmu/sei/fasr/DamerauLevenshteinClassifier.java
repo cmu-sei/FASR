@@ -169,9 +169,11 @@ public class DamerauLevenshteinClassifier {
 	public Collection<UnsafeControlAction> classifyFortisOutput(String s) {
 		Collection<UnsafeControlAction> ret = new HashSet<>();
 		ObjectMapper mapper = new ObjectMapper();
+		boolean addUCA;
 		try {
 			ArrayNode root = (ArrayNode) mapper.readTree(s);
 			for (JsonNode jsonPair : root) {
+				addUCA = true;
 				var pair = (ObjectNode) jsonPair;
 				List<String> safe = mapper.readerForListOf(String.class).readValue(pair.get("goodTrace"));
 				List<String> unsafe = mapper.readerForListOf(String.class).readValue(pair.get("badTrace"));
@@ -183,7 +185,19 @@ public class DamerauLevenshteinClassifier {
 				List<String> components = mapper.readerForListOf(String.class)
 						.readValue(pair.get("violatingComponents"));
 				String componentStr = String.join(",", components);
-				ret.add(classify(safe, unsafe, invariantStr, componentStr));
+				UnsafeControlAction newUCA = classify(safe, unsafe, invariantStr, componentStr);
+				for(UnsafeControlAction uca : ret) {
+					if(uca.source().equals(newUCA.source()) && uca.guideword() == newUCA.guideword() && uca.controlAction().equals(newUCA.controlAction()) && uca.violatedConstraint().equals(newUCA.violatedConstraint())){
+						String nUCACompressed = newUCA.context().replaceAll("\"Wait\" -> ", "");
+						String ucaCompressed = uca.context().replaceAll("\"Wait\" -> ", "");
+						if(nUCACompressed.equals(ucaCompressed)){
+							addUCA = false;
+						}
+					}
+				}
+				if(addUCA) {
+					ret.add(newUCA);
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
