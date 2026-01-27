@@ -28,7 +28,7 @@
 		<link>
 			<name>MAGIC_DRAW_INSTALL_DIRECTORY</name>
 			<type>2</type>
-			<location>/Applications/Cameo Enterprise Architecture 2024</location>
+			<location>/Applications/Cameo Enterprise Architecture</location>
 		</link>
 	</linkedResources>
 </projectDescription>
