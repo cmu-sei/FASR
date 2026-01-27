@@ -85,6 +85,12 @@ class DamerauLevenshteinTests {
 	 * | Transposition | Any         | Any           | Out of Order             | Incorrect action   |
 	 * | Transposition | Any         | Delay         | Too Late                 | Late action        |
 	 * | Transposition | Delay       | Any           | Too Early                | Early              |
+	 *
+	 * | **Activity Duration** | **Guideword**    |
+	 * | --------------------- | ---------------- |
+	 * | Shorter than correct  | Stopped too Soon |
+	 * | Longer than correct   | Applied too Long |
+	 * 
 	 * 
 	 */
 

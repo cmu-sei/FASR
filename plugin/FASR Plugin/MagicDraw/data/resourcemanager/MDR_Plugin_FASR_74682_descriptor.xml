@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<resourceDescriptor critical="false" date="2025-11-05" description="FASR Plugin" group="CMU/SEI Resource" homePage="" id="74682" mdVersionMax="higher" mdVersionMin="17.0" name="FASR" product="FASR" restartMagicdraw="true" type="Plugin">
+    <version human="1.0" internal="100010" resource="1000100"/>
+    <provider email="" homePage="" name="CMU/SEI"/>
+    <edition>Reader</edition>
+    <edition>Community</edition>
+    <edition>Standard</edition>
+    <edition>Professional Java</edition>
+    <edition>Professional C++</edition>
+    <edition>Professional</edition>
+    <edition>Architect</edition>
+    <edition>Enterprise</edition>
+    <installation>
+        <file from="plugins/FASR/plugin.xml" to="plugins/FASR/plugin.xml"/>
+        <file from="plugins/FASR/lib/Supremica.jar" to="plugins/FASR/lib/Supremica.jar"/>
+        <file from="plugins/FASR/lib/fortis-core.jar" to="plugins/FASR/lib/fortis-core.jar"/>
+        <file from="plugins/FASR/lib/ltsa.jar" to="plugins/FASR/lib/ltsa.jar"/>
+        <file from="plugins/FASR/lib/AlloyMax-1.0.3.jar" to="plugins/FASR/lib/AlloyMax-1.0.3.jar"/>
+        <file from="plugins/FASR/lib/SupremicaLib.jar" to="plugins/FASR/lib/SupremicaLib.jar"/>
+        <file from="plugins/FASR/lib/ltl2buchi.jar" to="plugins/FASR/lib/ltl2buchi.jar"/>
+        <file from="plugins/FASR/lib/fasr.jar" to="plugins/FASR/lib/fasr.jar"/>
+        <file from="plugins/FASR/lib/TLAtoLTS.jar" to="plugins/FASR/lib/TLAtoLTS.jar"/>
+        <file from="profiles/FASR Profile.mdzip" to="profiles/FASR Profile.mdzip"/>
+        <file from="data/defaults/data/diagrams/UnsafeControlActionTable/UnsafeControlActionTableDescriptor.xml" to="data/defaults/data/diagrams/UnsafeControlActionTable/UnsafeControlActionTableDescriptor.xml"/>
+    </installation>
+</resourceDescriptor>

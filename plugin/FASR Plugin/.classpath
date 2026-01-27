@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/MagicDraw"/>
+	<classpathentry kind="lib" path="MagicDraw/plugins/FASR/lib/fortis-core.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
