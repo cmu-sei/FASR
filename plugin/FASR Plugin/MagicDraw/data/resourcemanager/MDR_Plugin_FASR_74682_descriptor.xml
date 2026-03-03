@@ -21,6 +21,6 @@
         <file from="plugins/FASR/lib/fasr.jar" to="plugins/FASR/lib/fasr.jar"/>
         <file from="plugins/FASR/lib/TLAtoLTS.jar" to="plugins/FASR/lib/TLAtoLTS.jar"/>
         <file from="profiles/FASR Profile.mdzip" to="profiles/FASR Profile.mdzip"/>
-        <file from="data/defaults/data/diagrams/UnsafeControlActionTable/UnsafeControlActionTableDescriptor.xml" to="data/defaults/data/diagrams/UnsafeControlActionTable/UnsafeControlActionTableDescriptor.xml"/>
+        <file from="data/defaults/data/diagrams/UnsafeControlActionTable/UnsafeControlActionTableDescriptor.xml" to="data/defaults/data/diagrams/UnsafeControlActionTable/descriptor.xml"/>
     </installation>
 </resourceDescriptor>
