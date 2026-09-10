@@ -24,6 +24,8 @@ from pathlib import Path
 import gradio as gr
 from gradio.themes import Soft
 
+import dspy
+
 from ..pipeline import (
     build_programs,
     build_session,
@@ -58,8 +60,8 @@ def _capture_generate(programs, requirements, progress=gr.Progress()):
     try:
         progress(0.0, desc="Generating TLA+")
         tla_plus = generate_tla(programs, requirements)
-        summary_obj = programs["tla2req"](spec=tla_plus)
-        summary = str(summary_obj.summary)
+        with dspy.context(lm=programs["lm"]):
+            summary = str(programs["tla2req"](spec=tla_plus).summary)
     finally:
         builtins.print = orig_print
     progress(1.0, desc="Done")
@@ -166,7 +168,7 @@ def launch():
         # Model handlers
         def use_model(name):
             cfg = get_config_or(name)
-            progs = build_programs(cfg)
+            progs = build_programs(cfg, warm=False)
             info = f"**Current:** {progs['cfg'].name}\n`{progs['cfg'].model_id}`"
             return progs, gr.update(value=info)
 
@@ -335,7 +337,7 @@ def launch():
 
         new_session_btn.click(create_new_session, inputs=[new_req], outputs=[req_box, new_req, session_dropdown, session_state])
 
-        def generate_fn(requirements, clarifications, session_obj, progress=gr.Progress()):
+        def generate_fn(requirements, clarifications, session_obj, programs, progress=gr.Progress()):
             progress(0, desc="Generating TLA+")
             sess = session_obj
             sess.original_requirements = requirements.strip()
@@ -344,7 +346,7 @@ def launch():
                 if line:
                     sess.add_clarification(line)
             prompt = sess.build_prompt()
-            tla_plus, summary, log = _capture_generate(programs_state.value, prompt, progress)
+            tla_plus, summary, log = _capture_generate(programs, prompt, progress)
             rnd = sess.archive_round(prompt, tla_plus, summary, now_iso())
             sess.save()
             hist = "\n\n".join(_format_round(sess, i) for i in range(len(sess.rounds)))
@@ -382,7 +384,8 @@ def launch():
                 sess,
             ])
 
-        generate_btn.click(generate_fn, inputs=[req_box, clar_box, session_state], outputs=[*[a for acc in module_accordions for a in [acc]] + [*module_codes], summary_box, history_box, log_box, session_state])
+        generate_btn.click(generate_fn, inputs=[req_box, clar_box, session_state, programs_state], 
+                           outputs=[*[a for acc in module_accordions for a in [acc]] + [*module_codes], summary_box, history_box, log_box, session_state])
 
         clear_logs_btn.click(lambda: "", outputs=[log_box])
 

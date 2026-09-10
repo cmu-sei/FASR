@@ -86,7 +86,7 @@ def get_llm(config: ModelConfig) -> dspy.LM:
     return build_llm(config)
 
 
-def build_programs(config: ModelConfig) -> dict:
+def build_programs(config: ModelConfig, warm: bool = True) -> dict:
     """Configure the LM and build the two predictor programs.
 
     Warm-compiles the programs by running a tiny prompt so the ChainOfThought
@@ -95,17 +95,19 @@ def build_programs(config: ModelConfig) -> dict:
     """
     llm = get_llm(config)
     programs = get_programs(llm, config)
-    try:
-        programs["req2tla"](requirements="identity")
-    except Exception as exc:
-        # A warm pass failing to *generate* a well-formed answer is fine here;
-        # we only care that the module was initialised without raising.
-        print(f"  [build] warm-compile of '{config.model_id}': {str(exc).splitlines()[0]}")
+    if warm:
+        try:
+            with dspy.context(lm=programs["lm"]):
+                programs["req2tla"](requirements="identity")
+        except Exception as exc:
+            # A warm pass failing to *generate* a well-formed answer is fine here;
+            # we only care that the module was initialised without raising.
+            print(f"  [build] warm-compile of '{config.model_id}': {str(exc).splitlines()[0]}")
     return programs
 
 
 def get_programs(llm: dspy.LM, config: ModelConfig) -> dict:
-    dspy.configure(lm=llm)
+    # dspy.configure(lm=llm)
     try:
         req2tla = dspy.ChainOfThought(RequirementToTLA)
     except Exception:
@@ -113,7 +115,7 @@ def get_programs(llm: dspy.LM, config: ModelConfig) -> dict:
     tla2req = dspy.Predict(TLAToRequirement)
     # Store the active config alongside the programs so callers can show a
     # banner / rebuild when the model is picked again.
-    return {"req2tla": req2tla, "tla2req": tla2req, "cfg": config}
+    return {"req2tla": req2tla, "tla2req": tla2req, "cfg": config, "lm":llm}
 
 
 
@@ -161,7 +163,8 @@ def generate_tla(programs: dict, requirements: str) -> str:
             )
 
         try:
-            result = req2tla(requirements=prompt)
+            with dspy.context(lm=programs["lm"]):
+                result = req2tla(requirements=prompt)
             tla_plus = str(result.tla_plus)
         except Exception as exc:
             print(f"  model call error: {str(exc).splitlines()[0]}")
@@ -320,5 +323,6 @@ def build_session(fresh_input: str, state_dir: str = DEFAULT_STATE_DIR) -> Sessi
 
 def roundtrip(programs: dict, requirements: str) -> tuple[str, str]:
     tla_plus = generate_tla(programs, requirements)
-    summary = str(programs["tla2req"](spec=tla_plus).summary)
+    with dspy.context(lm=programs["lm"]):
+        summary = str(programs["tla2req"](spec=tla_plus).summary)
     return tla_plus, summary

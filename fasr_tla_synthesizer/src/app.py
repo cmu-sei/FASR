@@ -31,6 +31,8 @@ from .pipeline import (
 from .models import load_all, get_config_or, add_user_model, mask_secret
 from .tla_validator import validate_tla, split_tla_bundle
 
+import dspy
+
 
 def _print_round(rnd) -> None:
     print("\n--- Round", rnd.index, "---")
@@ -112,7 +114,8 @@ def main() -> None:
     else:
         prompt = session.build_prompt()
         tla_plus = generate_tla(programs, prompt)
-        summary = str(programs["tla2req"](spec=tla_plus).summary)
+        with dspy.context(lm=programs["lm"]):
+            summary = str(programs["tla2req"](spec=tla_plus).summary)
         rnd = session.archive_round(prompt, tla_plus, summary, now_iso())
         session.save()
         _print_round(rnd)
@@ -197,7 +200,8 @@ def main() -> None:
         session.add_clarification(clar)
         prompt = session.build_prompt()
         tla_plus = generate_tla(programs, prompt)
-        summary = str(programs["tla2req"](spec=tla_plus).summary)
+        with dspy.context(lm=programs["lm"]):
+            summary = str(programs["tla2req"](spec=tla_plus).summary)
         rnd = session.archive_round(prompt, tla_plus, summary, now_iso())
         session.save()
         _print_round(rnd)
