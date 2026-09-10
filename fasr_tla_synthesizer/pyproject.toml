@@ -1,0 +1,12 @@
+[project]
+name = "fasr-tla-synthesizer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dspy>=3.3.1",
+    "gradio>=6.26.0",
+    "numpy>=2.5.2",
+    "tla>=0.0.4",
+]

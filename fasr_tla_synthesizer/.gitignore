@@ -1,0 +1,9 @@
+.venv
+__pycache__/
+docs/
+.rtl2tla_sessions/
+.DS_Store
+outputs/
+tla2tools.jar
+.rtl2tla/
+META-INF/
