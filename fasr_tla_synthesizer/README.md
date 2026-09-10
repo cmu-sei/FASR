@@ -82,7 +82,7 @@ python app_gui.py
 
 ## Using it
 
-1. On first run, choose a model from the built-in catalog or add your own.
+1. On first run, you'll need to add a model.
 2. Type your requirements, one per line.
 3. Press **Enter on an empty line** to finish.
 4. Read the TLA+ and the natural-language summary.
