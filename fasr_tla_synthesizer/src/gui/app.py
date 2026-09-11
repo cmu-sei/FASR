@@ -92,9 +92,15 @@ def _format_round(session, rnd_idx):
 
 def launch():
     models = load_all()
-    default_cfg = get_config_or(None)
     model_choices = {c.name: c.name for c in models}
-    programs = build_programs(default_cfg)
+    default_cfg = model_choices[0] if models else None
+    programs = build_programs(default_cfg) if default_cfg else None
+    has_model = programs is not None
+    model_status = {
+        f"**Current**: {programs['cfg'].name}\n`{programs['cfg'].model_id}`"
+        if programs
+        else "**No model configured** Add a model below to get started!"
+    }
     # Initial empty session
     init_session = Session(original_requirements="", clarifications=[])
 
@@ -123,12 +129,17 @@ def launch():
             with gr.Column(scale=3):
                 gr.Markdown("# RTL2TLA")
                 # Model selector
-                model_dropdown = gr.Dropdown(label="Model", choices=list(model_choices.keys()), value=default_cfg.name, interactive=True)
-                model_info = gr.Markdown(f"**Current:** {programs['cfg'].name}\n`{programs['cfg'].model_id}`")
+                model_dropdown = gr.Dropdown(
+                    label="Model",
+                    choices=list(model_choices.keys()),
+                    value=default_cfg.name if default_cfg else None,
+                    interactive=True
+                )
+                model_info = gr.Markdown(model_status)
                 with gr.Row():
-                    use_model_btn = gr.Button("Use Model")
+                    use_model_btn = gr.Button("Use Model", interactive=has_model)
                     add_model_btn = gr.Button("Add Model")
-                with gr.Accordion("Add / Edit Model", open=False) as model_acc:
+                with gr.Accordion("Add / Edit Model", open=not has_model) as model_acc:
                     new_model_name = gr.Textbox(label="Name")
                     new_model_id = gr.Textbox(label="model_id")
                     new_model_base = gr.Textbox(label="base_url (optional)")
@@ -140,7 +151,7 @@ def launch():
                 req_box = gr.Textbox(label="Requirements", lines=8, value="")
                 clar_box = gr.Textbox(label="Add clarification", lines=2, placeholder="Type clarification and press Enter")
                 with gr.Row():
-                    generate_btn = gr.Button("Generate", variant="primary")
+                    generate_btn = gr.Button("Generate", variant="primary", interactive=has_model)
                     clear_logs_btn = gr.Button("Clear log")
                 log_box = gr.Textbox(label="Log", lines=10)
                 module_accordions = []
@@ -167,16 +178,25 @@ def launch():
 
         # Model handlers
         def use_model(name):
+            if not name:
+                return None, "**No model selected!** Add or select a model first."
             cfg = get_config_or(name)
             progs = build_programs(cfg, warm=False)
             info = f"**Current:** {progs['cfg'].name}\n`{progs['cfg'].model_id}`"
-            return progs, gr.update(value=info)
+            return progs, info
 
         use_model_btn.click(use_model, inputs=[model_dropdown], outputs=[programs_state, model_info])
 
         def add_model(name, model_id, base_url, api_key, temp, tokens):
             if not name or not model_id:
-                return "Please provide name and model_id", None, gr.update()
+                return (
+                    "Please provide name and model_id",
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),
+                    gr.update()
+                )
             cfg = {"model_id": model_id}
             if base_url:
                 cfg["base_url"] = base_url
@@ -190,14 +210,34 @@ def launch():
                 cfg["max_tokens"] = int(tokens)
             path = add_user_model(name, cfg)
             if path:
-                # refresh model dropdown choices
                 models = load_all()
                 choices = [c.name for c in models]
-                return f"Added model '{name}'.", gr.update(choices=choices, value=name), gr.update()
+                selected = get_config_or(name)
+                progs = build_programs(selected, warm=False)
+                info = f"**Current:** {progs['cfg'].name}\n`{progs['cfg'].model_id}`"
+                return (
+                    info,
+                    gr.update(choices=choices, value=name),
+                    gr.update(open=False),
+                    progs,
+                    gr.update(interactive=True),
+                    gr.update(interactive=True)
+                )
             else:
-                return "Failed to add model.", None, gr.update()
+                return (
+                    "Failed to add model!",
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),
+                    gr.update()
+                )
 
-        save_model_btn.click(add_model, inputs=[new_model_name, new_model_id, new_model_base, new_model_api, new_model_temp, new_model_tokens], outputs=[model_info, model_dropdown, model_acc])
+        save_model_btn.click(
+            add_model,
+            inputs=[new_model_name, new_model_id, new_model_base, new_model_api, new_model_temp, new_model_tokens],
+            outputs=[model_info, model_dropdown, model_acc]
+        )
 
         def load_session_fn(choice):
             if not choice:
@@ -338,6 +378,8 @@ def launch():
         new_session_btn.click(create_new_session, inputs=[new_req], outputs=[req_box, new_req, session_dropdown, session_state])
 
         def generate_fn(requirements, clarifications, session_obj, programs, progress=gr.Progress()):
+            if not programs:
+                raise gr.Error("Add or select a model before generating TLA+.")
             progress(0, desc="Generating TLA+")
             sess = session_obj
             sess.original_requirements = requirements.strip()

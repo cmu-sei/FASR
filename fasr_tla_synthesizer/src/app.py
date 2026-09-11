@@ -52,6 +52,41 @@ def _print_round(rnd) -> None:
     print("\n--- Natural-language summary ---")
     print(rnd.summary)
 
+def _prompt_add_model(*, allow_exit: bool = False) -> bool | None:
+    model_name_prompt = "Model Name (or /exit): " if allow_exit else "Model Name:"
+    model_name = input(model_name_prompt).strip()
+    if allow_exit and model_name.lower() == "exit()":
+        return False
+    if not model_name:
+        print("Model Name required!")
+        return None
+    model_id = input("Model ID: ").strip()
+    if not model_id:
+        print("Model ID required!")
+        return None
+    base_url = input("Base URL (optional): ").strip()
+    api_key = input("API Key (optional, default=local): ").strip() or "local"
+    temp = input("Temperature (optional, default=0.0): ").strip()
+    max_tokens = input("Max Tokens (optional, default=50000)").strip()
+    config = {
+        "model_id": model_id,
+        "base_url": base_url,
+        "api_key": api_key
+    }
+    try:
+        if temp:
+            config["temperature"] = float(temp)
+        if max_tokens:
+            config["max_tokens"] = int(max_tokens)
+    except ValueError:
+        print("Temperature must be a number and max tokens must be an integer")
+        return None
+    path = add_user_model(model_name, config)
+    if path:
+        print(f"Added model '{model_name}' to '{path}'")
+        return True
+    print("Failed to add model!")
+    return None
 
 def main() -> None:
     print("=" * 70)
@@ -61,6 +96,15 @@ def main() -> None:
 
     # Model selection
     models = load_all()
+    if not models:
+        print("\nNo models are configured. Add one now to continue...")
+        while not models:
+            added = _prompt_add_model(allow_exit=True)
+            if added is False:
+                print("No model was added. Exiting...")
+                return
+            if added:
+                models = load_all()
     default_cfg = get_config_or(None)
     print("\nAvailable models:")
     for i, cfg in enumerate(models, 1):
@@ -169,32 +213,7 @@ def main() -> None:
             print(f"  max_tokens: {c.max_tokens}")
             continue
         if cmd == "/add model":
-            name = input("Name: ").strip()
-            if not name:
-                print("Name required.")
-                continue
-            model_id = input("model_id: ").strip()
-            if not model_id:
-                print("model_id required.")
-                continue
-            base_url = input("base_url (optional): ").strip()
-            api_key = input("api_key (optional, 'local' or env:VAR): ").strip() or "local"
-            temp = input("temperature (optional, default 0.0): ").strip()
-            max_tok = input("max_tokens (optional, default 50000): ").strip()
-            cfg = {
-                "model_id": model_id,
-                "base_url": base_url,
-                "api_key": api_key,
-            }
-            if temp:
-                cfg["temperature"] = float(temp)
-            if max_tok:
-                cfg["max_tokens"] = int(max_tok)
-            path = add_user_model(name, cfg)
-            if path:
-                print(f"Added model '{name}' to {path}")
-            else:
-                print("Failed to add model.")
+            _prompt_add_model()
             continue
         # treat as clarification
         session.add_clarification(clar)
