@@ -55,7 +55,7 @@ def _print_round(rnd) -> None:
 def _prompt_add_model(*, allow_exit: bool = False) -> bool | None:
     model_name_prompt = "Model Name (or /exit): " if allow_exit else "Model Name:"
     model_name = input(model_name_prompt).strip()
-    if allow_exit and model_name.lower() == "exit()":
+    if allow_exit and model_name.lower() in {"exit()", "/exit", "quit"}:
         return False
     if not model_name:
         print("Model Name required!")

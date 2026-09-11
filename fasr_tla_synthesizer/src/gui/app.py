@@ -93,14 +93,14 @@ def _format_round(session, rnd_idx):
 def launch():
     models = load_all()
     model_choices = {c.name: c.name for c in models}
-    default_cfg = model_choices[0] if models else None
+    default_cfg = models[0] if models else None
     programs = build_programs(default_cfg) if default_cfg else None
     has_model = programs is not None
-    model_status = {
+    model_status = (
         f"**Current**: {programs['cfg'].name}\n`{programs['cfg'].model_id}`"
         if programs
         else "**No model configured** Add a model below to get started!"
-    }
+    )
     # Initial empty session
     init_session = Session(original_requirements="", clarifications=[])
 
@@ -236,7 +236,7 @@ def launch():
         save_model_btn.click(
             add_model,
             inputs=[new_model_name, new_model_id, new_model_base, new_model_api, new_model_temp, new_model_tokens],
-            outputs=[model_info, model_dropdown, model_acc]
+            outputs=[model_info, model_dropdown, model_acc, programs_state, use_model_btn, generate_btn]
         )
 
         def load_session_fn(choice):
