@@ -7,3 +7,5 @@ outputs/
 tla2tools.jar
 .rtl2tla/
 META-INF/
+tmp/
+requirements/

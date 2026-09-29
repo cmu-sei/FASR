@@ -26,6 +26,33 @@ import tempfile
 from pathlib import Path
 
 
+_WINDOWS_RESERVED_STEMS = {
+    "CON", "PRN", "AUX", "NUL",
+    *(f"COM{i}" for i in range(1, 10)),
+    *(f"LPT{i}" for i in range(1, 10)),
+    "COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
+}
+
+
+def _module_filename(name: str) -> str:
+    """Return a safe filename for a parsed module name."""
+    if name == "<bundle>":
+        return "Bundle.tla"
+    if os.name == "nt" and name.rstrip(" .").upper() in _WINDOWS_RESERVED_STEMS:
+        raise ValueError(
+            f"module name '{name}' is reserved on Windows; choose another module name"
+        )
+    return f"{name}.tla"
+
+
+class TLAValidationError(ValueError):
+    """A concise display message together with complete SANY diagnostics."""
+
+    def __init__(self, message: str, diagnostics: str):
+        super().__init__(message)
+        self.diagnostics = diagnostics
+
+
 def validate_tla(tla_plus: str) -> None:
     text = str(tla_plus).strip()
     modules = split_tla_bundle(text)
@@ -42,12 +69,21 @@ def validate_tla(tla_plus: str) -> None:
         filenames = []
         for mod in modules:
             name = mod["name"]
-            file_path = tmp_path / f"{name}.tla"
-            file_path.write_text(mod["text"], encoding="utf-8")
-            filenames.append(f"{name}.tla")
+            filename = _module_filename(name)
+            file_path = tmp_path / filename
+            try:
+                file_path.write_text(mod["text"], encoding="utf-8")
+            except OSError as exc:
+                raise ValueError(
+                    f"could not prepare module '{name}' for validation: {exc}"
+                ) from exc
+            filenames.append(filename)
 
         cmd = ["java", "-cp", jar_path, "tla2sany.SANY", "-s", "-error-codes"] + filenames
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=tmpdir)
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=tmpdir)
+        except OSError as exc:
+            raise RuntimeError(f"could not start Java for TLA+ validation: {exc}") from exc
 
         combined = result.stdout + "\n" + result.stderr
         if result.returncode == 0:
@@ -68,7 +104,7 @@ def validate_tla(tla_plus: str) -> None:
                     break
         if not msg:
             msg = combined[:500]
-        raise ValueError(msg)
+        raise TLAValidationError(msg, combined)
 
 
 def split_tla_bundle(tla_plus: str) -> list[dict]:

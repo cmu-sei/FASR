@@ -23,7 +23,7 @@
 
 This module is the single source of truth for which LLMs RTL2TLA can talk to
 and how to reach them. Models are managed exclusively by the user via
-``~/.rtl2tla/models.json``.
+the platform-specific application data directory.
 
 Secrets (API keys) are only ever written to the user's model file and are
 never logged or persisted through the app.
@@ -33,9 +33,11 @@ from __future__ import annotations
 
 import os
 import json
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
+
+from .storage import legacy_models_path, user_data_dir
 
 
 # ---------------------------------------------------------------------------
@@ -45,13 +47,26 @@ from typing import Optional
 def secret_store_path() -> Path:
     """Return the path to the model secret store.
 
-    Defaults to ``<repo_root>/.rtl2tla/models.json`` with an override via
-    ``RTL2TLA_MODELS_STORE``.
+    Defaults to the platform's per-user application data directory with an
+    override via ``RTL2TLA_MODELS_STORE``.
     """
-    # Repo-relative default: <src>/.. / .rtl2tla / models.json
-    repo_root = Path(__file__).resolve().parent.parent
-    default = repo_root / ".rtl2tla" / "models.json"
-    return Path(os.environ.get("RTL2TLA_MODELS_STORE", default))
+    override = os.environ.get("RTL2TLA_MODELS_STORE")
+    if override:
+        return Path(override).expanduser()
+    return user_data_dir() / "models.json"
+
+
+def _model_load_path() -> Path:
+    """Prefer the current store, falling back to legacy data when needed."""
+    path = secret_store_path()
+    if (
+        path.exists()
+        or os.environ.get("RTL2TLA_MODELS_STORE")
+        or os.environ.get("RTL2TLA_DATA_DIR")
+    ):
+        return path
+    legacy = legacy_models_path()
+    return legacy if legacy.exists() else path
 
 
 def _ensure_store_dir() -> None:
@@ -61,7 +76,7 @@ def _ensure_store_dir() -> None:
 
 def load_user_models() -> dict[str, dict]:
     """Load user-registered models. ``{name -> config dict}``, registration order kept."""
-    path = secret_store_path()
+    path = _model_load_path()
     if not path.exists():
         return {}
     try:
@@ -82,7 +97,7 @@ def load_user_models() -> dict[str, dict]:
 
 
 def save_user_models(models: dict[str, dict]) -> Path:
-    """Persist user-registered models to ``~/.rtl2tla/models.json`` (never commits this)."""
+    """Persist user-registered models to the per-user secret store."""
     _ensure_store_dir()
     path = secret_store_path()
     with open(path, "w", encoding="utf-8") as fh:
@@ -97,6 +112,8 @@ def add_user_model(name: str, cfg: dict) -> Optional[Path]:
     cfg = dict(cfg)
     cfg.setdefault("temperature", 0.0)
     cfg.setdefault("max_tokens", 50000)
+    cfg.setdefault("timeout", 120.0)
+    cfg.setdefault("num_retries", 1)
     cfg.setdefault("openai_compatible", True)
     cfg.setdefault("api_key", "local")
     cfg.setdefault("base_url", "")
@@ -134,6 +151,8 @@ class ModelConfig:
     api_key: str = "local"
     temperature: float = 0.0
     max_tokens: int = 50000
+    timeout: float = 120.0
+    num_retries: int = 1
     openai_compatible: bool = True
     description: str = ""
 
@@ -150,6 +169,8 @@ class ModelConfig:
             api_key=api_key,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
+            timeout=self.timeout,
+            num_retries=self.num_retries,
             openai_compatible=self.openai_compatible,
             description=self.description,
         )
@@ -173,6 +194,8 @@ def load_all() -> list[ModelConfig]:
                 api_key=user_cfg.get("api_key", "local"),
                 temperature=float(user_cfg.get("temperature", 0.0)),
                 max_tokens=int(user_cfg.get("max_tokens", 50000)),
+                timeout=float(user_cfg.get("timeout", 120.0)),
+                num_retries=int(user_cfg.get("num_retries", 1)),
                 openai_compatible=bool(user_cfg.get("openai_compatible", True)),
                 description=str(user_cfg.get("description", "")),
             ))
@@ -201,7 +224,7 @@ def get_config_or(name: Optional[str]) -> ModelConfig:
     configs = load_all()
     if not configs:
         raise ValueError(
-            "No models configured. Add a model via /add model or edit ~/.rtl2tla/models.json"
+            f"No models configured. Add a model via /add model or edit {secret_store_path()}"
         )
     return configs[0]
 
@@ -246,4 +269,6 @@ def build_llm(config: ModelConfig) -> object:
         base_url=resolved.base_url or None,
         temperature=resolved.temperature,
         max_tokens=resolved.max_tokens,
+        timeout=resolved.timeout,
+        num_retries=resolved.num_retries,
     )

@@ -22,7 +22,13 @@
 import dspy
 
 class RequirementToTLA(dspy.Signature):
-    """Generate a well-formed TLA+ module that faithfully encodes the given natural-language requirements."""
+    """Generate a TLA+ bundle and TLC configuration focused only on safety invariants.
+
+    Preserve the system's state and transition behavior, but exclude liveness,
+    eventual progress, and fairness requirements from generation and checking,
+    even when they appear in the input requirements. Do not turn liveness
+    requirements into state invariants. Liveness is outside this verification scope.
+    """
 
     requirements = dspy.InputField(
         desc="Natural-language description of the system's behaviour."
@@ -35,7 +41,10 @@ class RequirementToTLA(dspy.Signature):
             "that INSTANCEs all others. Compose a three-module structure of Environment (inputs), "
             "Machine (reacts to Environment), System (composes Environment and Machine). Use this "
             "to decide the Init (initial-value) and Next (state-transition) behaviour of each "
-            "module before emitting the TLA+ bundle."
+            "module before emitting the TLA+ bundle and TLC configuration. Identify only "
+            "safety checks expressible as state invariants; exclude liveness, eventual "
+            "progress, and fairness requirements. Explain "
+            "any constant assignments or finite model bounds."
         )
     )
     tla_plus = dspy.OutputField(
@@ -46,8 +55,28 @@ class RequirementToTLA(dspy.Signature):
             "Compose three modules in the canonical form Environment, Machine, System, with System composing Environment and Machine."
             "Each module must have a banner '---- MODULE <Name> ----' and end with a '====' trailer line. "
             "The exact number of dashes in the banner is NOT significant: any run of three or more leading dashes and any trailing dashes parses fine. "
-            "Operational constraint from our TLA+ parser: AVOID '\\and', '\\/or', '\\/==', '\\/!='. Use '/' for conjunction and disjunction. "
-            "Write universal quantifier as '\\A v . expr' and existential as '\\/E v . expr' (slash backslash immediately touching bound variable, then space, dot, expression)."
+            "Use standard TLA+ syntax accepted by SANY: /\\ for conjunction, \\/ for disjunction, "
+            "and bounded quantifiers such as \\A v \\in S : P(v). "
+            "The final module must expose Spec and the state predicates TypeOK and Safety. "
+            "Define safety requirements as state invariants. Do not generate liveness "
+            "operators or fairness conditions (WF_ or SF_). Use Spec == Init /\\ [][Next]_vars "
+            "with the appropriate variable tuple; the temporal syntax of this behavior "
+            "specification is still required. Do not assume desired safety invariants "
+            "in Spec to force them to pass. Put only TLA+ modules in this field; "
+            "emit the TLC configuration separately in tlc_config."
+        )
+    )
+    tlc_config = dspy.OutputField(
+        desc=(
+            "Complete plain-text contents of a TLC .cfg file for the final composition module, "
+            "without Markdown fences, filenames, or prose. Use SPECIFICATION Spec, "
+            "INVARIANT TypeOK, and INVARIANT Safety. Add CONSTANTS assignments for every "
+            "required model constant and INVARIANT entries for any additional safety checks. "
+            "Do not emit PROPERTY or PROPERTIES entries; liveness is outside the checking scope. "
+            "Refer only to operators exposed by the final module. Do not list temporal "
+            "formulas as INVARIANT entries. Do not disable deadlock checking, omit a failing "
+            "safety requirement, or add constraints/overrides merely to hide violations. Any model "
+            "bounds must follow the requirements and be documented in the TLA+ comments."
         )
     )
 
@@ -56,6 +85,7 @@ class TLAToRequirement(dspy.Signature):
     """Summarise a TLA+ bundle in plain natural language so a human can review whether it matches the original requirements."""
 
     spec = dspy.InputField(desc="The TLA+ bundle (commonly Environment, Machine, System, with a composition module that INSTANCEs the others) to summarize.")
+    tlc_config = dspy.InputField(desc="The TLC configuration associated with the bundle, including selected safety invariants and constant assignments.")
     summary = dspy.OutputField(
-        desc="Plain-language summary of what the TLA+ bundle specifies, covering Environment, Machine composition, other modules if present, and how the composition module composes them.",
+        desc="Plain-language summary of the behavior and module composition, plus the checks and model bounds selected by tlc_config. State that verification is scoped to safety invariants and does not establish liveness or eventual progress. Distinguish what is modeled from what is checked; do not claim verification succeeded merely because a property is defined or configured.",
     )

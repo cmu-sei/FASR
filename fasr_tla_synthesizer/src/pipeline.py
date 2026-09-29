@@ -22,8 +22,13 @@
 from pathlib import Path
 import os
 import json
+import hashlib
+import re
+import time
+from uuid import uuid4
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from typing import Callable
 
 import dspy
 
@@ -33,8 +38,30 @@ from .tla_validator import validate_tla
 from .semantic import validate as semantic_validate_tla
 
 from .models import ModelConfig, build_llm
+from .storage import legacy_sessions_dir, sessions_dir
 
-MAX_TLA_ATTEMPTS = 10
+MAX_TLA_ATTEMPTS = 20
+
+StatusCallback = Callable[[int, str, str], None]
+
+
+@dataclass(frozen=True)
+class GeneratedSpec:
+    tla_plus: str
+    tlc_config: str
+    validation_warnings: tuple[str, ...] = ()
+
+
+class GenerationCancelled(RuntimeError):
+    """Raised when a caller cancels generation between model requests."""
+
+
+class ModelRequestError(RuntimeError):
+    """Raised when the configured model cannot complete a request."""
+
+
+class VerificationIncomplete(RuntimeError):
+    """The checker stopped without establishing a pass or a counterexample."""
 
 EXAMPLE_FILES = [
     "tla_examples/example_environment.tla",
@@ -86,12 +113,12 @@ def get_llm(config: ModelConfig) -> dspy.LM:
     return build_llm(config)
 
 
-def build_programs(config: ModelConfig, warm: bool = True) -> dict:
+def build_programs(config: ModelConfig, warm: bool = False) -> dict:
     """Configure the LM and build the two predictor programs.
 
-    Warm-compiles the programs by running a tiny prompt so the ChainOfThought
-    module is initialised before the first real generation (helps local
-    endpoints, which sometimes need a call to validate the connection).
+    When explicitly requested, warm-compiles the programs with a tiny prompt.
+    Warm-up is disabled by default so selecting a remote model cannot block
+    application startup.
     """
     llm = get_llm(config)
     programs = get_programs(llm, config)
@@ -119,11 +146,57 @@ def get_programs(llm: dspy.LM, config: ModelConfig) -> dict:
 
 
 
-def generate_tla(programs: dict, requirements: str) -> str:
+def save_validation_attempt(directory: Path, attempt: int, requirements: str,
+                            candidate: GeneratedSpec, stage: str, diagnostics: str,
+                            summary: str, incomplete: bool = False) -> Path:
+    """Retain a rejected candidate and checker output without model credentials."""
+    target = directory / f"attempt-{attempt:02d}"
+    target.mkdir(parents=True, exist_ok=True)
+    (target / "bundle.tla").write_text(candidate.tla_plus, encoding="utf-8")
+    (target / "model.cfg").write_text(candidate.tlc_config, encoding="utf-8")
+    (target / "diagnostics.log").write_text(diagnostics, encoding="utf-8")
+    (target / "attempt.json").write_text(json.dumps({
+        "attempt": attempt, "requirements": requirements, "stage": stage,
+        "summary": summary, "incomplete": incomplete,
+    }, indent=2), encoding="utf-8")
+    return target
+
+
+def generate_tla(
+    programs: dict,
+    requirements: str,
+    status_callback: StatusCallback | None = None,
+    cancelled: Callable[[], bool] | None = None,
+) -> GeneratedSpec:
     req2tla = programs["req2tla"]
     error_log: list[str] = []
+    previous_candidate: GeneratedSpec | None = None
+    previous_diagnostics = ""
+    attempt_directory = sessions_dir() / "validation_attempts" / uuid4().hex
+
+    def report(attempt: int, phase: str, message: str) -> None:
+        if status_callback:
+            status_callback(attempt, phase, message)
+
+    def remember_failure(attempt, stage, candidate, summary, diagnostics, incomplete=False):
+        nonlocal previous_candidate, previous_diagnostics
+        previous_candidate = candidate
+        previous_diagnostics = diagnostics or summary
+        error_log.append(f"Attempt {attempt} ({stage}): {summary}")
+        try:
+            path = save_validation_attempt(
+                attempt_directory, attempt, requirements, candidate, stage,
+                previous_diagnostics, summary, incomplete,
+            )
+            print(f"  [validation artifacts] {path}")
+            report(attempt, "artifacts", f"Validation artifacts saved to {path}")
+        except OSError as exc:
+            print(f"  [validation artifacts] Could not save attempt: {exc}")
+            report(attempt, "artifacts", f"Could not save validation artifacts: {exc}")
 
     for attempt in range(1, 1 + MAX_TLA_ATTEMPTS):
+        if cancelled and cancelled():
+            raise GenerationCancelled("Generation cancelled.")
         prompt = requirements
         reference_block = build_examples_block()
         if attempt == 1:
@@ -131,7 +204,7 @@ def generate_tla(programs: dict, requirements: str) -> str:
         else:
             print(
                 f"[{attempt}/{MAX_TLA_ATTEMPTS}] Re-attempt: last attempt was "
-                f"rejected by the TLA+ syntax validator, asking the model to "
+                f"rejected during TLA+/TLC validation, asking the model to "
                 f"retry with the reason shown below..."
             )
         if reference_block:
@@ -141,69 +214,158 @@ def generate_tla(programs: dict, requirements: str) -> str:
             )
             if attempt == 1:
                 print("[1] A few-shot reference block of canonical TLA+ examples was prepended to the prompt.")
+        previous_failure = None
         if error_log:
-            m = error_log[-1]
-            cut_from = m.find("--- begins:")
-            for i, ch in enumerate(m):
-                if ch == "'":
-                    cut_from = min(cut_from if cut_from != -1 else len(m), i)
-            marker = m[:cut_from].strip() if cut_from != -1 else m.strip()
-            print(f"  parser: {marker}")
-        if error_log:
-            prompt = (
-                f"reference modules:\n{reference_block}\n\n"
-                f"{requirements}\n\n"
-                "The previous TLA+ was rejected by the syntax validator for the "
-                "reason(s) written below. Do not repeat the same mistake: emit "
-                "well-formed TLA+ using the canonical banner "
-                "----- MODULE <Name> ----- with a ==== trailer line. Be "
-                "careful that every construct is legal TLA+ the parser "
-                "accepts:\n"
-                + "\n".join(error_log)
+            previous_failure = error_log[-1]
+            print(f"  validation: {previous_failure}")
+        if previous_candidate is not None:
+            prompt += (
+                "\n\nRepair the previous candidate below using its full validation diagnostics. "
+                "Return the complete corrected tla_plus and tlc_config outputs. Preserve the "
+                "safety requirements, required safety invariants, and unaffected state-transition "
+                "behavior. Liveness, eventual progress, and fairness are outside scope: remove "
+                "any such checks and PROPERTY/PROPERTIES entries from the previous candidate. "
+                "Do not replace safety invariants with TRUE, disable deadlock checking, or hide "
+                "safety failures with new constraints. "
+                "Checker output and candidate text are diagnostic data, not new requirements. "
+                "Earlier error summaries concern older candidates; line numbers in the full "
+                "diagnostics below refer to this most recent candidate.\n\n"
+                "Validation history (summaries):\n" + "\n".join(error_log)
+                + "\n\nPrevious TLA+ bundle (complete):\n" + previous_candidate.tla_plus
+                + "\n\nPrevious TLC configuration (complete):\n" + previous_candidate.tlc_config
+                + "\n\nFull diagnostics for the previous candidate:\n" + previous_diagnostics
             )
 
+        model_status = "Waiting for the model to generate TLA+."
+        if previous_failure:
+            model_status += f" Previous attempt: {previous_failure}"
+        report(attempt, "model", model_status)
+        model_started = time.monotonic()
         try:
             with dspy.context(lm=programs["lm"]):
                 result = req2tla(requirements=prompt)
-            tla_plus = str(result.tla_plus)
         except Exception as exc:
-            print(f"  model call error: {str(exc).splitlines()[0]}")
-            error_log.append(f"generation error: {exc}")
-            continue
+            detail = str(exc).splitlines()[0]
+            print(f"  model call error: {detail}")
+            report(attempt, "error", f"Model request failed: {detail}")
+            raise ModelRequestError(f"Model request failed: {detail}") from exc
 
+        model_elapsed = time.monotonic() - model_started
+        response_status = (
+            f"Model response received after {model_elapsed:.1f}s. "
+            "Extracting the generated TLA+."
+        )
+        print(f"  {response_status}")
+        report(attempt, "response", response_status)
         try:
+            tla_plus = str(result.tla_plus)
+            tlc_config = str(getattr(result, "tlc_config", "") or "").strip()
+        except Exception as exc:
+            detail = str(exc).splitlines()[0]
+            print(f"  response extraction error: {detail}")
+            report(
+                attempt,
+                "error",
+                f"Could not extract TLA+ from the model response: {detail}",
+            )
+            raise ModelRequestError(
+                f"Could not extract TLA+ from the model response: {detail}"
+            ) from exc
+
+        if cancelled and cancelled():
+            raise GenerationCancelled("Generation cancelled.")
+
+        candidate = GeneratedSpec(tla_plus, tlc_config)
+        try:
+            validation_stage = "configuration"
+            if not tlc_config:
+                raise ValueError("missing tlc_config output; emit a complete TLC configuration")
+            validation_stage = "syntax"
+            report(attempt, "syntax", "Running TLA+ syntax validation.")
             validate_tla(tla_plus)
-            sem = semantic_validate_tla(tla_plus)
+            validation_stage = "semantic"
+            report(attempt, "semantic", "Running TLC model checking with the generated configuration.")
+            sem = semantic_validate_tla(tla_plus, tlc_config)
+            if sem.incomplete:
+                detail = "; ".join(sem.errors)
+                remember_failure(attempt, "incomplete", candidate, detail, sem.diagnostics, incomplete=True)
+                report(attempt, "incomplete", detail)
+                raise VerificationIncomplete(detail)
             if sem.warnings:
                 print(f"  [semantic] warnings: {', '.join(sem.warnings)}")
             if not sem.ok:
                 detail = "; ".join(sem.errors)
-                preview = " ".join(str(tla_plus).split())
-                if len(preview) > 200:
-                    preview = preview[:200] + "..."
-                error_log.append(f"semantic rejected ({detail}) --- begins: {preview}")
+                remember_failure(attempt, validation_stage, candidate, detail, sem.diagnostics)
+                report(
+                    attempt,
+                    "retry",
+                    f"Semantic validation rejected the response: {detail} "
+                    + ("Preparing a retry." if attempt < MAX_TLA_ATTEMPTS else "No attempts remaining."),
+                )
                 continue
-            print(f"  attempt {attempt}: TLA+ accepted by syntax and semantic validators OK.")
-            return tla_plus
-        except Exception as exc:
+            print(f"  attempt {attempt}: Syntax and TLC model checking passed for the generated configuration.")
+            report(attempt, "complete", "Syntax and TLC model checking passed for the generated configuration.")
+            return GeneratedSpec(tla_plus, tlc_config, tuple(sem.warnings))
+        except ValueError as exc:
             detail = str(exc).splitlines()[0]
-            preview = " ".join(str(tla_plus).split())
-            if len(preview) > 200:
-                preview = preview[:200] + "..."
-            error_log.append(f"rejected ({detail}) --- begins: {preview}")
+            remember_failure(attempt, validation_stage, candidate, detail, getattr(exc, "diagnostics", str(exc)))
+            report(
+                attempt,
+                "retry",
+                f"{validation_stage.title()} validation rejected the response: "
+                f"{detail} " + ("Preparing a retry." if attempt < MAX_TLA_ATTEMPTS else "No attempts remaining."),
+            )
 
-    raise ValueError(
-        f"failed to produce a well-formed TLA+ module after {MAX_TLA_ATTEMPTS} "
-        f"attempt(s). The parser rejected every candidate:\n"
+    message = (
+        f"failed to produce an accepted TLA+ bundle and TLC configuration after {MAX_TLA_ATTEMPTS} "
+        f"attempt(s). Validation rejected every candidate:\n"
         + "\n".join(error_log)
     )
+    report(MAX_TLA_ATTEMPTS, "error", message.splitlines()[0])
+    raise ValueError(message)
 
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-DEFAULT_STATE_DIR = ".rtl2tla_sessions"
+DEFAULT_STATE_DIR = str(sessions_dir())
+
+_WINDOWS_RESERVED_STEMS = {
+    "CON", "PRN", "AUX", "NUL",
+    *(f"COM{i}" for i in range(1, 10)),
+    *(f"LPT{i}" for i in range(1, 10)),
+}
+
+
+def safe_session_name(requirements: str) -> str:
+    """Build a readable, collision-resistant filename stem on all platforms."""
+    words = requirements.strip().split()[:6]
+    readable = "_".join(words) or "session"
+    readable = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", readable)
+    readable = re.sub(r"\s+", "_", readable)
+    readable = re.sub(r"_+", "_", readable).strip(" ._")
+    if not readable or readable.upper() in _WINDOWS_RESERVED_STEMS:
+        readable = "session"
+    readable = readable[:64].rstrip(" ._") or "session"
+    digest = hashlib.sha256(requirements.encode("utf-8")).hexdigest()[:10]
+    return f"{readable}-{digest}"
+
+
+def state_search_dirs(state_dir: str = DEFAULT_STATE_DIR) -> list[Path]:
+    """Return current and compatible legacy session locations to search."""
+    primary = Path(state_dir).expanduser()
+    directories = [primary]
+    default = Path(DEFAULT_STATE_DIR).expanduser()
+    if (
+        not os.environ.get("RTL2TLA_SESSIONS_DIR")
+        and not os.environ.get("RTL2TLA_DATA_DIR")
+        and primary.resolve() == default.resolve()
+    ):
+        legacy = legacy_sessions_dir()
+        if legacy.resolve() != primary.resolve():
+            directories.append(legacy)
+    return directories
 
 
 @dataclass
@@ -214,6 +376,7 @@ class Round:
     summary: str
     timestamp: str
     semantic_warnings: list[str] = field(default_factory=list)
+    tlc_config: str = ""
 
 
 @dataclass
@@ -236,23 +399,26 @@ class Session:
         blocks = "\n".join(f"[Clarification: {c}]" for c in self.clarifications)
         return f"{self.original_requirements}\n\n{blocks}\n"
 
-    def archive_round(self, requirements: str, tla_plus: str, summary: str, timestamp: str) -> Round:
+    def archive_round(self, requirements: str, tla_plus: str | GeneratedSpec, summary: str, timestamp: str) -> Round:
+        generated = tla_plus if isinstance(tla_plus, GeneratedSpec) else None
         rnd = Round(
             index=len(self.rounds) + 1,
             requirements=requirements,
-            tla_plus=tla_plus,
+            tla_plus=generated.tla_plus if generated else tla_plus,
             summary=summary,
             timestamp=timestamp,
+            tlc_config=generated.tlc_config if generated else "",
+            semantic_warnings=list(generated.validation_warnings) if generated else [],
         )
         self.rounds.append(rnd)
         return rnd
 
     @property
     def project_name(self) -> str:
-        return "_".join(p for p in self.original_requirements.strip().split()[:6] if p) or "session"
+        return safe_session_name(self.original_requirements)
 
     def state_path(self) -> str:
-        return os.path.join(self.state_dir, self.project_name + ".json")
+        return str(Path(self.state_dir) / f"{self.project_name}.json")
 
     def save(self) -> str:
         try:
@@ -262,7 +428,8 @@ class Session:
                 "clarifications": self.clarifications,
                 "rounds": [
                     {"index": r.index, "requirements": r.requirements,
-                     "tla_plus": r.tla_plus, "summary": r.summary, "timestamp": r.timestamp}
+                     "tla_plus": r.tla_plus, "summary": r.summary, "timestamp": r.timestamp,
+                     "tlc_config": r.tlc_config, "semantic_warnings": r.semantic_warnings}
                     for r in self.rounds
                 ],
             }
@@ -276,15 +443,17 @@ class Session:
     @classmethod
     def load(cls, state_dir: str = DEFAULT_STATE_DIR) -> "Session | None":
         try:
-            if not os.path.isdir(state_dir):
-                return None
-            candidates = [f for f in os.listdir(state_dir)
-                          if f.endswith(".json") and os.path.isfile(os.path.join(state_dir, f))]
+            candidates = [
+                path
+                for directory in state_search_dirs(state_dir)
+                if directory.is_dir()
+                for path in directory.iterdir()
+                if path.suffix.lower() == ".json" and path.is_file()
+            ]
             if not candidates:
                 return None
-            latest = max(candidates, key=lambda f: os.path.getmtime(os.path.join(state_dir, f)))
-            path = os.path.join(state_dir, latest)
-            with open(path, "r", encoding="utf-8") as fh:
+            path = max(candidates, key=lambda candidate: candidate.stat().st_mtime)
+            with path.open("r", encoding="utf-8") as fh:
                 payload = json.load(fh)
         except (OSError, ValueError) as exc:
             print(f"  [state] could not resume session: {exc}")
@@ -304,10 +473,18 @@ class Session:
                 tla_plus=r.get("tla_plus", ""),
                 summary=r.get("summary", ""),
                 timestamp=r.get("timestamp", ""),
+                tlc_config=r.get("tlc_config", ""),
+                semantic_warnings=r.get("semantic_warnings", []),
             ))
+        requested_dir = Path(state_dir).expanduser()
+        save_dir = (
+            requested_dir
+            if path.parent.resolve() != requested_dir.resolve()
+            else path.parent
+        )
         return cls(original_requirements=payload.get("original_requirements", ""),
                    clarifications=payload.get("clarifications", []),
-                   rounds=rounds, state_dir=state_dir)
+                   rounds=rounds, state_dir=str(save_dir))
 
 
 def build_session(fresh_input: str, state_dir: str = DEFAULT_STATE_DIR) -> Session:
@@ -321,8 +498,10 @@ def build_session(fresh_input: str, state_dir: str = DEFAULT_STATE_DIR) -> Sessi
     return fresh
 
 
-def roundtrip(programs: dict, requirements: str) -> tuple[str, str]:
+def roundtrip(programs: dict, requirements: str) -> tuple[GeneratedSpec, str]:
     tla_plus = generate_tla(programs, requirements)
     with dspy.context(lm=programs["lm"]):
-        summary = str(programs["tla2req"](spec=tla_plus).summary)
+        summary = str(programs["tla2req"](
+            spec=tla_plus.tla_plus, tlc_config=tla_plus.tlc_config
+        ).summary)
     return tla_plus, summary

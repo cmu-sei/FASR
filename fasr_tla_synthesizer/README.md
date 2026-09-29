@@ -54,10 +54,27 @@ with the `TLA2TOOLS_JAR` environment variable.
 This project uses **uv** for fast dependency management.
 
 ```bash
-# create and sync the environment
+# Create and sync the environment
 uv venv
-source .venv/bin/activate
 uv sync
+```
+
+Activate it on Linux or macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Activate it in Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Or in Windows Command Prompt:
+
+```bat
+.venv\Scripts\activate.bat
 ```
 
 The TLA+ Toolbox jar `tla2tools.jar` is not committed. Download it from the
@@ -66,6 +83,43 @@ TLA+ Toolbox releases and place it at the repo root, or set `TLA2TOOLS_JAR`.
 ---
 
 ## Running
+
+### Generated TLC configuration
+
+Generation returns both the three-module TLA+ bundle and a separate `tlc_config`
+output. The configuration selects `Spec`, enables `TypeOK` and `Safety` as
+invariants, and supplies required constant assignments. The LLM is instructed to
+focus only on safety invariants, omitting liveness, eventual-progress, and fairness
+requirements even when present in the input. It must not emit `PROPERTY` or
+`PROPERTIES` entries or convert liveness requirements into invariants. The behavior
+specification still uses `Spec == Init /\ [][Next]_vars`.
+The summary model receives both outputs. The CLI and GUI display the configuration,
+and sessions save it with each round; older sessions without a configuration still load.
+
+The validator writes the generated configuration as `<CompositionModule>.cfg` and
+passes it to TLC explicitly. Missing configurations or required invariant entries
+are rejected and retried. Deadlock checking is enabled.
+
+Validation runs **TLC model checking**, with deadlock checking and the generated
+configuration's checks enabled. Generated configurations are intended to check
+safety invariants only; a successful result does not establish liveness or eventual
+progress. The validator executes the supplied configuration as written. Acceptance requires
+TLC to report successful completion. A counterexample rejects the candidate and
+triggers a generation retry. The default 30-second timeout is reported as
+**verification incomplete**, stops generation, and never counts as a pass or
+automatically asks the model to weaken the specification. Infinite or large state
+spaces may require a reviewed finite abstraction or additional checking time.
+A completed check establishes only the configured properties of the supplied
+model; correspondence to the original requirements still needs review.
+
+Retries receive the complete previous TLA+ bundle, its TLC configuration, and
+the full SANY/TLC diagnostics, including counterexample states. Earlier attempts
+are included only as short error summaries so their line numbers are not confused
+with the current candidate. The UI continues to show concise error messages.
+Rejected and incomplete attempts are saved under
+`<sessions directory>/validation_attempts/<run id>/attempt-<number>/` as
+`bundle.tla`, `model.cfg`, `diagnostics.log`, and `attempt.json`. The log reports
+that location. Timeout artifacts are retained, but timeouts never trigger an LLM retry.
 
 CLI:
 ```bash
@@ -78,15 +132,39 @@ GUI (Gradio):
 python app_gui.py
 ```
 
+### Application data
+
+Models and sessions are stored in a per-user, writable application data
+directory. On Windows this defaults to `%LOCALAPPDATA%\RTL2TLA`; on Linux it
+uses `$XDG_DATA_HOME/rtl2tla` or `~/.local/share/rtl2tla`, and on macOS it uses
+`~/Library/Application Support/RTL2TLA`.
+
+Set `RTL2TLA_DATA_DIR` to override the complete application data directory,
+`RTL2TLA_MODELS_STORE` to override only the model JSON file, or
+`RTL2TLA_SESSIONS_DIR` to override only the session directory. Existing model
+and session data in the repository-local legacy locations remains readable.
+
 ---
 
 ## Using it
 
-1. On first run, you'll need to add a model.
+1. On first run, add a model using the setup form in the GUI or the startup
+   prompt in the CLI.
 2. Type your requirements, one per line.
 3. Press **Enter on an empty line** to finish.
 4. Read the TLA+ and the natural-language summary.
 5. Type clarifications to refine, or use commands to change model / exit.
+
+The GUI reports the active attempt, current phase, and elapsed time while a
+model request is running. The log updates live when a response arrives and as
+the application extracts, validates, summarizes, and saves the result. Use
+**Cancel** to stop queued retries; an in-flight network request may take until
+its configured timeout to return.
+
+Use **Edit Model** to change the selected model. Leaving the API-key field
+blank while editing preserves the existing value. Model requests default to a
+120-second timeout and one transport retry; both settings are configurable in
+the model form.
 
 ---
 

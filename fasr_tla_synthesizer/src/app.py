@@ -49,6 +49,11 @@ def _print_round(rnd) -> None:
     except Exception as e:
         print("\n[TLA+ syntax] NOT well-formed", end="")
         print(f" ({str(e).splitlines()[0]})")
+    if rnd.tlc_config:
+        print("\n--- TLC configuration ---")
+        print(rnd.tlc_config)
+    for warning in rnd.semantic_warnings:
+        print(f"[Validation] {warning}")
     print("\n--- Natural-language summary ---")
     print(rnd.summary)
 
@@ -130,7 +135,7 @@ def main() -> None:
     else:
         cfg = default_cfg
 
-    programs = build_programs(cfg)
+    programs = build_programs(cfg, warm=False)
     print(f"\nUsing model: {programs['cfg'].name} ({programs['cfg'].model_id})")
 
     print("\nPlease enter your requirements (one or more lines):")
@@ -159,7 +164,9 @@ def main() -> None:
         prompt = session.build_prompt()
         tla_plus = generate_tla(programs, prompt)
         with dspy.context(lm=programs["lm"]):
-            summary = str(programs["tla2req"](spec=tla_plus).summary)
+            summary = str(programs["tla2req"](
+                spec=tla_plus.tla_plus, tlc_config=tla_plus.tlc_config
+            ).summary)
         rnd = session.archive_round(prompt, tla_plus, summary, now_iso())
         session.save()
         _print_round(rnd)
@@ -193,7 +200,7 @@ def main() -> None:
                     for c in models:
                         print(f"  - {c.name}")
                     continue
-            programs = build_programs(cfg)
+            programs = build_programs(cfg, warm=False)
             print(f"Switched model to {programs['cfg'].name} ({programs['cfg'].model_id})")
             continue
         if cmd == "/list models":
@@ -211,6 +218,8 @@ def main() -> None:
             print(f"  api_key: {mask_secret(c.api_key)}")
             print(f"  temperature: {c.temperature}")
             print(f"  max_tokens: {c.max_tokens}")
+            print(f"  timeout: {c.timeout} seconds")
+            print(f"  num_retries: {c.num_retries}")
             continue
         if cmd == "/add model":
             _prompt_add_model()
@@ -220,7 +229,9 @@ def main() -> None:
         prompt = session.build_prompt()
         tla_plus = generate_tla(programs, prompt)
         with dspy.context(lm=programs["lm"]):
-            summary = str(programs["tla2req"](spec=tla_plus).summary)
+            summary = str(programs["tla2req"](
+                spec=tla_plus.tla_plus, tlc_config=tla_plus.tlc_config
+            ).summary)
         rnd = session.archive_round(prompt, tla_plus, summary, now_iso())
         session.save()
         _print_round(rnd)
