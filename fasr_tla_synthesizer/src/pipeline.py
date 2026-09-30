@@ -275,6 +275,12 @@ def generate_tla(
         if cancelled and cancelled():
             raise GenerationCancelled("Generation cancelled.")
 
+        tlc_config = re.sub(
+            r"(?m)^\s*\[\[\s*##\s*completed\s*##\s*\]\]\s*$",
+            "",
+            tlc_config,
+        ).strip()
+
         candidate = GeneratedSpec(tla_plus, tlc_config)
         try:
             validation_stage = "configuration"
